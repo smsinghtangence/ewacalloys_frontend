@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import type { CatalogIndustry, CatalogProductCategory, CatalogService } from "@/lib/catalog";
+import type { NavLink } from "@/lib/headerSettings";
 
 type MenuNode = { label: string; href?: string; children?: MenuNode[] };
 
 function buildMobileMenu(
   productCategories: CatalogProductCategory[],
   services: CatalogService[],
-  industries: CatalogIndustry[]
+  industries: CatalogIndustry[],
+  navLinks: NavLink[]
 ): MenuNode[] {
   return [
     { label: "Home", href: "#" },
@@ -37,9 +39,7 @@ function buildMobileMenu(
         href: `#${industry.slug}`,
       })),
     },
-    { label: "About", href: "/about" },
-    { label: "Insights", href: "/insights" },
-    { label: "Careers", href: "#" },
+    ...navLinks.map((link) => ({ label: link.label, href: link.href })),
     { label: "Contact", href: "/contact-us" },
   ];
 }
@@ -87,14 +87,16 @@ export default function MobileMenu({
   productCategories,
   services,
   industries,
+  navLinks,
 }: {
   open: boolean;
   onClose: () => void;
   productCategories: CatalogProductCategory[];
   services: CatalogService[];
   industries: CatalogIndustry[];
+  navLinks: NavLink[];
 }) {
-  const menu = buildMobileMenu(productCategories, services, industries);
+  const menu = buildMobileMenu(productCategories, services, industries, navLinks);
 
   return (
     <div className={`mobile-menu${open ? " active" : ""}`} id="mobileMenu">

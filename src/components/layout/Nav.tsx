@@ -1,19 +1,16 @@
 import Link from "next/link";
 import type { CatalogIndustry, CatalogProductCategory, CatalogService } from "@/lib/catalog";
+import type { DropdownCopy, NavLink } from "@/lib/headerSettings";
 
 type MegaCard = { label: string; image: string; href: string };
 
 function MegaDropdown({
-  eyebrow,
-  title,
-  description,
+  copy,
   cards,
   gridModifier = "",
   cardVariant = "icon",
 }: {
-  eyebrow: string;
-  title: React.ReactNode;
-  description: string;
+  copy: DropdownCopy;
   cards: MegaCard[];
   gridModifier?: string;
   cardVariant?: "icon" | "image";
@@ -22,11 +19,11 @@ function MegaDropdown({
     <div className="dropdown dropdown-mega">
       <div className="mega-inner">
         <div className="mega-left-panel">
-          <span className="mega-eyebrow">{eyebrow}</span>
-          <h3>{title}</h3>
-          <p>{description}</p>
-          <a href="#" className="mega-explore-btn">
-            Explore All <i className="fa fa-arrow-right" />
+          <span className="mega-eyebrow">{copy.eyebrow}</span>
+          <h3>{copy.title}</h3>
+          <p>{copy.description}</p>
+          <a href={copy.exploreHref} className="mega-explore-btn">
+            {copy.exploreLabel} <i className="fa fa-arrow-right" />
           </a>
         </div>
         <div className={`mega-cards-grid ${gridModifier}`}>
@@ -59,10 +56,18 @@ export default function Nav({
   productCategories,
   services,
   industries,
+  productsDropdown,
+  servicesDropdown,
+  industriesDropdown,
+  navLinks,
 }: {
   productCategories: CatalogProductCategory[];
   services: CatalogService[];
   industries: CatalogIndustry[];
+  productsDropdown: DropdownCopy;
+  servicesDropdown: DropdownCopy;
+  industriesDropdown: DropdownCopy;
+  navLinks: NavLink[];
 }) {
   const productCards: MegaCard[] = productCategories.map((category) => ({
     label: category.name,
@@ -89,18 +94,7 @@ export default function Nav({
             <img src="/assets/images/expand-arrow.webp" alt="" />
           </span>
         </a>
-        <MegaDropdown
-          eyebrow="What We Make"
-          title={
-            <>
-              Our
-              <br />
-              Products
-            </>
-          }
-          description="High-performance welding consumables and wear protection solutions for demanding environments."
-          cards={productCards}
-        />
+        <MegaDropdown copy={productsDropdown} cards={productCards} />
       </div>
 
       <div className="nav-item has-dropdown">
@@ -111,15 +105,7 @@ export default function Nav({
           </span>
         </a>
         <MegaDropdown
-          eyebrow="What We Do"
-          title={
-            <>
-              Our
-              <br />
-              Services
-            </>
-          }
-          description="Comprehensive on-site and in-house solutions across India's critical industrial sectors."
+          copy={servicesDropdown}
           cards={serviceCards}
           gridModifier="mega-cards-grid--3col"
           cardVariant="image"
@@ -133,23 +119,14 @@ export default function Nav({
             <img src="/assets/images/expand-arrow.webp" alt="" />
           </span>
         </a>
-        <MegaDropdown
-          eyebrow="What We Serve"
-          title={
-            <>
-              Industries
-              <br />
-              We Serve
-            </>
-          }
-          description="Decades of expertise across India's most demanding industrial sectors."
-          cards={industryCards}
-        />
+        <MegaDropdown copy={industriesDropdown} cards={industryCards} />
       </div>
 
-      <Link href="/about">About</Link>
-      <Link href="/insights">Insights</Link>
-      <a href="#">Careers</a>
+      {navLinks.map((link) => (
+        <Link href={link.href} key={link.label}>
+          {link.label}
+        </Link>
+      ))}
 
       <button className="search-btn" type="button" aria-label="Search">
         <svg viewBox="0 0 24 24">

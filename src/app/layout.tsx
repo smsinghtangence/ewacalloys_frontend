@@ -4,6 +4,7 @@ import "./globals.css";
 import SiteHeader from "@/components/layout/SiteHeader";
 import Footer from "@/components/layout/Footer";
 import { getProductCategories, getServices, getIndustries, getFooterColumns } from "@/lib/catalog";
+import { getHeaderSettings } from "@/lib/headerSettings";
 
 export const metadata: Metadata = {
   title: "EWAC",
@@ -15,11 +16,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [productCategories, services, industries, footerColumns] = await Promise.all([
+  const [productCategories, services, industries, footerColumns, headerSettings] = await Promise.all([
     getProductCategories(),
     getServices(),
     getIndustries(),
     getFooterColumns(),
+    getHeaderSettings(),
   ]);
 
   return (
@@ -44,6 +46,7 @@ export default async function RootLayout({
           productCategories={productCategories}
           services={services}
           industries={industries}
+          headerSettings={headerSettings}
         />
         {children}
         <Footer columns={footerColumns} />

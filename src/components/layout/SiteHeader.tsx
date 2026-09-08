@@ -6,15 +6,18 @@ import Nav from "./Nav";
 import MobileMenu from "./MobileMenu";
 import Overlay from "./Overlay";
 import type { CatalogIndustry, CatalogProductCategory, CatalogService } from "@/lib/catalog";
+import type { HeaderSettings } from "@/lib/headerSettings";
 
 export default function SiteHeader({
   productCategories,
   services,
   industries,
+  headerSettings,
 }: {
   productCategories: CatalogProductCategory[];
   services: CatalogService[];
   industries: CatalogIndustry[];
+  headerSettings: HeaderSettings;
 }) {
   const topBarRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -60,7 +63,7 @@ export default function SiteHeader({
   return (
     <>
       <div ref={topBarRef}>
-        <TopBar />
+        <TopBar {...headerSettings.topBar} />
       </div>
 
       <header className={`header${isSticky ? " is-sticky" : ""}`} ref={headerRef}>
@@ -70,7 +73,15 @@ export default function SiteHeader({
           </a>
         </div>
 
-        <Nav productCategories={productCategories} services={services} industries={industries} />
+        <Nav
+          productCategories={productCategories}
+          services={services}
+          industries={industries}
+          productsDropdown={headerSettings.productsDropdown}
+          servicesDropdown={headerSettings.servicesDropdown}
+          industriesDropdown={headerSettings.industriesDropdown}
+          navLinks={headerSettings.navLinks}
+        />
 
         <button
           className="menu-btn"
@@ -89,6 +100,7 @@ export default function SiteHeader({
         productCategories={productCategories}
         services={services}
         industries={industries}
+        navLinks={headerSettings.navLinks}
       />
     </>
   );
