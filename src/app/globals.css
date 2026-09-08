@@ -1,26 +1,35 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Compensates for .header switching to position:fixed on scroll, so content
+   doesn't jump underneath it. --dropdown-top is kept in sync with the header's
+   rendered height by SiteHeader. */
+body.header-fixed {
+  padding-top: var(--dropdown-top, 111px);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* The newsletter column is one of 6 equal-flex .footer-col items, so on wide
+   desktop viewports it can end up narrower than the email input + submit
+   button need, causing the button to overflow, clipped and invisible.
+   Letting the form wrap keeps the button visible at any column width. */
+.newsletter-form {
+  flex-wrap: wrap;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
 }
