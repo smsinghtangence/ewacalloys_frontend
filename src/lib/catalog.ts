@@ -49,7 +49,9 @@ export function resolveImage(media: StrapiMedia, alt: string): CatalogImage {
   if (!media?.url) {
     return { url: "", alt };
   }
-  return { url: `${STRAPI_URL}${media.url}`, alt };
+  // Local uploads are relative (/uploads/...) and proxied by the rewrite in
+  // next.config.ts; absolute URLs (e.g. a cloud upload provider) pass through.
+  return { url: media.url, alt };
 }
 
 export async function fetchStrapi(path: string): Promise<unknown[]> {
