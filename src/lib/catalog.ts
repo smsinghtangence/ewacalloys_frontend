@@ -45,14 +45,14 @@ export type CatalogFooterColumn = {
 
 type StrapiMedia = { url: string; name?: string } | null | undefined;
 
-function resolveImage(media: StrapiMedia, alt: string): CatalogImage {
+export function resolveImage(media: StrapiMedia, alt: string): CatalogImage {
   if (!media?.url) {
     return { url: "", alt };
   }
   return { url: `${STRAPI_URL}${media.url}`, alt };
 }
 
-async function fetchStrapi(path: string): Promise<unknown[]> {
+export async function fetchStrapi(path: string): Promise<unknown[]> {
   try {
     const response = await fetch(`${STRAPI_URL}${path}`, {
       next: { revalidate: 60 },

@@ -21,7 +21,9 @@ export default function FindTheRightSolution({
 }: {
   productCategories: CatalogProductCategory[];
 }) {
-  const tabs = [...productCategories, EQUIPMENT_TAB];
+  const tabs = productCategories.some((category) => category.slug === EQUIPMENT_TAB.slug)
+    ? productCategories
+    : [...productCategories, EQUIPMENT_TAB];
   const { activeTab, setActiveTab, onDropdownChange } = useTabs(tabs.map((category) => category.slug));
   const carouselRef = useRef<CardCarouselHandle>(null);
   const activePane = tabs.find((category) => category.slug === activeTab) ?? tabs[0];

@@ -1,20 +1,18 @@
 import Link from "next/link";
 import type { CatalogIndustry, CatalogProductCategory, CatalogService } from "@/lib/catalog";
-import type { DropdownCopy, NavLink } from "@/lib/headerSettings";
+import type { NavDropdownItem, NavItem, NavSource } from "@/lib/headerSettings";
 
 type MegaCard = { label: string; image: string; href: string };
 
 function MegaDropdown({
   copy,
   cards,
-  gridModifier = "",
-  cardVariant = "icon",
 }: {
-  copy: DropdownCopy;
+  copy: NavDropdownItem;
   cards: MegaCard[];
-  gridModifier?: string;
-  cardVariant?: "icon" | "image";
 }) {
+  const gridModifier = copy.cardVariant === "image" ? "mega-cards-grid--3col" : "";
+
   return (
     <div className="dropdown dropdown-mega">
       <div className="mega-inner">
@@ -27,7 +25,7 @@ function MegaDropdown({
           </a>
         </div>
         <div className={`mega-cards-grid ${gridModifier}`}>
-          {cardVariant === "image"
+          {copy.cardVariant === "image"
             ? cards.map((card) => (
                 <a href={card.href} key={card.label}>
                   <div className="menu-img-wrap">
@@ -56,77 +54,50 @@ export default function Nav({
   productCategories,
   services,
   industries,
-  productsDropdown,
-  servicesDropdown,
-  industriesDropdown,
-  navLinks,
+  navItems,
 }: {
   productCategories: CatalogProductCategory[];
   services: CatalogService[];
   industries: CatalogIndustry[];
-  productsDropdown: DropdownCopy;
-  servicesDropdown: DropdownCopy;
-  industriesDropdown: DropdownCopy;
-  navLinks: NavLink[];
+  navItems: NavItem[];
 }) {
-  const productCards: MegaCard[] = productCategories.map((category) => ({
-    label: category.name,
-    image: category.image.url,
-    href: `#${category.slug}`,
-  }));
-  const serviceCards: MegaCard[] = services.map((service) => ({
-    label: service.name,
-    image: service.image.url,
-    href: `#${service.slug}`,
-  }));
-  const industryCards: MegaCard[] = industries.map((industry) => ({
-    label: industry.name,
-    image: industry.image.url,
-    href: `#${industry.slug}`,
-  }));
+  const cardsBySource: Record<NavSource, MegaCard[]> = {
+    "product-categories": productCategories.map((category) => ({
+      label: category.name,
+      image: category.image.url,
+      href: `#${category.slug}`,
+    })),
+    services: services.map((service) => ({
+      label: service.name,
+      image: service.image.url,
+      href: `#${service.slug}`,
+    })),
+    industries: industries.map((industry) => ({
+      label: industry.name,
+      image: industry.image.url,
+      href: `#${industry.slug}`,
+    })),
+  };
 
   return (
     <nav className="nav">
-      <div className="nav-item has-dropdown">
-        <a href="#">
-          Products{" "}
-          <span className="nav-arrow">
-            <img src="/assets/images/expand-arrow.webp" alt="" />
-          </span>
-        </a>
-        <MegaDropdown copy={productsDropdown} cards={productCards} />
-      </div>
-
-      <div className="nav-item has-dropdown">
-        <a href="#">
-          Services{" "}
-          <span className="nav-arrow">
-            <img src="/assets/images/expand-arrow.webp" alt="" />
-          </span>
-        </a>
-        <MegaDropdown
-          copy={servicesDropdown}
-          cards={serviceCards}
-          gridModifier="mega-cards-grid--3col"
-          cardVariant="image"
-        />
-      </div>
-
-      <div className="nav-item has-dropdown">
-        <a href="#">
-          Industries{" "}
-          <span className="nav-arrow">
-            <img src="/assets/images/expand-arrow.webp" alt="" />
-          </span>
-        </a>
-        <MegaDropdown copy={industriesDropdown} cards={industryCards} />
-      </div>
-
-      {navLinks.map((link) => (
-        <Link href={link.href} key={link.label}>
-          {link.label}
-        </Link>
-      ))}
+      {navItems.map((item) =>
+        item.type === "dropdown" ? (
+          <div className="nav-item has-dropdown" key={item.label}>
+            <a href="#">
+              {item.label}{" "}
+              <span className="nav-arrow">
+                <img src="/assets/images/expand-arrow.webp" alt="" />
+              </span>
+            </a>
+            <MegaDropdown copy={item} cards={cardsBySource[item.source]} />
+          </div>
+        ) : (
+          <Link href={item.href} key={item.label}>
+            {item.label}
+          </Link>
+        )
+      )}
 
       <button className="search-btn" type="button" aria-label="Search">
         <svg viewBox="0 0 24 24">

@@ -1,18 +1,37 @@
 const backendUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
 
-export type NavLink = { label: string; href: string };
-export type DropdownCopy = {
-  eyebrow: string;
-  title: string;
-  description: string;
-  exploreLabel: string;
-  exploreHref: string;
-};
 export type TopBarContent = {
   label: string;
   message: string;
   ctaLabel: string;
   ctaHref: string;
+};
+
+export type NavSource = "product-categories" | "services" | "industries";
+
+export type NavLinkItem = {
+  type: "link";
+  label: string;
+  href: string;
+};
+
+export type NavDropdownItem = {
+  type: "dropdown";
+  label: string;
+  eyebrow: string;
+  title: string;
+  description: string;
+  exploreLabel: string;
+  exploreHref: string;
+  source: NavSource;
+  cardVariant: "icon" | "image";
+};
+
+export type NavItem = NavLinkItem | NavDropdownItem;
+
+export type HeaderSettings = {
+  topBar: TopBarContent;
+  navItems: NavItem[];
 };
 
 const DEFAULT_TOP_BAR: TopBarContent = {
@@ -22,78 +41,95 @@ const DEFAULT_TOP_BAR: TopBarContent = {
   ctaHref: "#",
 };
 
-const DEFAULT_PRODUCTS_DROPDOWN: DropdownCopy = {
-  eyebrow: "What We Make",
-  title: "Our Products",
-  description:
-    "High-performance welding consumables and wear protection solutions for demanding environments.",
-  exploreLabel: "Explore All",
-  exploreHref: "#",
-};
-
-const DEFAULT_SERVICES_DROPDOWN: DropdownCopy = {
-  eyebrow: "What We Do",
-  title: "Our Services",
-  description: "Comprehensive on-site and in-house solutions across India's critical industrial sectors.",
-  exploreLabel: "Explore All",
-  exploreHref: "#",
-};
-
-const DEFAULT_INDUSTRIES_DROPDOWN: DropdownCopy = {
-  eyebrow: "What We Serve",
-  title: "Industries We Serve",
-  description: "Decades of expertise across India's most demanding industrial sectors.",
-  exploreLabel: "Explore All",
-  exploreHref: "#",
-};
-
-const DEFAULT_NAV_LINKS: NavLink[] = [
-  { label: "About", href: "/about" },
-  { label: "Insights", href: "/insights" },
-  { label: "Careers", href: "#" },
+const DEFAULT_NAV_ITEMS: NavItem[] = [
+  {
+    type: "dropdown",
+    label: "Products",
+    eyebrow: "What We Make",
+    title: "Our Products",
+    description:
+      "High-performance welding consumables and wear protection solutions for demanding environments.",
+    exploreLabel: "Explore All",
+    exploreHref: "#",
+    source: "product-categories",
+    cardVariant: "icon",
+  },
+  {
+    type: "dropdown",
+    label: "Services",
+    eyebrow: "What We Do",
+    title: "Our Services",
+    description: "Comprehensive on-site and in-house solutions across India's critical industrial sectors.",
+    exploreLabel: "Explore All",
+    exploreHref: "#",
+    source: "services",
+    cardVariant: "image",
+  },
+  {
+    type: "dropdown",
+    label: "Industries",
+    eyebrow: "What We Serve",
+    title: "Industries We Serve",
+    description: "Decades of expertise across India's most demanding industrial sectors.",
+    exploreLabel: "Explore All",
+    exploreHref: "#",
+    source: "industries",
+    cardVariant: "icon",
+  },
+  { type: "link", label: "About", href: "/about" },
+  { type: "link", label: "Insights", href: "/insights" },
+  { type: "link", label: "Careers", href: "#" },
 ];
-
-export type HeaderSettings = {
-  topBar: TopBarContent;
-  productsDropdown: DropdownCopy;
-  servicesDropdown: DropdownCopy;
-  industriesDropdown: DropdownCopy;
-  navLinks: NavLink[];
-};
 
 const DEFAULT_HEADER_SETTINGS: HeaderSettings = {
   topBar: DEFAULT_TOP_BAR,
-  productsDropdown: DEFAULT_PRODUCTS_DROPDOWN,
-  servicesDropdown: DEFAULT_SERVICES_DROPDOWN,
-  industriesDropdown: DEFAULT_INDUSTRIES_DROPDOWN,
-  navLinks: DEFAULT_NAV_LINKS,
+  navItems: DEFAULT_NAV_ITEMS,
 };
 
-type RawDropdownCopy = {
-  Eyebrow?: string;
-  Title?: string;
-  Description?: string;
-  ExploreLabel?: string;
-  ExploreHref?: string;
-};
+type RawNavItem =
+  | {
+      __component: "nav.mega-dropdown";
+      Label?: string;
+      Eyebrow?: string;
+      Title?: string;
+      Description?: string;
+      ExploreLabel?: string;
+      ExploreHref?: string;
+      Source?: NavSource;
+      CardVariant?: "icon" | "image";
+    }
+  | {
+      __component: "nav.nav-link";
+      Label?: string;
+      Href?: string;
+    };
 
-function resolveDropdown(raw: RawDropdownCopy | null | undefined, fallback: DropdownCopy): DropdownCopy {
-  if (!raw) return fallback;
-  return {
-    eyebrow: raw.Eyebrow || fallback.eyebrow,
-    title: raw.Title || fallback.title,
-    description: raw.Description || fallback.description,
-    exploreLabel: raw.ExploreLabel || fallback.exploreLabel,
-    exploreHref: raw.ExploreHref || fallback.exploreHref,
-  };
+function resolveNavItem(raw: RawNavItem): NavItem | null {
+  if (raw.__component === "nav.mega-dropdown") {
+    if (!raw.Source) return null;
+    return {
+      type: "dropdown",
+      label: raw.Label || "",
+      eyebrow: raw.Eyebrow || "",
+      title: raw.Title || "",
+      description: raw.Description || "",
+      exploreLabel: raw.ExploreLabel || "Explore All",
+      exploreHref: raw.ExploreHref || "#",
+      source: raw.Source,
+      cardVariant: raw.CardVariant || "icon",
+    };
+  }
+  if (raw.__component === "nav.nav-link") {
+    return { type: "link", label: raw.Label || "", href: raw.Href || "#" };
+  }
+  return null;
 }
 
 export async function getHeaderSettings(): Promise<HeaderSettings> {
   try {
-    const response = await fetch(
-      `${backendUrl}/api/header-settings?populate=TopBar,ProductsDropdown,ServicesDropdown,IndustriesDropdown,NavLinks`,
-      { next: { revalidate: 60 } }
-    );
+    const response = await fetch(`${backendUrl}/api/header-settings?populate=TopBar,NavItems`, {
+      next: { revalidate: 60 },
+    });
 
     if (!response.ok) {
       return DEFAULT_HEADER_SETTINGS;
@@ -102,13 +138,9 @@ export async function getHeaderSettings(): Promise<HeaderSettings> {
     const payload = await response.json();
     const data = payload?.data ?? payload;
 
-    const navLinks: NavLink[] =
-      Array.isArray(data?.NavLinks) && data.NavLinks.length > 0
-        ? data.NavLinks.map((link: { Label?: string; Href?: string }) => ({
-            label: link.Label || "",
-            href: link.Href || "#",
-          }))
-        : DEFAULT_NAV_LINKS;
+    const navItems = Array.isArray(data?.NavItems)
+      ? (data.NavItems.map(resolveNavItem).filter(Boolean) as NavItem[])
+      : [];
 
     return {
       topBar: {
@@ -117,10 +149,7 @@ export async function getHeaderSettings(): Promise<HeaderSettings> {
         ctaLabel: data?.TopBar?.CtaLabel || DEFAULT_TOP_BAR.ctaLabel,
         ctaHref: data?.TopBar?.CtaHref || DEFAULT_TOP_BAR.ctaHref,
       },
-      productsDropdown: resolveDropdown(data?.ProductsDropdown, DEFAULT_PRODUCTS_DROPDOWN),
-      servicesDropdown: resolveDropdown(data?.ServicesDropdown, DEFAULT_SERVICES_DROPDOWN),
-      industriesDropdown: resolveDropdown(data?.IndustriesDropdown, DEFAULT_INDUSTRIES_DROPDOWN),
-      navLinks,
+      navItems: navItems.length > 0 ? navItems : DEFAULT_NAV_ITEMS,
     };
   } catch {
     return DEFAULT_HEADER_SETTINGS;

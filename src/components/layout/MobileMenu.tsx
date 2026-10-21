@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { CatalogIndustry, CatalogProductCategory, CatalogService } from "@/lib/catalog";
-import type { NavLink } from "@/lib/headerSettings";
+import type { NavItem, NavSource } from "@/lib/headerSettings";
 
 type MenuNode = { label: string; href?: string; children?: MenuNode[] };
 
@@ -10,36 +10,30 @@ function buildMobileMenu(
   productCategories: CatalogProductCategory[],
   services: CatalogService[],
   industries: CatalogIndustry[],
-  navLinks: NavLink[]
+  navItems: NavItem[]
 ): MenuNode[] {
+  // Products is the only source with a real 2nd nesting level (category ->
+  // products); Services/Industries are flat, matching their catalog shape.
+  const childrenBySource: Record<NavSource, MenuNode[]> = {
+    "product-categories": productCategories.map((category) => ({
+      label: category.name,
+      href: `#${category.slug}`,
+      children: category.products.map((product) => ({
+        label: product.name,
+        href: `#${product.slug}`,
+      })),
+    })),
+    services: services.map((service) => ({ label: service.name, href: `#${service.slug}` })),
+    industries: industries.map((industry) => ({ label: industry.name, href: `#${industry.slug}` })),
+  };
+
   return [
     { label: "Home", href: "#" },
-    {
-      label: "Products",
-      children: productCategories.map((category) => ({
-        label: category.name,
-        href: `#${category.slug}`,
-        children: category.products.map((product) => ({
-          label: product.name,
-          href: `#${product.slug}`,
-        })),
-      })),
-    },
-    {
-      label: "Services",
-      children: services.map((service) => ({
-        label: service.name,
-        href: `#${service.slug}`,
-      })),
-    },
-    {
-      label: "Industries",
-      children: industries.map((industry) => ({
-        label: industry.name,
-        href: `#${industry.slug}`,
-      })),
-    },
-    ...navLinks.map((link) => ({ label: link.label, href: link.href })),
+    ...navItems.map((item) =>
+      item.type === "dropdown"
+        ? { label: item.label, children: childrenBySource[item.source] }
+        : { label: item.label, href: item.href }
+    ),
     { label: "Contact", href: "/contact-us" },
   ];
 }
@@ -87,16 +81,16 @@ export default function MobileMenu({
   productCategories,
   services,
   industries,
-  navLinks,
+  navItems,
 }: {
   open: boolean;
   onClose: () => void;
   productCategories: CatalogProductCategory[];
   services: CatalogService[];
   industries: CatalogIndustry[];
-  navLinks: NavLink[];
+  navItems: NavItem[];
 }) {
-  const menu = buildMobileMenu(productCategories, services, industries, navLinks);
+  const menu = buildMobileMenu(productCategories, services, industries, navItems);
 
   return (
     <div className={`mobile-menu${open ? " active" : ""}`} id="mobileMenu">
