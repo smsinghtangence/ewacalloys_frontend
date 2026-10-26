@@ -4802,3 +4802,110 @@ margin: 0 0 24px;
   .life-gallery{padding-top:0px!important}
   .life-testimonials{padding-bottom:0px!important}
 }
+
+
+/* Board of Directors (/about-us/company-info) */
+.board-section {
+  position: relative;
+  padding: 60px 0 70px;
+  background: #fff;
+  overflow: clip;
+}
+
+.board-section .board-gear {
+  right: -40px;
+  left: auto;
+  top: 150px;
+  bottom: auto;
+  margin: 0;
+  transform: scale(0.85);
+  transform-origin: top right;
+}
+
+.board-title {
+  margin: 0 0 56px;
+  font-size: clamp(30px, 3.5vw, 44px);
+  font-weight: 400;
+  color: #434343;
+}
+
+.board-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.board-card {
+  overflow: hidden;
+  border-radius: 8px;
+  background: #ededed;
+  color: #222;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.board-photo {
+  background: #e6e6e6;
+  line-height: 0;
+}
+
+.board-photo img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.board-info {
+  padding: 26px 24px 28px;
+}
+
+.board-info h2 {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 500;
+  color: inherit;
+}
+
+.board-info p {
+  margin: 0 0 26px;
+  font-size: 14px;
+  color: inherit;
+}
+
+.board-social {
+  display: inline-flex;
+  font-size: 20px;
+  color: inherit;
+}
+
+.board-card:hover,
+.board-card:focus-within {
+  background: #c02222;
+  color: #fff;
+}
+
+@media (max-width: 991px) {
+  .board-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .board-section .board-gear {
+    display: none;
+  }
+}
+
+@media (max-width: 575px) {
+  .board-section {
+    padding: 36px 0 48px;
+  }
+
+  .board-title {
+    margin-bottom: 32px;
+  }
+
+  .board-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+}
