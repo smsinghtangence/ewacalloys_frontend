@@ -10,36 +10,30 @@ function buildMobileMenu(
   productCategories,
   services,
   industries,
-  navLinks
+  navItems
 ) {
+  // Products is the only source with a real 2nd nesting level (category ->
+  // products); Services/Industries are flat, matching their catalog shape.
+  const childrenBySource = {
+    "product-categories": productCategories.map((category) => ({
+      label: category.name,
+      href: `#${category.slug}`,
+      children: category.products.map((product) => ({
+        label: product.name,
+        href: `#${product.slug}`,
+      })),
+    })),
+    services: services.map((service) => ({ label: service.name, href: `#${service.slug}` })),
+    industries: industries.map((industry) => ({ label: industry.name, href: `#${industry.slug}` })),
+  };
+
   return [
     { label: "Home", href: "#" },
-    {
-      label: "Products",
-      children: productCategories.map((category) => ({
-        label: category.name,
-        href: `#${category.slug}`,
-        children: category.products.map((product) => ({
-          label: product.name,
-          href: `#${product.slug}`,
-        })),
-      })),
-    },
-    {
-      label: "Services",
-      children: services.map((service) => ({
-        label: service.name,
-        href: `#${service.slug}`,
-      })),
-    },
-    {
-      label: "Industries",
-      children: industries.map((industry) => ({
-        label: industry.name,
-        href: `#${industry.slug}`,
-      })),
-    },
-    ...navLinks.map((link) => ({ label: link.label, href: link.href })),
+    ...navItems.map((item) =>
+      item.type === "dropdown"
+        ? { label: item.label, children: childrenBySource[item.source] }
+        : { label: item.label, href: item.href }
+    ),
     { label: "Contact", href: "/contact-us" },
   ];
 }
@@ -87,9 +81,9 @@ export default function MobileMenu({
   productCategories,
   services,
   industries,
-  navLinks,
+  navItems,
 }) {
-  const menu = buildMobileMenu(productCategories, services, industries, navLinks);
+  const menu = buildMobileMenu(productCategories, services, industries, navItems);
 
   return (
     <div className={`mobile-menu${open ? " active" : ""}`} id="mobileMenu">

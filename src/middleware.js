@@ -4,20 +4,28 @@ import { getSecuritySettings } from '@/lib/securityHeaders';
 export async function middleware(request) {
   const response = NextResponse.next();
   const settings = await getSecuritySettings();
+  const contentSecurityPolicy =
+    settings.contentSecurityPolicy &&
+    process.env.NODE_ENV === 'development' &&
+    !settings.contentSecurityPolicy.includes("'unsafe-eval'")
+      ? settings.contentSecurityPolicy.replace("script-src ", "script-src 'unsafe-eval' ")
+      : settings.contentSecurityPolicy;
 
-  // React's dev build uses eval() to rebuild debug callstacks, so allow it in
-  // development only — production keeps the policy exactly as configured.
-  const csp =
-    process.env.NODE_ENV === 'production'
-      ? settings.contentSecurityPolicy
-      : settings.contentSecurityPolicy.replace(/script-src([^;]*)/, "script-src$1 'unsafe-eval'");
+  const headers = {
+    'Content-Security-Policy': contentSecurityPolicy,
+    'Permissions-Policy': settings.permissionsPolicy,
+    'Referrer-Policy': settings.referrerPolicy,
+    'X-Frame-Options': settings.xFrameOptions,
+    'X-Content-Type-Options': settings.xContentTypeOptions,
+    'Strict-Transport-Security': settings.strictTransportSecurity,
+  };
 
-  response.headers.set('Content-Security-Policy', csp);
-  response.headers.set('Permissions-Policy', settings.permissionsPolicy);
-  response.headers.set('Referrer-Policy', settings.referrerPolicy);
-  response.headers.set('X-Frame-Options', settings.xFrameOptions);
-  response.headers.set('X-Content-Type-Options', settings.xContentTypeOptions);
-  response.headers.set('Strict-Transport-Security', settings.strictTransportSecurity);
+  // Only send headers the backend actually configured.
+  for (const [name, value] of Object.entries(headers)) {
+    if (value) {
+      response.headers.set(name, value);
+    }
+  }
 
   return response;
 }

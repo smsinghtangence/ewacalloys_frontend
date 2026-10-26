@@ -72,10 +72,7 @@ export default function SiteHeader({
           productCategories={productCategories}
           services={services}
           industries={industries}
-          productsDropdown={headerSettings.productsDropdown}
-          servicesDropdown={headerSettings.servicesDropdown}
-          industriesDropdown={headerSettings.industriesDropdown}
-          navLinks={headerSettings.navLinks}
+          navItems={headerSettings.navItems}
         />
 
         <button
@@ -95,7 +92,7 @@ export default function SiteHeader({
         productCategories={productCategories}
         services={services}
         industries={industries}
-        navLinks={headerSettings.navLinks}
+        navItems={headerSettings.navItems}
       />
     </>
   );

@@ -6,18 +6,22 @@ import FindTheRightSolution from "@/components/home/FindTheRightSolution";
 import IndustriesWeServe from "@/components/home/IndustriesWeServe";
 import WhyChooseEwac from "@/components/home/WhyChooseEwac";
 import UniSlider from "@/components/home/UniSlider";
-import { BLOG_CARDS, NEWS_CARDS, CASE_STUDY_CARDS } from "@/components/home/uniSliderData";
 import ClientsLogos from "@/components/home/ClientsLogos";
 import FaqSection from "@/components/home/FaqSection";
 import CtaBanner from "@/components/home/CtaBanner";
 import { getProductCategories, getServices, getIndustries } from "@/lib/catalog";
+import { getBlogPostCards, getNewsArticleCards, getCaseStudyCards } from "@/lib/insights";
 
 export default async function Home() {
-  const [productCategories, services, industries] = await Promise.all([
-    getProductCategories(),
-    getServices(),
-    getIndustries(),
-  ]);
+  const [productCategories, services, industries, blogCards, newsCards, caseStudyCards] =
+    await Promise.all([
+      getProductCategories(),
+      getServices(),
+      getIndustries(),
+      getBlogPostCards(),
+      getNewsArticleCards(),
+      getCaseStudyCards(),
+    ]);
 
   return (
     <>
@@ -32,7 +36,7 @@ export default async function Home() {
       <WhyChooseEwac />
       <UniSlider
         heading="Blogs"
-        cards={BLOG_CARDS}
+        cards={blogCards}
         footerLabel="View all Blogs"
         footerHref="/blogs"
         sectionClassName="blog"
@@ -40,7 +44,7 @@ export default async function Home() {
       />
       <UniSlider
         heading="News"
-        cards={NEWS_CARDS}
+        cards={newsCards}
         footerLabel="View all News"
         footerHref="/insights#news-pane"
         sectionClassName="red-color"
@@ -48,7 +52,7 @@ export default async function Home() {
       />
       <UniSlider
         heading="Case Studies"
-        cards={CASE_STUDY_CARDS}
+        cards={caseStudyCards}
         footerLabel="View all Case Studies"
         footerHref="/insights#case-pane"
         sectionClassName="case-study"

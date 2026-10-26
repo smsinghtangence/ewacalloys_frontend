@@ -1,29 +1,15 @@
 const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function resolveImage(media, alt) {
+export function resolveImage(media, alt) {
   if (!media?.url) {
     return { url: "", alt };
   }
-  return { url: `${STRAPI_URL}${media.url}`, alt };
+  // Local uploads are relative (/uploads/...) and proxied by the rewrite in
+  // next.config.ts; absolute URLs (e.g. a cloud upload provider) pass through.
+  return { url: media.url, alt };
 }
 
-async function fetchStrapi(path) {
+export async function fetchStrapi(path) {
   try {
     const response = await fetch(`${STRAPI_URL}${path}`, {
       next: { revalidate: 60 },
@@ -35,10 +21,6 @@ async function fetchStrapi(path) {
     return [];
   }
 }
-
-
-
-
 
 export async function getProductCategories() {
   const data = (await fetchStrapi(
@@ -85,9 +67,6 @@ export async function getIndustries() {
     image: resolveImage(industry.Image, industry.Name),
   }));
 }
-
-
-
 
 // Footer links that are still "#" in Strapi but already have a page on this site.
 const FOOTER_HREF_FALLBACKS = {
