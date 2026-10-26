@@ -11,7 +11,8 @@ if (typeof AOS !== 'undefined') {
   AOS.init({
     duration: 700,
     easing: 'ease-out-cubic',
-    once: true,
+    once: false,
+    mirror: true,
     offset: 80
   });
 }
