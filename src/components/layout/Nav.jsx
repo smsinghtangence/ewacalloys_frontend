@@ -68,7 +68,7 @@ export default function Nav({
     industries: industries.map((industry) => ({
       label: industry.name,
       image: industry.image.url,
-      href: `#${industry.slug}`,
+      href: `/our_industries/${industry.slug}`,
     })),
   };
 

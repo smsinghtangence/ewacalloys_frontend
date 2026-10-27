@@ -16,7 +16,7 @@ const DEFAULT_NAV_ITEMS = [
     description:
       "High-performance welding consumables and wear protection solutions for demanding environments.",
     exploreLabel: "Explore All",
-    exploreHref: "#",
+    exploreHref: "/products",
     source: "product-categories",
     cardVariant: "icon",
   },
@@ -27,7 +27,7 @@ const DEFAULT_NAV_ITEMS = [
     title: "Our Services",
     description: "Comprehensive on-site and in-house solutions across India's critical industrial sectors.",
     exploreLabel: "Explore All",
-    exploreHref: "#",
+    exploreHref: "/our_services/turnkey-solution",
     source: "services",
     cardVariant: "image",
   },
@@ -38,7 +38,7 @@ const DEFAULT_NAV_ITEMS = [
     title: "Industries We Serve",
     description: "Decades of expertise across India's most demanding industrial sectors.",
     exploreLabel: "Explore All",
-    exploreHref: "#",
+    exploreHref: "/our_industries/steel",
     source: "industries",
     cardVariant: "icon",
   },
@@ -52,6 +52,13 @@ const DEFAULT_HEADER_SETTINGS = {
   navItems: DEFAULT_NAV_ITEMS,
 };
 
+// Where "Explore All" goes when Strapi leaves the link empty.
+const EXPLORE_FALLBACK = {
+  "product-categories": "/products",
+  services: "/our_services/turnkey-solution",
+  industries: "/our_industries/steel",
+};
+
 function resolveNavItem(raw) {
   if (raw.__component === "nav.mega-dropdown") {
     if (!raw.Source) return null;
@@ -62,7 +69,7 @@ function resolveNavItem(raw) {
       title: raw.Title || "",
       description: raw.Description || "",
       exploreLabel: raw.ExploreLabel || "Explore All",
-      exploreHref: raw.ExploreHref || "#",
+      exploreHref: raw.ExploreHref || EXPLORE_FALLBACK[raw.Source] || "#",
       source: raw.Source,
       cardVariant: raw.CardVariant || "icon",
     };

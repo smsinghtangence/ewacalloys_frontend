@@ -24,7 +24,7 @@ function buildMobileMenu(
       })),
     })),
     services: services.map((service) => ({ label: service.name, href: `#${service.slug}` })),
-    industries: industries.map((industry) => ({ label: industry.name, href: `#${industry.slug}` })),
+    industries: industries.map((industry) => ({ label: industry.name, href: `/our_industries/${industry.slug}` })),
   };
 
   return [
