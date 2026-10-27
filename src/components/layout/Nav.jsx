@@ -52,6 +52,7 @@ export default function Nav({
   services,
   industries,
   navItems,
+  onSearch,
 }) {
   const cardsBySource = {
     "product-categories": productCategories.map((category) => ({
@@ -91,7 +92,7 @@ export default function Nav({
         )
       )}
 
-      <button className="search-btn" type="button" aria-label="Search">
+      <button className="search-btn" type="button" aria-label="Search" onClick={onSearch}>
         <svg viewBox="0 0 24 24">
           <circle cx="10" cy="10" r="6.5" stroke="#d32f2f" strokeWidth="1.8" />
           <line x1="15" y1="15" x2="20" y2="20" stroke="#d32f2f" strokeWidth="1.8" strokeLinecap="round" />

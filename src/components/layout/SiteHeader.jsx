@@ -5,6 +5,7 @@ import TopBar from "./TopBar";
 import Nav from "./Nav";
 import MobileMenu from "./MobileMenu";
 import Overlay from "./Overlay";
+import SearchBar from "./SearchBar";
 
 
 
@@ -18,6 +19,7 @@ export default function SiteHeader({
   const headerRef = useRef(null);
   const [isSticky, setIsSticky] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
     const updateStickyState = () => {
@@ -73,6 +75,7 @@ export default function SiteHeader({
           services={services}
           industries={industries}
           navItems={headerSettings.navItems}
+          onSearch={() => setSearchOpen((open) => !open)}
         />
 
         <button
@@ -84,6 +87,8 @@ export default function SiteHeader({
           ☰
         </button>
       </header>
+
+      <SearchBar open={searchOpen} onClose={() => setSearchOpen(false)} />
 
       <Overlay active={mobileMenuOpen} onClick={() => setMobileMenuOpen(false)} />
       <MobileMenu

@@ -71,19 +71,34 @@ export default function Footer({ columns }) {
 
           <div className="footer-col">
             <form className="newsletter-form" action="#" method="post">
-              <div className="newsletter-title">sign up for updates:</div>
+              <div className="newsletter-card">
+                <div className="newsletter-intro">
+                  <span className="newsletter-icon" aria-hidden="true">
+                    <i className="far fa-paper-plane" />
+                  </span>
+                  <div>
+                    <div className="newsletter-title">sign up for updates:</div>
+                    <p className="newsletter-sub">Product news, technical tips and event invites.</p>
+                  </div>
+                </div>
 
-              <div className="newsletter-row">
-                <input
-                  type="email"
-                  name="email"
-                  className="newsletter-input"
-                  placeholder="email address"
-                  required
-                />
-                <button type="submit" className="newsletter-btn">
-                  submit
-                </button>
+                <div className="newsletter-row">
+                  <label className="newsletter-field">
+                    <i className="far fa-envelope" aria-hidden="true" />
+                    <input
+                      type="email"
+                      name="email"
+                      className="newsletter-input"
+                      placeholder="email address"
+                      aria-label="Email address"
+                      required
+                    />
+                  </label>
+                  <button type="submit" className="newsletter-btn">
+                    submit
+                    <i className="fas fa-arrow-right" aria-hidden="true" />
+                  </button>
+                </div>
               </div>
 
               <p className="newsletter-terms">

@@ -2537,11 +2537,12 @@ color: #555;
     padding: 12px 16px;
     border-bottom: 2px solid transparent;
     color: #555;
-    font-size: 10px;
+    font-size: 14px;
     letter-spacing: 0.6px;
     text-transform: uppercase;
     text-decoration: none;
     white-space: nowrap;
+    font-weight:300
 }
 
 .ind-tabs a:hover {
@@ -2640,7 +2641,7 @@ color: #555;
 }
 
 .ind-applications {
-    padding: 10px 0 80px;
+    padding: 10px 0 0px;
     background: #fff;
 }
 
@@ -2697,15 +2698,15 @@ color: #555;
 
 .ind-acc-text p {
     margin: 0 0 12px;
-    font-size: 11.5px;
-    line-height: 1.7;
-    color: #777;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #212529;
 }
 
 .ind-acc-body.has-images {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
     gap: 28px;
 }
 
@@ -2755,12 +2756,13 @@ color: #555;
 .ind-acc-gallery {
     flex: 1 1 360px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
 }
 
 .ind-acc-gallery img {
     width: 100%;
+    aspect-ratio: 4 / 3;
     border-radius: 6px;
     object-fit: cover;
     display: block;
@@ -4907,5 +4909,849 @@ margin: 0 0 24px;
   .board-grid {
     grid-template-columns: minmax(0, 1fr);
     gap: 14px;
+  }
+}
+
+
+/* Turnkey Solution (/our_services/turnkey-solution) */
+.tk-title {
+  margin: 0 0 28px;
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 400;
+  text-align: center;
+  color: #434343;
+}
+
+.tk-heading {
+  margin: 0;
+  font-size: clamp(30px, 3.4vw, 46px);
+  font-weight: 400;
+  line-height: 1.05;
+  color: #434343;
+}
+
+.tk-underline {
+  width: 68px;
+  height: 2px;
+  background: #c02222;
+}
+
+.tk-panel {
+  box-sizing: border-box;
+  padding: 34px 38px;
+  color: #fff;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: justify;
+  font-weight: 300;
+}
+
+.tk-panel p {
+  margin: 0 0 14px;
+    font-weight: 300;
+}
+.tk-panel ol{
+    list-style: decimal;
+}
+.tk-panel p:last-child {
+  margin-bottom: 0;
+}
+
+.tk-panel ol,
+.tk-panel ul {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+
+.tk-panel ul {
+  list-style: disc;
+}
+
+.tk-panel--blue {
+  background: #004c86;
+}
+
+.tk-panel--red {
+  background: #c02222;
+}
+
+/* intro */
+.tk-intro {
+  position: relative;
+  padding: 70px 0 90px;
+  background:
+    linear-gradient(180deg, rgba(236, 238, 241, 0.88) 0%, rgba(227, 230, 234, 0.92) 100%),
+    url("/assets/images/turnkey/turnkey-bg.webp") center / cover no-repeat;
+  overflow: clip;
+}
+
+.tk-intro .tk-gear {
+  position: absolute;
+  left: -30px;
+  right: auto;
+  top: auto;
+  bottom: 50px;
+  margin: 0;
+  transform: scale(0.8);
+  transform-origin: bottom left;
+  pointer-events: none;
+  /* the gear SVGs are light grey (#c9c9c9) outlines; darken them so they show on the photo background */
+  opacity: 1;
+  filter: brightness(0.45) contrast(1.1);
+}
+
+.tk-intro .tk-gear img {
+  opacity: 1;
+}
+
+.tk-intro-stage,
+.tk-why-stage,
+.tk-team-stage {
+  position: relative;
+  z-index: 1;
+}
+
+.tk-intro-stage {
+  min-height: 540px;
+}
+
+.tk-intro-img,
+.tk-team-img,
+.tk-why-img {
+  overflow: hidden;
+  border-radius: 10px;
+  line-height: 0;
+}
+
+.tk-intro-img {
+  width: 57%;
+}
+
+.tk-intro-img img,
+.tk-team-img img,
+.tk-why-img img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.tk-intro-stage .tk-heading {
+  position: absolute;
+  left: 61%;
+  top: 18px;
+}
+
+.tk-intro-stage .tk-underline {
+  position: absolute;
+  left: 61.3%;
+  top: 112px;
+}
+
+.tk-intro-panel {
+  position: absolute;
+  right: 0;
+  top: 130px;
+  width: 46.4%;
+}
+
+/* what we do */
+.tk-what {
+  padding: 70px 0 80px;
+  background: #f7f7f7;
+}
+
+.tk-lead {
+margin: 0 auto 50px;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: center;
+  color: #555;
+  font-weight: 3;
+}
+
+.tk-what-slide {
+  position: relative;
+  padding: 0 14px 0 28px;
+}
+
+.tk-what-slide::before {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 0;
+  width: 2px;
+  height: 120px;
+  background: #c02222;
+}
+
+/* every card has the same shape; the photo fills it and is cropped to fit */
+.tk-what-card {
+  position: relative;
+  aspect-ratio: 693 / 473;
+  overflow: hidden;
+  border-radius: 10px;
+  line-height: 0;
+}
+
+.tk-what-card img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* darkens the bottom of the photo so the caption stays readable */
+.tk-what-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 45%, rgba(0, 0, 0, 0.75) 100%);
+  pointer-events: none;
+}
+
+.tk-what-card h3 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  margin: 0;
+  padding: 0 28px 22px 18px;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #fff;
+}
+
+/* industries */
+.tk-industries {
+  padding: 80px 0 90px;
+  background: linear-gradient(180deg, #0b3aa3 0%, #07307f 55%, #041c4a 100%);
+}
+
+.tk-industries-lead {
+  margin: 0 auto 50px;
+  font-size: 16px;
+  line-height: 1.6;
+  text-align: center;
+  color: #fff;
+  font-weight: 300;
+}
+
+.tk-ind-wrap {
+  position: relative;
+  padding: 0 4px;
+}
+
+.tk-ind-card {
+  position: relative;
+  margin: 0 8px;
+  overflow: hidden;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  border-radius: 18px;
+  line-height: 0;
+}
+
+.tk-ind-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 272 / 311;
+  object-fit: cover;
+}
+
+/* darkens the bottom of the photo so the name stays readable */
+.tk-ind-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, 0.6) 100%);
+  pointer-events: none;
+}
+
+.tk-ind-card h3 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  z-index: 1;
+  margin: 0;
+  font-size: clamp(20px, 1.9vw, 26px);
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: center;
+  color: #fff;
+}
+
+.tk-ind-arrow {
+  position: absolute;
+  top: 44%;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #333;
+  font-size: 13px;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.tk-ind-prev {
+  left: -56px;
+}
+
+.tk-ind-next {
+  right: -56px;
+  background: #a9b3c7;
+  color: #fff;
+}
+
+.tk-dots {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 40px;
+}
+
+.tk-dot {
+  display: block;
+  width: 32px;
+  height: 5px;
+  border: 0;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.tk-dot.is-active {
+  background: #c02222;
+}
+
+/* why we stand out */
+.tk-why {
+  padding: 70px 0 20px;
+  background: #fff;
+}
+
+.tk-why-stage {
+  min-height: 600px;
+}
+
+.tk-why-stage .tk-heading {
+  position: absolute;
+  left: 0;
+  top: 70px;
+}
+
+.tk-why-stage .tk-underline {
+  position: absolute;
+  left: 0.4%;
+  top: 130px;
+}
+
+.tk-why-panel {
+  position: absolute;
+  left: 0;
+  top: 154px;
+  z-index: 2;
+  width: 50.4%;
+}
+
+.tk-why-img {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 56.9%;
+}
+
+/* team details */
+.tk-team {
+  padding: 100px 0 70px;
+  background: #fff;
+}
+
+.tk-team-stage {
+  min-height: 520px;
+}
+
+.tk-team-img {
+  width: 57.3%;
+}
+
+.tk-team-stage .tk-heading {
+  position: absolute;
+  left: 61%;
+  top: 30px;
+}
+
+.tk-team-stage .tk-underline {
+  position: absolute;
+  left: 61.3%;
+  top: 88px;
+}
+
+.tk-team-panel {
+  position: absolute;
+  right: 0;
+  top: 138px;
+  width: 50.3%;
+}
+
+/* nationwide network */
+.tk-network {
+  padding: 30px 0 40px;
+  background: #fff;
+}
+
+.tk-network-box {
+  padding: 60px 40px 60px;
+  background: linear-gradient(180deg, rgba(236, 238, 241, 0.88) 0%, rgba(227, 230, 234, 0.92) 100%), url(../images/turnkey/nationwide-bg.webp) no-repeat center / cover;
+  text-align: center;
+}
+
+.tk-network-box p {
+margin: 0 auto;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* workshop locations */
+.tk-locations {
+  padding: 30px 0 90px;
+  background: #fff;
+}
+
+.tk-workshops {
+  display: flex;
+  align-items: center;
+  gap: 90px;
+}
+
+.tk-workshop-list {
+  flex: 0 0 31%;
+  max-height: 430px;
+  margin: 0;
+  padding: 10px 12px;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #f6f6f6;
+}
+
+.tk-workshop {
+  display: block;
+  width: 100%;
+  padding: 12px 14px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #222;
+  cursor: pointer;
+}
+
+.tk-workshop strong {
+  display: block;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+.tk-workshop.is-active {
+  background: #d8d8d8;
+}
+
+.tk-workshop.is-active strong {
+  color: #c02222;
+}
+
+.tk-map {
+  position: relative;
+  flex: 1;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.tk-map img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.tk-pin {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #004c86;
+  cursor: pointer;
+  transform: translate(-50%, -100%);
+}
+
+.tk-pin svg {
+  display: block;
+  width: 24px;
+  height: auto;
+}
+
+.tk-pin svg path {
+  fill: currentColor;
+}
+
+.tk-pin svg circle {
+  fill: #fff;
+}
+
+.tk-pin-base {
+  display: block;
+  width: 20px;
+  height: 3px;
+  margin-top: 1px;
+  background: currentColor;
+}
+
+.tk-pin:hover,
+.tk-pin:focus-visible {
+  color: #0a66b5;
+}
+
+.tk-pin.is-active {
+  z-index: 3;
+  color: #c02222;
+}
+
+/* popup beside the selected pin */
+.tk-map-pop {
+  position: absolute;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  min-width: 250px;
+  padding: 14px 22px;
+  box-sizing: border-box;
+  border: 1px solid #d9d9d9;
+  border-radius: 5px;
+  background: #f3f3f3;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  animation: tk-pop-in 0.18s ease-out;
+}
+
+/* its right edge sits just past the pin, directly under it */
+.tk-map-pop--left {
+  transform: translate(calc(-100% + 24px), 6px);
+}
+
+.tk-map-pop--right {
+  transform: translate(-24px, 6px);
+}
+
+.tk-map-pop-title {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tk-map-pop-title strong {
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: #c02222;
+}
+
+.tk-map-pop-title span {
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+}
+
+.tk-map-pop-stats {
+  display: grid;
+  gap: 3px;
+  margin: 0;
+}
+
+.tk-map-pop-stats div {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.tk-map-pop-stats dt {
+  font-size: 11px;
+  font-weight: 500;
+  color: #555;
+}
+
+.tk-map-pop-stats dd {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: #222;
+}
+
+@keyframes tk-pop-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 1399px) {
+  .tk-ind-prev {
+    left: -14px;
+  }
+
+  .tk-ind-next {
+    right: -14px;
+  }
+  .ind-intro-panel p{font-size: 14px;line-height: 1.6}
+}
+
+@media (max-width: 991px) {
+  .tk-intro,
+  .tk-why,
+  .tk-team {
+    padding: 40px 0;
+  }
+
+  .tk-intro .tk-gear {
+    display: none;
+  }
+
+  .tk-intro-stage,
+  .tk-why-stage,
+  .tk-team-stage {
+    min-height: 0;
+  }
+
+  .tk-intro-img,
+  .tk-team-img,
+  .tk-why-img {
+    width: 100%;
+  }
+
+  .tk-intro-stage .tk-heading,
+  .tk-intro-stage .tk-underline,
+  .tk-intro-panel,
+  .tk-why-stage .tk-heading,
+  .tk-why-stage .tk-underline,
+  .tk-why-panel,
+  .tk-why-img,
+  .tk-team-stage .tk-heading,
+  .tk-team-stage .tk-underline,
+  .tk-team-panel {
+    position: static;
+    width: auto;
+  }
+
+  .tk-intro-stage .tk-heading,
+  .tk-why-stage .tk-heading,
+  .tk-team-stage .tk-heading {
+    margin: 22px 0 10px;
+  }
+
+  .tk-intro-panel,
+  .tk-why-panel,
+  .tk-team-panel {
+    margin-top: 18px;
+    padding: 26px 22px;
+    text-align: left;
+  }
+
+  /* "Why We Stand Out": on tablet / phone the photo comes first, then the heading and text */
+  .tk-why-stage {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tk-why-img {
+    order: -1;
+    margin: 0 0 6px;
+    width: 100%;
+  }
+
+  .tk-what,
+  .tk-industries {
+    padding: 48px 0 56px;
+  }
+
+  .tk-ind-arrow {
+    display: none;
+  }
+
+  .tk-network-box {
+    padding: 40px 24px;
+  }
+
+  .tk-workshops {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .tk-workshop-list {
+    flex: none;
+    width: 100%;
+    max-height: 320px;
+  }
+}
+
+/* dots for the light "What we do" slider */
+.tk-dot--grey {
+  background: #c4c4c4;
+}
+
+.tk-dot--grey.is-active {
+  background: #444;
+}
+
+/* on small screens the popup can't sit beside the pin, so it docks to the bottom of the map */
+@media (max-width: 767px) {
+  .tk-map-pop {
+    left: 50% !important;
+    top: auto !important;
+    bottom: 0;
+    min-width: 0;
+    width: calc(100% - 16px);
+    justify-content: space-between;
+    transform: translateX(-50%);
+  }
+  .tk-heading br{display:none  }
+   .tk-heading{text-align: center;}
+  
+}
+
+/* Image hover animation: Turnkey Solution and Board of Directors photos zoom in slowly on hover */
+.tk-intro-img img,
+.tk-what-card img,
+.tk-ind-card img,
+.tk-why-img img,
+.tk-team-img img,
+.board-photo img {
+  transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1), filter 0.6s ease;
+  will-change: transform;
+}
+
+.tk-intro-img:hover img,
+.tk-what-card:hover img,
+.tk-ind-card:hover img,
+.tk-why-img:hover img,
+.tk-team-img:hover img,
+.board-card:hover .board-photo img {
+  transform: scale(1.08);
+}
+
+.tk-what-card:hover img,
+.tk-ind-card:hover img {
+  filter: brightness(1.08) saturate(1.1);
+}
+
+.board-photo {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tk-intro-img img,
+  .tk-what-card img,
+  .tk-ind-card img,
+  .tk-why-img img,
+  .tk-team-img img,
+  .board-photo img {
+    transition: none;
+  }
+
+  .tk-intro-img:hover img,
+  .tk-what-card:hover img,
+  .tk-ind-card:hover img,
+  .tk-why-img:hover img,
+  .tk-team-img:hover img,
+  .board-card:hover .board-photo img {
+    transform: none;
+  }
+}
+
+/* Search results (/search) */
+.search-results {
+  padding: 50px 0 70px;
+  background: #fff;
+}
+
+.search-results .container {
+  max-width: 860px;
+}
+
+.search-results h1 {
+  margin: 0 0 8px;
+  font-size: clamp(28px, 3.2vw, 40px);
+  font-weight: 400;
+  color: #434343;
+}
+
+.search-count {
+  margin: 0 0 28px;
+  font-size: 15px;
+  color: #777;
+}
+
+.search-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.search-list li {
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.search-list a {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 6px;
+  color: #222;
+  text-decoration: none;
+  transition: background 0.2s ease, padding-left 0.2s ease;
+}
+
+.search-list a:hover {
+  padding-left: 14px;
+  background: #f6f6f6;
+  color: #c02222;
+}
+
+.search-type {
+  flex: 0 0 82px;
+  padding: 3px 0;
+  border-radius: 999px;
+  background: #004c86;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.search-title {
+  font-size: 17px;
+}
+
+@media (max-width: 575.98px) {
+  .ind-acc-gallery {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
