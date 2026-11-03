@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import { PRODUCTS } from "@/components/products/productsData";
 
@@ -141,13 +142,13 @@ export default function ProductListing({ category }) {
                       </div>
                       <h3>{product.name}</h3>
                       <p>{product.description}</p>
-                      <a
-                        href="#"
+                      <Link
+                        href={`/products/${product.category}/${product.slug}`}
                         className={`product-tile-btn${product.bestSeller ? " is-red" : ""}`}
                         aria-label={`View details: ${product.name}`}
                       >
                         View Details <i className="fas fa-arrow-right" aria-hidden="true" />
-                      </a>
+                      </Link>
                     </div>
                   </article>
                 ))}

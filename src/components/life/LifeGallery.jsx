@@ -43,7 +43,7 @@ const SLOT = {
   2: { x: 234, w: 215, h: 302 },
 };
 
-export default function LifeGallery() {
+export default function LifeGallery({ showHeading = true }) {
   const [tab, setTab] = useState("all");
   const [index, setIndex] = useState(0);
   const [scale, setScale] = useState(1);
@@ -84,7 +84,7 @@ export default function LifeGallery() {
   return (
     <section className="life-gallery">
       <div className="container">
-        <h2 className="life-heading">Gallery</h2>
+        {showHeading && <h2 className="life-heading">Gallery</h2>}
 
         <ul className="nav insights-tabs life-gallery-tabs" role="tablist">
           {TABS.map((item) => (

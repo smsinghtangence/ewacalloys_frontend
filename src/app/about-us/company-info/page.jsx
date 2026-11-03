@@ -2,19 +2,45 @@ import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
+import BoardDirectors from "@/components/about/BoardDirectors";
 
 export const metadata = {
   title: "Board of Directors | EWAC",
   description: "Meet the Board of Directors of EWAC Alloys Limited.",
 };
 
-// Photos are in /public/assets/images/company-info/. Set `social` to a director's X (Twitter) profile URL.
+// Photos are in /public/assets/images/company-info/.
 const DIRECTORS = [
-  { name: "Rohit Gambhir", role: "Chairman", image: "rohit-gambhir.webp", social: "#" },
-  { name: "Debobroto Banerjee", role: "Director & Chief Executive Officer", image: "debobroto-banerjee.webp", social: "#" },
-  { name: "B Mohan", role: "Director", image: "b-mohan.webp", social: "#" },
-  { name: "Jagannathan Palle Venkata", role: "Director", image: "jagannathan-palle-venkata.webp", social: "#" },
-  { name: "Jaimon Antony", role: "Director", image: "jaimon-antony.webp", social: "#" },
+  {
+    name: "Rohit Gambhir",
+    role: "Chairman",
+    image: "rohit-gambhir.webp",
+    bio: "Provides leadership to the Board and contributes to the governance and long-term direction of EWAC Alloys Limited.",
+  },
+  {
+    name: "Debobroto Banerjee",
+    role: "Director & Chief Executive Officer",
+    image: "debobroto-banerjee.webp",
+    bio: "Leads the company as Chief Executive Officer and serves on the Board of EWAC Alloys Limited.",
+  },
+  {
+    name: "B Mohan",
+    role: "Director",
+    image: "b-mohan.webp",
+    bio: "Serves on the Board of EWAC Alloys Limited, contributing to its governance and oversight.",
+  },
+  {
+    name: "Jagannathan Palle Venkata",
+    role: "Director",
+    image: "jagannathan-palle-venkata.webp",
+    bio: "Serves on the Board of EWAC Alloys Limited, contributing to its governance and oversight.",
+  },
+  {
+    name: "Jaimon Antony",
+    role: "Director",
+    image: "jaimon-antony.webp",
+    bio: "Serves on the Board of EWAC Alloys Limited, contributing to its governance and oversight.",
+  },
 ];
 
 export default function CompanyInfoPage() {
@@ -40,28 +66,7 @@ export default function CompanyInfoPage() {
             Board of Directors
           </h1>
 
-          <div className="board-grid">
-            {DIRECTORS.map((director, index) => (
-              <article className="board-card" key={director.name} data-aos="fade-up" data-aos-delay={(index % 3) * 100}>
-                <div className="board-photo">
-                  <img src={`/assets/images/company-info/${director.image}`} alt={director.name} />
-                </div>
-                <div className="board-info">
-                  <h2>{director.name}</h2>
-                  <p>{director.role}</p>
-                  <a
-                    href={director.social}
-                    className="board-social"
-                    aria-label={`${director.name} on X`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <i className="fab fa-x-twitter" aria-hidden="true" />
-                  </a>
-                </div>
-              </article>
-            ))}
-          </div>
+          <BoardDirectors directors={DIRECTORS} />
         </div>
       </section>
 

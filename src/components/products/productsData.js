@@ -32,5 +32,6 @@ const SEEDS = [
 export const PRODUCTS = SEEDS.map((seed, index) => ({
   ...seed,
   id: index + 1,
+  slug: `${seed.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${index + 1}`,
   image: IMAGES[Math.floor(index / 4) % IMAGES.length],
 }));

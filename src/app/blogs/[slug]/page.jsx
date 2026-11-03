@@ -4,38 +4,59 @@ import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
-import { BLOG_POSTS } from "@/components/blogs/blogPosts";
+import BlogDetailContent from "@/components/blogs/BlogDetailContent";
+import { getBlogPost, getBlogPosts } from "@/lib/blogs";
 
-const AUTHOR = "enquiry@ewacalloys.com";
+export const revalidate = 60;
+export const dynamicParams = true;
 
 // Dates are stored as YYYY-MM-DD; format in UTC so the day never shifts with the server's timezone.
 function formatDate(iso, month, day) {
+  if (!iso) return "";
   return new Intl.DateTimeFormat("en-US", { month, day, year: "numeric", timeZone: "UTC" }).format(
     new Date(`${iso}T00:00:00Z`)
   );
 }
 
-export function generateStaticParams() {
-  return BLOG_POSTS.map((post) => ({ slug: post.slug }));
+function getPostDescription(post) {
+  const intro = post.blocks.find((block) => block.type === "html" || block.type === "text");
+  const text = intro?.text ?? intro?.html?.replace(/<[^>]+>/g, "") ?? "";
+  return text.slice(0, 160);
+}
+
+export async function generateStaticParams() {
+  const posts = await getBlogPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  const post = await getBlogPost(slug);
   if (!post) return {};
-  const firstParagraph = post.blocks.find((b) => b.type === "html")?.html.replace(/<[^>]+>/g, "") ?? "";
-  return { title: `${post.title} | EWAC`, description: firstParagraph.slice(0, 160) };
+  return { title: `${post.title} | EWAC`, description: getPostDescription(post) };
 }
 
 export default async function BlogDetailPage({ params }) {
   const { slug } = await params;
-  const post = BLOG_POSTS.find((p) => p.slug === slug);
+  const [post, posts] = await Promise.all([getBlogPost(slug), getBlogPosts()]);
   if (!post) notFound();
 
-  const latest = [...BLOG_POSTS]
+  const candidates = [...posts]
     .filter((p) => p.slug !== post.slug)
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 3);
+    .sort((a, b) => b.date.localeCompare(a.date));
+  const related = candidates.slice(0, 3);
+  const topics = [
+    { label: "Steel", slug: "steel" },
+    { label: "Cement", slug: "cement" },
+    { label: "Power", slug: "power" },
+    { label: "Sugar", slug: "sugar" },
+    { label: "Mining", slug: "mining" },
+    { label: "Oil & Gas Refineries", slug: "oil-gas-refineries" },
+    { label: "Tyre", slug: "tyre" },
+    { label: "Port", slug: "port" },
+    { label: "Road Transport", slug: "road-transport" },
+    { label: "Railways", slug: "railways", unavailable: true },
+  ];
 
   return (
     <>
@@ -59,49 +80,70 @@ export default async function BlogDetailPage({ params }) {
             <i className="fas fa-arrow-left" /> Back to Blog
           </Link>
 
-          <div className="blog-detail-layout">
-            <article className="blog-detail-main">
-              <div className="blog-detail-hero" data-aos="fade-up">
+          <article>
+            <header className="blog-article-header">
+              <div className="blog-article-heading">
+                <h1 className="blog-detail-title">{post.title}</h1>
+                <div className="blog-detail-meta">
+                  <span><time dateTime={post.date}>{formatDate(post.date, "long", "numeric")}</time></span>
+                  <span>{post.readMinutes} min read</span>
+                </div>
+              </div>
+              <div className="blog-article-hero">
                 <img src={post.image} alt={post.title} />
               </div>
+            </header>
 
-              <h1 className="blog-detail-title">{post.title}</h1>
-              <div className="blog-detail-meta">
-                <span>
-                  By <strong>{AUTHOR}</strong>
-                </span>
-                <span>{formatDate(post.date, "long", "numeric")}</span>
-                <span>{post.readMinutes} min read</span>
+            <BlogDetailContent blocks={post.blocks} title={post.title} />
+          </article>
+
+          <section className="blog-related-section" id="related-articles" aria-labelledby="related-articles-title">
+            <div className="blog-related-heading">
+              <div>
+                <span className="blog-related-eyebrow">Keep exploring</span>
+                <h2 id="related-articles-title">Related Articles</h2>
               </div>
+              <Link href="/blogs">View all articles <i className="fas fa-arrow-right" aria-hidden="true" /></Link>
+            </div>
+            <div className="blog-related-grid">
+              {related.map((item) => {
+                const excerpt = getPostDescription(item);
+                return (
+                  <Link className="blog-related-card" href={`/blogs/${item.slug}`} key={item.slug}>
+                    <div className="blog-related-image"><img src={item.image} alt="" loading="lazy" /></div>
+                    <div className="blog-related-card-body">
+                      <div className="blog-related-meta">
+                        <span><time dateTime={item.date}>{formatDate(item.date, "short", "2-digit")}</time></span>
+                      </div>
+                      <h3>{item.title}</h3>
+                      <p>{excerpt.slice(0, 132)}{excerpt.length > 132 ? "…" : ""}</p>
+                      <span className="blog-related-read">{item.readMinutes} min read <i className="fas fa-arrow-right" aria-hidden="true" /></span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
 
-              <div className="blog-detail-content">
-                {post.blocks.map((block, index) =>
-                  block.type === "h2" ? (
-                    <h2 key={index} dangerouslySetInnerHTML={{ __html: block.html }} />
-                  ) : (
-                    <div key={index} dangerouslySetInnerHTML={{ __html: block.html }} />
-                  )
-                )}
-              </div>
-            </article>
-
-            <aside className="blog-detail-sidebar">
-              <h3>Latest Posts</h3>
-              <ul>
-                {latest.map((item) => (
-                  <li key={item.slug}>
-                    <Link href={`/blogs/${item.slug}`}>
-                      <img src={item.image} alt="" />
-                      <span>
-                        <strong>{item.title}</strong>
-                        <small>{formatDate(item.date, "short", "2-digit")}</small>
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </aside>
-          </div>
+          <section className="blog-topics-section" aria-labelledby="blog-topics-title">
+            <h2 id="blog-topics-title">More Topics</h2>
+            <div className="blog-topic-links">
+              {topics.map((item) => {
+                const className = "blog-topic-link";
+                return item.unavailable ? (
+                  <span className={className} key={item.slug} aria-disabled="true">{item.label}</span>
+                ) : (
+                  <Link
+                    href={`/our_industries/${item.slug}`}
+                    className={className}
+                    key={item.slug}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
         </div>
       </section>
 

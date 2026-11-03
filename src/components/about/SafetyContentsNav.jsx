@@ -16,8 +16,9 @@ const DEFAULT_HELP = {
 export default function SafetyContentsNav({
   sections,
   help = DEFAULT_HELP,
+  activeImage,
 }) {
-  const [activeId, setActiveId] = useState(sections[0].id);
+  const [activeId, setActiveId] = useState(sections[0]?.id ?? null);
 
   // Highlight the section currently crossing the upper part of the viewport.
   useEffect(() => {
@@ -47,6 +48,14 @@ export default function SafetyContentsNav({
             <a
               href={`#${section.id}`}
               className={section.id === activeId ? "active" : ""}
+              aria-current={section.id === activeId ? "location" : undefined}
+              style={
+                section.id === activeId && activeImage
+                  ? {
+                      backgroundImage: `linear-gradient(rgba(0, 49, 88, 0.68), rgba(0, 49, 88, 0.68)), url("${activeImage}")`,
+                    }
+                  : undefined
+              }
               onClick={() => setActiveId(section.id)}
             >
               <span className="safety-contents-num">{String(index + 1).padStart(2, "0")}</span>

@@ -44,7 +44,7 @@ const DEFAULT_NAV_ITEMS = [
   },
   { type: "link", label: "About", href: "/about-us" },
   { type: "link", label: "Insights", href: "/insights" },
-  { type: "link", label: "Careers", href: "#" },
+  { type: "link", label: "Careers", href: "/careers" },
 ];
 
 const DEFAULT_HEADER_SETTINGS = {
@@ -75,7 +75,13 @@ function resolveNavItem(raw) {
     };
   }
   if (raw.__component === "nav.nav-link") {
-    return { type: "link", label: raw.Label || "", href: raw.Href || "#" };
+    const label = raw.Label || "";
+    const fallbackHref = label.trim().toLowerCase() === "careers" ? "/careers" : "#";
+    return {
+      type: "link",
+      label,
+      href: raw.Href && raw.Href !== "#" ? raw.Href : fallbackHref,
+    };
   }
   return null;
 }

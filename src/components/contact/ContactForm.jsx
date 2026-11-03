@@ -30,7 +30,7 @@ const INTERESTED_IN_OPTIONS = [
   "EWAC Reclamation Facility (ERF)",
 ];
 
-export default function ContactForm() {
+export default function ContactForm({ initialValues = {} }) {
   const router = useRouter();
   const [values, setValues] = useState({
     name: "",
@@ -39,6 +39,7 @@ export default function ContactForm() {
     country: "",
     interestedIn: "",
     message: "",
+    ...initialValues,
   });
   const [honeypot, setHoneypot] = useState("");
   const [error, setError] = useState(null);

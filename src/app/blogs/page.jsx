@@ -3,16 +3,23 @@ import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import PostListing from "@/components/shared/PostListing";
 import ConsultCta from "@/components/shared/ConsultCta";
-import { BLOG_LIST } from "@/components/blogs/blogData";
+import { getBlogPosts } from "@/lib/blogs";
 
 export const metadata = {
   title: "Blogs | EWAC",
   description: "Technical articles and insights from EWAC Alloys.",
 };
 
+export const revalidate = 60;
 
+export default async function BlogsPage() {
+  const posts = await getBlogPosts();
+  const cards = posts.map((post) => ({
+    image: post.image,
+    title: post.title,
+    href: `/blogs/${post.slug}`,
+  }));
 
-export default function BlogsPage() {
   return (
     <>
       <InnerBanner
@@ -33,7 +40,7 @@ export default function BlogsPage() {
         </div>
       </section>
     
-      <PostListing cards={BLOG_LIST} activeTab="blogs" />
+      <PostListing cards={cards} activeTab="blogs" />
 
       <ConsultCta welderDecoration />
     </>

@@ -1,106 +1,120 @@
-import Link from "next/link";
+import { marked } from "marked";
 import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import ConsultCta from "@/components/shared/ConsultCta";
+import SafetyContentsNav from "@/components/about/SafetyContentsNav";
+
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
+
+function addPolicySectionAnchors(html) {
+  const sections = [];
+  const usedIds = new Set();
+  const anchoredHtml = html.replace(/<h2\b[^>]*>([\s\S]*?)<\/h2>/gi, (heading, content) => {
+    const label = content
+      .replace(/<[^>]*>/g, "")
+      .replace(/&amp;/gi, "&")
+      .replace(/&lt;/gi, "<")
+      .replace(/&gt;/gi, ">")
+      .replace(/&quot;/gi, '"')
+      .replace(/&#39;|&apos;/gi, "'");
+    const baseId = label
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") || "section";
+    let id = `privacy-${baseId}`;
+    let suffix = 2;
+    while (usedIds.has(id)) {
+      id = `privacy-${baseId}-${suffix}`;
+      suffix += 1;
+    }
+
+    usedIds.add(id);
+    sections.push({ id, label });
+    return heading.replace(/<h2\b[^>]*>/i, `<h2 id="${id}">`);
+  });
+
+  return { html: anchoredHtml, sections };
+}
+
+async function getPrivacyPolicy() {
+  try {
+    const res = await fetch(`${STRAPI_URL}/api/privacy-policy?populate[0]=MetaSection&populate[1]=Banner`, { next: { revalidate: 60 } });
+    if (!res.ok) {
+      console.error(`Privacy policy API failed: ${res.status} ${res.url}`);
+      return null;
+    }
+    const { data } = await res.json();
+    if (!data?.Content) return null;
+    const html = await marked.parse(data.Content);
+    const content = addPolicySectionAnchors(html);
+
+    return {
+      title: data.Title,
+      updated: data.LastUpdated
+        ? new Date(data.LastUpdated).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+        : "",
+      html: content.html,
+      sections: content.sections,
+      meta: [].concat(data.MetaSection ?? [])[0],
+      banner: data.Banner?.url ?? null,
+    };
+  } catch (error) {
+    console.error("Privacy policy API error", error);
+    return null;
+  }
+}
+
 
 export async function generateMetadata() {
-  const policy = null;
+  const policy = await getPrivacyPolicy();
+  const meta = policy?.meta;
   return {
-    title: policy?.seoTitle ?? "Privacy Policy | EWAC",
-    description:
-      policy?.seoDescription ??
-      "How EWAC Alloys collects, uses and protects the personal information you share through this website.",
+    title: meta?.MetaTitle || "Privacy Policy | EWAC",
+    description: meta?.MetaDescription,
+    keywords: meta?.MetaKeyword,
+    robots: meta?.MetaRobots,
   };
 }
 
-const LAST_UPDATED = "23 October 2026";
-
 export default async function PrivacyPolicyPage() {
-  const policy = null;
+  const policy = await getPrivacyPolicy();
 
   return (
     <>
       <InnerBanner
-        src="/assets/images/legal/privacy-banner.webp"
-        mobileSrc="/assets/images/legal/privacy-banner-mobile.webp"
+        src={policy?.banner ?? "/assets/images/legal/privacy-banner.webp"}
+        mobileSrc={policy?.banner ?? "/assets/images/legal/privacy-banner-mobile.webp"}
         alt="Privacy Policy"
         className="blog-page-banner"
       />
-
       <section className="blog-toolbar">
         <div className="container">
           <Breadcrumb current="Privacy Policy" />
         </div>
       </section>
 
-      <section className="terms-simple">
+      <section className="terms-simple privacy-simple">
         <div className="container">
-          <h1>{policy?.title ?? "Privacy Policy"}</h1>
-          {(policy?.lastUpdated || LAST_UPDATED) && (
-            <p className="terms-updated">Last updated: {policy?.lastUpdated || LAST_UPDATED}</p>
-          )}
-
-          {policy ? (
-            <div dangerouslySetInnerHTML={{ __html: policy.html }} />
-          ) : (
-            <>
-              <p>
-                EWAC Alloys Limited (&ldquo;EWAC&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) respects your privacy.
-                This Privacy Policy explains how we collect, use and protect information when you visit this website
-                or contact us through it.
-              </p>
-
-              <h2>1. Information we collect</h2>
-              <p>
-                We may collect information you choose to provide, such as your name, email address, phone number,
-                company and the contents of your enquiry. When you browse the website, basic technical information
-                such as your browser, device and pages visited may also be collected.
-              </p>
-
-              <h2>2. How we use your information</h2>
-              <p>We use this information to:</p>
-              <ul>
-                <li>respond to your questions and provide the information or services you request;</li>
-                <li>operate, maintain and improve this website; and</li>
-                <li>protect the website and meet our legal obligations.</li>
-              </ul>
-
-              <h2>3. Cookies and similar technologies</h2>
-              <p>
-                This website may use cookies or similar technologies to support its operation and understand how it
-                is used. You can manage cookies through your browser settings; disabling them may affect some
-                website features.
-              </p>
-
-              <h2>4. Sharing and retention</h2>
-              <p>
-                We do not sell your personal information. We may share it with service providers who help us operate
-                the website or respond to you, or where disclosure is required by law. We retain information only
-                for as long as needed for these purposes or as required by law.
-              </p>
-
-              <h2>5. Security and external links</h2>
-              <p>
-                We use reasonable measures to protect information, but no method of transmission or storage is
-                completely secure. This website may link to third-party sites; their privacy practices are governed
-                by their own policies.
-              </p>
-
-              <h2>6. Your choices and this policy</h2>
-              <p>
-                You may contact us to ask about or request changes to personal information you have provided, subject
-                to applicable law. We may update this policy from time to time; the date above indicates when it was
-                last updated.
-              </p>
-
-              <h2>7. Contact us</h2>
-              <p>
-                For questions about this Privacy Policy or your information, email{" "}
-                <a href="mailto:enquiry@ewacalloys.com">enquiry@ewacalloys.com</a> or use our{" "}
-                <Link href="/contact-us">contact form</Link>.
-              </p>
-            </>
-          )}
+          <div className="safety-layout privacy-layout">
+            <SafetyContentsNav
+              sections={policy?.sections ?? []}
+              activeImage={policy?.banner ?? "/assets/images/legal/privacy-banner.webp"}
+              help={{
+                title: "Questions about privacy?",
+                text: "Contact our team if you have questions about your personal information.",
+              }}
+            />
+            <main className="safety-main privacy-main">
+              <h1>{policy?.title || "Privacy Policy"}</h1>
+              {policy?.updated && <p className="terms-updated">Last updated: {policy.updated}</p>}
+              {policy && (
+                <div
+                  className="privacy-content"
+                  dangerouslySetInnerHTML={{ __html: policy.html }}
+                />
+              )}
+            </main>
+          </div>
         </div>
       </section>
 
