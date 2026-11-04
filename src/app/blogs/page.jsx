@@ -1,9 +1,8 @@
-
 import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import PostListing from "@/components/shared/PostListing";
 import ConsultCta from "@/components/shared/ConsultCta";
-import { getBlogPosts } from "@/lib/blogs";
+import { fetchStrapi } from "@/lib/catalog";
 
 export const metadata = {
   title: "Blogs | EWAC",
@@ -13,12 +12,19 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function BlogsPage() {
-  const posts = await getBlogPosts();
-  const cards = posts.map((post) => ({
-    image: post.image,
-    title: post.title,
-    href: `/blogs/${post.slug}`,
-  }));
+  const blogs = await fetchStrapi("/api/blogs?sort=publishedAt:desc&pagination[pageSize]=100");
+
+  // Strapi has no card image field, so each card uses the first photo in the article
+  // (made relative so it loads through the /uploads rewrite in next.config.mjs).
+  const cards = blogs
+    .filter((blog) => blog.Heading && blog.slug)
+    .map((blog) => ({
+      image:
+        blog.Content?.match(/<img[^>]+src="(?:https?:\/\/[^/"]+)?(\/uploads\/[^"]+)"/i)?.[1] ??
+        "/assets/images/blogs/blogs-banner.webp",
+      title: blog.Heading,
+      href: `/blogs/${blog.slug}`,
+    }));
 
   return (
     <>
@@ -35,11 +41,11 @@ export default async function BlogsPage() {
             <div className="col-md-12">
               <Breadcrumb current="Blogs" />
             </div>
-          
+
           </div>
         </div>
       </section>
-    
+
       <PostListing cards={cards} activeTab="blogs" />
 
       <ConsultCta welderDecoration />

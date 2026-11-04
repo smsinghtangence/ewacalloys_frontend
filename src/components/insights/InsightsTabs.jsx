@@ -4,10 +4,10 @@ import { useEffect } from "react";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import BlogListCard from "@/components/shared/BlogListCard";
 import { useTabs } from "@/components/shared/useTabs";
-import { INSIGHTS_BLOG_CARDS, INSIGHTS_NEWS_CARDS, INSIGHTS_CASE_CARDS } from "@/components/blogs/blogData";
+import { INSIGHTS_NEWS_CARDS, INSIGHTS_CASE_CARDS } from "@/components/blogs/blogData";
 
-const TABS = [
-  { id: "blogs-pane", label: "Blogs", cards: INSIGHTS_BLOG_CARDS, viewAllLabel: "View all Blogs", viewAllHref: "/blogs" },
+// The Blogs tab's cards come from the page (Strapi); News and Case Studies are still built in.
+const OTHER_TABS = [
   { id: "news-pane", label: "News", cards: INSIGHTS_NEWS_CARDS, viewAllLabel: "View all News", viewAllHref: "/news" },
   {
     id: "case-pane",
@@ -18,7 +18,11 @@ const TABS = [
   },
 ];
 
-export default function InsightsTabs() {
+export default function InsightsTabs({ blogCards }) {
+  const TABS = [
+    { id: "blogs-pane", label: "Blogs", cards: blogCards, viewAllLabel: "View all Blogs", viewAllHref: "/blogs" },
+    ...OTHER_TABS,
+  ];
   const { activeTab, setActiveTab } = useTabs(TABS.map((tab) => tab.id));
 
   // Homepage "View all News"/"View all Case Studies" links point at

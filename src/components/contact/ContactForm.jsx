@@ -189,7 +189,7 @@ export default function ContactForm({ initialValues = {} }) {
         className="absolute left-[-9999px] h-0 w-0 opacity-0"
       />
 
-      {error && <p className="text-left text-sm font-medium text-[#c0392b]">{error}</p>}
+      {error && <p className="text-left text-base font-medium text-[#c0392b]">{error}</p>}
 
       <button type="submit" className="contact-submit-btn" disabled={submitting}>
         {submitting ? "Sending..." : "Submit"}

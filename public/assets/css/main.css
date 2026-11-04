@@ -1192,7 +1192,7 @@
 
 .about-history-caption h3 { position: absolute; left: 4.4%; top: 48.31%; margin: 0; font-size: clamp(16px, 1.67vw, 24px); }
 
-.about-history-caption p { position: absolute; left: 4.4%; top: 64.04%; width: 95.6%; margin: 0; }
+.about-history-caption p { position: absolute; left: 4.4%; top: 64.04%; width: 95.6%; margin: 0; font-size: 16px; }
 
 .about-history-photo-wrap { position: absolute; left: 58.33%; top: 35.3%; margin: 0; }
 
@@ -1340,7 +1340,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  font-size: 11px;
+  font-size: 16px;
   line-height: 1.3;
   padding: 0 8px;
 }
@@ -1409,7 +1409,7 @@
 }
 
 .fac-erf-intro {
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   color: #434343;
   margin: 0 0 24px;
@@ -1420,7 +1420,7 @@
   list-style: disc;
   margin: 0;
   padding-left: 18px;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
   font-weight: 300;
 }
@@ -1747,7 +1747,7 @@ color: #434343;
 
 .exports-modal-caption {
   margin: 8px 0 0;
-  font-size: 14px;
+  font-size: 16px;
   color: #434343;
 }
 
@@ -1872,7 +1872,7 @@ color: #434343;
 
 .safety-questions p {
   margin: 0 0 12px;
-  font-size: 11px;
+  font-size: 16px;
   line-height: 1.6;
   color: #555;
 }
@@ -1958,7 +1958,7 @@ color: #555;
   position: relative;
   padding-left: 14px;
   margin-bottom: 8px;
-  font-size: 12px;
+  font-size: 16px;
   line-height: 1.5;
   color: #444;
 }
@@ -2359,7 +2359,7 @@ color: #555;
     display: block;
     padding: 6px 0;
     color: #696975;
-    font-size: 11px;
+    font-size: 14px;
     line-height: 1.55;
     text-decoration: none;
     transition: color 160ms ease;
@@ -2372,14 +2372,14 @@ color: #555;
 
 .blog-article-toc p {
     color: #65717c;
-    font-size: 12px;
+    font-size: 16px;
 }
 
 .blog-article-content {
     min-width: 0;
     color: #4f5b66;
-    font-size: 14px;
-    line-height: 1.85;
+    font-size: 16px;
+    line-height: 1.6;
     overflow-wrap: anywhere;
 }
 
@@ -2614,7 +2614,7 @@ color: #555;
     margin: 0 0 15px;
     overflow: hidden;
     color: #697681;
-    font-size: 12px;
+    font-size: 16px;
     line-height: 1.6;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
@@ -2630,7 +2630,7 @@ color: #555;
 }
 
 .blog-topics-section {
-    max-width: 720px;
+    max-width: 70%;
     padding: 42px 0 8px;
 }
 
@@ -2657,7 +2657,7 @@ color: #555;
     border-radius: 3px;
     background: #f2f2f2;
     color: #333;
-    font-size: 9px;
+    font-size: 16px;
     line-height: 1.3;
     font-weight: 600;
     text-decoration: none;
@@ -3025,7 +3025,7 @@ color: #555;
 .product-tile-body p {
     flex: 1;
     margin: 0 0 12px;
-    font-size: 10.5px;
+    font-size: 16px;
     line-height: 1.5;
     color: #666;
 }
@@ -3164,7 +3164,7 @@ color: #555;
 
 .ind-intro-panel p {
     margin: 0 0 5px;
-    font-size: 12px;
+    font-size: 16px;
     line-height: 1.6;
     font-weight: 300;
 }
@@ -3414,7 +3414,7 @@ color: #555;
 
 .nf-text {
     margin: 0 0 28px;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.7;
     font-weight: 300;
     color: #666;
@@ -3643,7 +3643,7 @@ color: #555;
 .ty-text {
     max-width: 560px;
     margin: 0 0 38px;
-    font-size: 15px;
+    font-size: 16px;
     line-height: 1.7;
     font-weight: 300;
     color: #666;
@@ -3873,7 +3873,7 @@ color: #555;
     bottom: 16px;
     z-index: 2;
     margin: 0;
-    font-size: 12px;
+    font-size: 16px;
     line-height: 1.6;
     color: #fff;
     opacity: 0;
@@ -3990,7 +3990,7 @@ margin: 0 0 24px;
 
 .life-rewards-list p {
     margin: 0;
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.5;
     color: #666;
 }
@@ -4347,7 +4347,7 @@ margin: 0 0 24px;
 
 .terms-simple p,
 .terms-simple li {
-    font-size: 14px;
+    font-size: 16px;
     line-height: 1.75;
     color: #555;
 }
@@ -4427,7 +4427,7 @@ margin: 0 0 24px;
 .privacy-content p {
  margin: 0 0 14px;
  color: #555;
- font-size: 14px;
+ font-size: 16px;
  line-height: 1.7;
 }
 
@@ -4440,7 +4440,7 @@ margin: 0 0 24px;
 .privacy-content li {
  margin-bottom: 7px;
  color: #555;
- font-size: 14px;
+ font-size: 16px;
  line-height: 1.6;
 }
 
@@ -4669,7 +4669,7 @@ margin: 0 0 24px;
 
 .policy-modal-content p,
 .policy-modal-content li {
-    font-size: 13px;
+    font-size: 16px;
     line-height: 1.7;
     color: #555;
 }
@@ -5056,7 +5056,7 @@ margin: 0 0 24px;
           width: 100%;
           min-height: auto;
           padding: 24px 20px;
-          font-size: 14px;
+          font-size: 16px;
           top: auto;
       }
 
@@ -5186,7 +5186,7 @@ margin: 0 0 24px;
           top: auto;
           width: 100%;
           text-align: center;
-          font-size: 14px;
+          font-size: 16px;
       }
 
   .about-history-photo-wrap {
@@ -5480,7 +5480,7 @@ margin: 0 0 24px;
   display: flex;
   flex-direction: column;
   gap: 28px;
-  max-width: 960px;
+  max-width: 90%;
 }
 
 .board-card {
@@ -5537,7 +5537,7 @@ margin: 0 0 24px;
 
 .board-role {
   margin: 0 0 16px;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.35;
   transition: font-size 0.3s ease, line-height 0.3s ease, margin 0.3s ease;
 }
@@ -5593,7 +5593,7 @@ margin: 0 0 24px;
 
 .board-card.is-open .board-role {
   margin-bottom: 10px;
-  font-size: 13px;
+  font-size: 16px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -5665,7 +5665,7 @@ margin: 0 0 24px;
   }
 
   .board-role {
-    font-size: 13px;
+    font-size: 16px;
   }
 
   .board-card.is-open .board-info h2 {
@@ -5673,7 +5673,7 @@ margin: 0 0 24px;
   }
 
   .board-bio {
-    font-size: 12px;
+    font-size: 16px;
   }
 }
 
@@ -6284,7 +6284,7 @@ margin: 0 auto;
   .tk-ind-next {
     right: -14px;
   }
-  .ind-intro-panel p{font-size: 14px;line-height: 1.6}
+  .ind-intro-panel p{font-size: 16px;line-height: 1.6}
 }
 
 @media (max-width: 991px) {
@@ -6397,7 +6397,17 @@ margin: 0 auto;
   }
   .tk-heading br{display:none  }
    .tk-heading{text-align: center;}
-  
+}
+
+.board-committee-list {
+   position: relative;
+   z-index: 1;
+   display: grid;
+   gap: 42px;
+}
+
+.board-committee {
+   min-width: 0;
 }
 
 /* Image hover animation: Turnkey Solution and Board of Directors photos zoom in slowly on hover */
@@ -6628,7 +6638,7 @@ margin: 0 auto;
   align-items: center;
   gap: 12px;
   min-width: 130px;
-  font-size: 15px;
+  font-size: 16px;
   color: #444;
 }
 
@@ -6671,7 +6681,7 @@ margin: 0 auto;
 .pd-subtitle p {
   margin: 0;
   color: #212529;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .pd-app-img {
@@ -6962,7 +6972,7 @@ border: 0;
   max-width: 680px;
   margin: 14px auto 0;
   color: #666;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.7;
 }
 
@@ -7050,7 +7060,7 @@ border: 0;
 .career-card-copy p {
   margin: 0 0 20px;
   color: #666;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.65;
 }
 
@@ -7122,7 +7132,7 @@ border: 0;
   max-width: 620px;
   margin: 0;
   color: #666;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
 }
 
@@ -7225,7 +7235,7 @@ border: 0;
 .job-search-heading > p:last-child {
   margin: 0;
   color: #666;
-  font-size: 15px;
+  font-size: 16px;
   line-height: 1.6;
 }
 
@@ -7349,7 +7359,7 @@ border: 0;
   border-bottom: 1px solid #e6d7a4;
   background: #fff9e8;
   color: #695620;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.5;
 }
 
@@ -7372,7 +7382,7 @@ border: 0;
 .job-listing-main > p:last-child {
   margin: 0;
   color: #666;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 1.55;
 }
 
@@ -7503,7 +7513,7 @@ border: 0;
 .job-empty-state p {
   margin: 0;
   color: #666;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1.6;
 }
 
@@ -7552,5 +7562,385 @@ border: 0;
   .career-enquiry-panel {
     max-height: calc(100vh - 24px);
     padding: 30px 20px 24px;
+  }
+}
+
+/* Railways (/our_services/railways): reuses the Turnkey Solution (tk-) styles, plus the bits below */
+/* the heading is one line here, so the underline and panel sit higher than on the Turnkey page */
+.tk-intro-stage .rw-intro-underline {
+  top: 74px;
+}
+
+.tk-intro-stage .rw-intro-panel {
+  top: 96px;
+}
+
+.rw-record-title {
+  color: #fff;
+}
+
+.rw-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.rw-stat {
+  padding: 34px 20px;
+  border: 1.5px solid rgba(255, 255, 255, 0.75);
+  border-radius: 18px;
+  text-align: center;
+  color: #fff;
+}
+
+.rw-stat strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: clamp(30px, 3.2vw, 44px);
+  font-weight: 600;
+  line-height: 1.1;
+  font-size:30px!important;
+}
+.rw-stat strong  span{
+  font-size:30px!important;
+}
+.rw-stat strong::after {
+  content: "";
+  display: block;
+  width: 48px;
+  height: 2px;
+  margin: 14px auto 0;
+  background: #c02222;
+}
+
+.rw-stat span {
+  font-size: 17px;
+  font-weight: 300;
+}
+
+.rw-app {
+  padding: 80px 0;
+  background: #fff;
+}
+
+.rw-app--reverse {
+  background: #f7f7f7;
+}
+
+.rw-app-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 60px;
+}
+
+.rw-app--reverse .rw-app-stage {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+}
+
+.rw-app--reverse .rw-app-text {
+  order: 2;
+}
+
+.rw-app-text .tk-underline {
+  margin: 14px 0 24px;
+}
+
+.rw-gallery {
+  width: 100%;
+  max-width: 460px;
+  justify-self: center;
+}
+
+.rw-gallery-card {
+  overflow: hidden;
+  border-radius: 10px;
+  line-height: 0;
+  aspect-ratio: 324 / 280;
+}
+
+.rw-gallery-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.rw-gallery-card:hover img {
+  transform: scale(1.08);
+}
+
+.rw-dots {
+  margin-top: 22px;
+}
+
+@media (max-width: 991px) {
+  .rw-stats {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .rw-app {
+    padding: 48px 0;
+  }
+
+  .rw-app-stage,
+  .rw-app--reverse .rw-app-stage {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  /* photos first on tablet / phone, like the Turnkey page */
+  .rw-app-text,
+  .rw-app--reverse .rw-app-text {
+    order: 2;
+  }
+
+  .rw-app-panel {
+    padding: 26px 22px;
+    text-align: left;
+  }
+}
+
+@media (max-width: 767px) {
+  .rw-app-text .tk-heading {
+    text-align: center;
+  }
+
+  .rw-app-text .tk-underline {
+    margin: 14px auto 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rw-gallery-card img {
+    transition: none;
+  }
+
+  .rw-gallery-card:hover img {
+    transform: none;
+  }
+}
+
+/* EWAC Reclamation Facility (/our_services/ewac-reclamation-facility-erf): reuses the tk- and rw- styles, plus the bits below */
+.erf-panel-title {
+  margin: 0 0 12px;
+  font-size: 24px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.erf-intro-stage {
+  min-height: 460px;
+}
+
+/* tabs */
+.erf-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 44px;
+}
+
+.erf-tab {
+  padding: 12px 30px;
+  border: 1.5px solid #004c86;
+  border-radius: 40px;
+  background: #fff;
+  color: #004c86;
+  font-size: 17px;
+  cursor: pointer;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+.erf-tab:hover {
+  border-color: #c02222;
+  color: #c02222;
+}
+
+.erf-tab.is-active {
+  border-color: #c02222;
+  background: #c02222;
+  color: #fff;
+}
+
+/* photo on the left, the blue panel overlaps its right edge */
+.erf-tab-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  animation: tk-pop-in 0.3s ease-out;
+}
+
+.erf-tab-img {
+  overflow: hidden;
+  border-radius: 10px;
+  line-height: 0;
+  aspect-ratio: 3 / 2;
+}
+
+.erf-tab-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.erf-tab-panel {
+  position: relative;
+  z-index: 1;
+  margin-left: -70px;
+  text-align: left;
+}
+
+.erf-tab-panel h3 {
+  margin: 0 0 14px;
+  font-size: 26px;
+  font-weight: 400;
+  color: #fff;
+}
+
+.erf-tab-panel ul {
+  margin-bottom: 0;
+}
+
+.erf-tab-panel li + li {
+  margin-top: 6px;
+}
+
+/* expertise numbers */
+.erf-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.erf-stat img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  /* the icons are dark blue; turn them white on the blue background */
+  filter: brightness(0) invert(1);
+}
+
+/* facilities & jobs */
+.erf-facilities {
+  padding: 80px 0;
+  background: #fff;
+}
+
+.erf-fac-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.erf-fac-card {
+  padding: 30px 28px;
+  border-top: 3px solid #004c86;
+  border-radius: 10px;
+  background: #f7f7f7;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.erf-fac-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.erf-fac-card--wide {
+  grid-column: 1 / -1;
+}
+
+.erf-fac-card--wide > ul {
+  columns: 2;
+  column-gap: 48px;
+}
+
+.erf-fac-card--wide > ul > li {
+  break-inside: avoid;
+}
+
+.erf-fac-card h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #434343;
+}
+
+.erf-fac-card .tk-underline {
+  margin: 14px 0 18px;
+}
+
+.erf-fac-card ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style: disc;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.erf-fac-card li + li {
+  margin-top: 6px;
+}
+
+.erf-fac-card li ul {
+  margin-top: 6px;
+  list-style: circle;
+}
+
+/* gallery */
+.erf-gallery-slide {
+  padding: 0 12px;
+}
+
+.erf-gallery-card {
+  aspect-ratio: 3 / 2;
+}
+
+@media (max-width: 991px) {
+  .erf-intro-stage {
+    min-height: 0;
+  }
+
+  .erf-tab-pane {
+    grid-template-columns: 1fr;
+  }
+
+  .erf-tab-panel {
+    margin: -30px 16px 0;
+    padding: 26px 22px;
+  }
+
+  .erf-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .erf-facilities {
+    padding: 48px 0;
+  }
+
+  .erf-fac-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  .erf-tab {
+    padding: 10px 20px;
+    font-size: 15px;
+  }
+
+  .erf-fac-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .erf-fac-card--wide > ul {
+    columns: 1;
   }
 }

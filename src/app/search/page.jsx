@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import ConsultCta from "@/components/shared/ConsultCta";
-import { BLOG_POSTS } from "@/components/blogs/blogPosts";
+import { fetchStrapi } from "@/lib/catalog";
 import { INDUSTRY_DETAILS } from "@/components/industries/industryDetails";
 import { PRODUCTS } from "@/components/products/productsData";
 
@@ -36,7 +36,7 @@ const PRODUCT_ENTRIES = [...new Map(PRODUCTS.map((p) => [p.name, p])).values()].
   keywords: `${p.description} ${p.type} ${p.process}`,
 }));
 
-const INDEX = [
+const STATIC_INDEX = [
   ...PAGES.map((item) => ({ ...item, type: "Page" })),
   ...PRODUCT_ENTRIES.map((item) => ({ ...item, type: "Product" })),
   ...INDUSTRY_DETAILS.map((item) => ({
@@ -45,18 +45,12 @@ const INDEX = [
     keywords: item.description.join(" "),
     type: "Industry",
   })),
-  ...BLOG_POSTS.map((post) => ({
-    title: post.title,
-    href: `/blogs/${post.slug}`,
-    keywords: "",
-    type: "Blog",
-  })),
 ];
 
-function search(query) {
+function search(index, query) {
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (!words.length) return [];
-  return INDEX.map((item) => {
+  return index.map((item) => {
     const title = item.title.toLowerCase();
     const text = `${title} ${item.keywords.toLowerCase()}`;
     if (!words.every((word) => text.includes(word))) return null;
@@ -71,7 +65,13 @@ function search(query) {
 export default async function SearchPage({ searchParams }) {
   const { q } = await searchParams;
   const query = (Array.isArray(q) ? q[0] : q)?.trim() ?? "";
-  const results = search(query);
+  // Blogs come from Strapi, so they are added to the index on each request.
+  const blogs = await fetchStrapi("/api/blogs?fields[0]=Heading&fields[1]=slug&filters[slug][$notNull]=true&pagination[pageSize]=100");
+  const index = [
+    ...STATIC_INDEX,
+    ...blogs.map((blog) => ({ title: blog.Heading, href: `/blogs/${blog.slug}`, keywords: "", type: "Blog" })),
+  ];
+  const results = search(index, query);
 
   return (
     <>

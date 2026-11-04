@@ -5,7 +5,7 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import BlogDetailContent from "@/components/blogs/BlogDetailContent";
-import { getBlogPost, getBlogPosts } from "@/lib/blogs";
+import { fetchStrapi } from "@/lib/catalog";
 
 export const revalidate = 60;
 export const dynamicParams = true;
@@ -18,33 +18,65 @@ function formatDate(iso, month, day) {
   );
 }
 
-function getPostDescription(post) {
-  const intro = post.blocks.find((block) => block.type === "html" || block.type === "text");
-  const text = intro?.text ?? intro?.html?.replace(/<[^>]+>/g, "") ?? "";
-  return text.slice(0, 160);
+// Turns a Strapi blog into what this page shows. Images in the article are made relative so they load through
+// the /uploads rewrite in next.config.mjs, and the HTML is split at each <h2> for the "In This Article" list.
+function toPost(blog) {
+  const html = (blog.Content ?? "").replace(/https?:\/\/[^\s"'/]+\/uploads\//g, "/uploads/");
+  const blocks = [];
+  let last = 0;
+  for (const match of html.matchAll(/<h2[^>]*>([\s\S]*?)<\/h2>/gi)) {
+    const before = html.slice(last, match.index).trim();
+    if (before) blocks.push({ type: "html", html: before });
+    blocks.push({ type: "h2", html: match[1].trim() });
+    last = match.index + match[0].length;
+  }
+  if (html.slice(last).trim()) blocks.push({ type: "html", html: html.slice(last).trim() });
+
+  const text = html.replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
+  const meta = blog.MetaSection?.[0] ?? {};
+  return {
+    meta,
+    slug: blog.slug,
+    title: blog.Heading,
+    image: html.match(/<img[^>]+src="([^"]+)"/i)?.[1] ?? "/assets/images/blogs/blogs-banner.webp",
+    date: blog.Date || (blog.publishedAt ?? "").slice(0, 10),
+    readMinutes: blog.ReadTime || Math.max(1, Math.ceil(text.split(" ").length / 200)),
+    description: blog.Excerpt || text.slice(0, 160),
+    blocks,
+  };
 }
 
-export async function generateStaticParams() {
-  const posts = await getBlogPosts();
-  return posts.map((post) => ({ slug: post.slug }));
+async function getPost(slug) {
+  // Get the blog with this slug. populate=* also returns its SEO fields (MetaSection) and related_articles.
+  const blogs = await fetchStrapi(`/api/blogs?filters[slug][$eq]=${slug}&populate=*`);
+  const blog = blogs[0];
+
+  if (!blog) return null;
+  // Related articles are picked per blog in Strapi; populate=* returns their own fields, which is all a card needs.
+  const relatedArticles = (blog.related_articles ?? []).filter((item) => item.slug).map(toPost);
+  return { ...toPost(blog), relatedArticles };
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const post = await getBlogPost(slug);
+  const post = await getPost(slug);
   if (!post) return {};
-  return { title: `${post.title} | EWAC`, description: getPostDescription(post) };
+  const { MetaTitle, MetaDescription, MetaKeyword, MetaRobots } = post.meta;
+  return {
+    title: MetaTitle || `${post.title} | EWAC`,
+    description: MetaDescription || post.description,
+    ...(MetaKeyword && { keywords: MetaKeyword }),
+    ...(MetaRobots && { robots: MetaRobots }),
+  };
 }
 
 export default async function BlogDetailPage({ params }) {
   const { slug } = await params;
-  const [post, posts] = await Promise.all([getBlogPost(slug), getBlogPosts()]);
+  const post = await getPost(slug);
   if (!post) notFound();
 
-  const candidates = [...posts]
-    .filter((p) => p.slug !== post.slug)
-    .sort((a, b) => b.date.localeCompare(a.date));
-  const related = candidates.slice(0, 3);
+  // Only the articles picked in Strapi; the section is hidden when none are picked.
+  const related = post.relatedArticles.slice(0, 3);
   const topics = [
     { label: "Steel", slug: "steel" },
     { label: "Cement", slug: "cement" },
@@ -97,6 +129,7 @@ export default async function BlogDetailPage({ params }) {
             <BlogDetailContent blocks={post.blocks} title={post.title} />
           </article>
 
+          {related.length > 0 && (
           <section className="blog-related-section" id="related-articles" aria-labelledby="related-articles-title">
             <div className="blog-related-heading">
               <div>
@@ -107,7 +140,7 @@ export default async function BlogDetailPage({ params }) {
             </div>
             <div className="blog-related-grid">
               {related.map((item) => {
-                const excerpt = getPostDescription(item);
+                const excerpt = item.description;
                 return (
                   <Link className="blog-related-card" href={`/blogs/${item.slug}`} key={item.slug}>
                     <div className="blog-related-image"><img src={item.image} alt="" loading="lazy" /></div>
@@ -124,6 +157,7 @@ export default async function BlogDetailPage({ params }) {
               })}
             </div>
           </section>
+          )}
 
           <section className="blog-topics-section" aria-labelledby="blog-topics-title">
             <h2 id="blog-topics-title">More Topics</h2>
