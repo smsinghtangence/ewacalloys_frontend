@@ -7944,3 +7944,661 @@ border: 0;
     columns: 1;
   }
 }
+
+/* EWAC R&D Centre (/about-us/ewac-rd-centre): reuses the Exports page (exports-) styles, plus the bits below */
+.rd-title {
+  font-size: clamp(26px, 3.1vw, 32px);
+  font-weight: 400;
+  margin: 0 0 16px;
+  color: #fff;
+}
+
+/* key focus areas: pill list under the DSIR text */
+.rd-focus {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  max-width: 1000px;
+  margin: 10px auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rd-focus li {
+  padding: 10px 22px;
+  border: 1.5px solid #004c86;
+  border-radius: 40px;
+  background: #fff;
+  color: #004c86;
+  font-size: 16px;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.rd-focus li:hover {
+  background: #004c86;
+  color: #fff;
+}
+
+/* facility tabs: photo on the left, text on the right */
+.rd-facilities {
+  padding-top: 10px;
+}
+
+.rd-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: start;
+  gap: 40px;
+  padding: 30px;
+  border-radius: 12px;
+  background: #fff;
+  animation: tk-pop-in 0.3s ease-out;
+}
+
+.rd-pane-img {
+  overflow: hidden;
+  border-radius: 8px;
+  line-height: 0;
+  aspect-ratio: 3 / 2;
+}
+
+.rd-pane-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.rd-pane-img:hover img {
+  transform: scale(1.06);
+}
+
+.rd-pane-text h2 {
+  margin: 0 0 14px;
+  font-size: clamp(22px, 2.4vw, 28px);
+  font-weight: 400;
+  color: #434343;
+}
+
+.rd-pane-text h2::after {
+  content: "";
+  display: block;
+  width: 68px;
+  height: 2px;
+  margin-top: 12px;
+  background: #c02222;
+}
+
+.rd-pane-text p,
+.rd-pane-text li {
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 300;
+  color: #434343;
+}
+
+.rd-pane-text p {
+  margin: 0 0 12px;
+}
+
+.rd-pane-text ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.rd-pane-text li + li {
+  margin-top: 8px;
+}
+
+.rd-pane-text strong {
+  font-weight: 600!important;
+  color: #004c86;
+}
+
+/* "continues to strive for" icons */
+.rd-goals {
+  padding: 70px 0;
+  background: #fff;
+  text-align: center;
+}
+
+.rd-goals h2 {
+  margin: 0 0 40px;
+  font-size: clamp(28px, 3.5vw, 44px);
+  color: #434343;
+}
+
+.rd-goal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rd-goal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 34px 24px;
+  border-top: 3px solid #c02222;
+  border-radius: 10px;
+  background: #f5f5f5;
+  font-size: 18px;
+  line-height: 1.4;
+  color: #434343;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.rd-goal:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.rd-goal img {
+  width: 72px;
+  height: 72px;
+}
+
+@media (max-width: 991px) {
+  .rd-pane {
+    grid-template-columns: 1fr;
+    gap: 24px;
+    padding: 20px;
+  }
+
+  .rd-goal-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .rd-goals {
+    padding: 48px 0;
+  }
+}
+
+@media (max-width: 575px) {
+  .rd-title {
+    text-align: center;
+  }
+
+  .rd-goal-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rd-pane-img img {
+    transition: none;
+  }
+
+  .rd-pane-img:hover img {
+    transform: none;
+  }
+}
+
+/* R&D Centre lab photo slider under the focus areas; 30 photos = 30 dots, so let them wrap on small screens */
+.rd-gallery {
+  margin-top: 50px;
+}
+
+.rd-gallery .tk-dots {
+  flex-wrap: wrap;
+  row-gap: 8px;
+  margin-top: 24px;
+}
+
+.rd-gallery .tk-dot {
+  width: 18px;
+}
+
+/* PhotoGallery click-to-enlarge (Fancybox-style viewer); used on the R&D Centre and ERF pages */
+.photo-gallery-open {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.photo-gallery-zoom {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 76, 134, 0.45);
+  color: #fff;
+  font-size: 30px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.photo-gallery-open:hover .photo-gallery-zoom,
+.photo-gallery-open:focus-visible .photo-gallery-zoom {
+  opacity: 1;
+}
+
+.photo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10050;
+  display: flex;
+  align-items: center;
+  animation: tk-pop-in 0.2s ease-out;
+}
+
+.photo-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 14, 20, 0.92);
+}
+
+.photo-lightbox-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  color: #fff;
+}
+
+.photo-lightbox-count {
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+.photo-lightbox-close,
+.photo-lightbox-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.photo-lightbox-close:hover,
+.photo-lightbox-arrow:hover {
+  background: #c02222;
+}
+
+.photo-lightbox-stage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+.photo-lightbox-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  height: 100dvh;
+  padding: 70px 80px;
+  box-sizing: border-box;
+}
+
+.photo-lightbox-slide img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.photo-lightbox-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  transform: translateY(-50%);
+}
+
+.photo-lightbox-prev {
+  left: 20px;
+}
+
+.photo-lightbox-next {
+  right: 20px;
+}
+
+@media (max-width: 767px) {
+  .photo-lightbox-slide {
+    padding: 70px 12px;
+  }
+
+  /* swipe instead; small arrows at the bottom so they don't cover the photo */
+  .photo-lightbox-arrow {
+    top: auto;
+    bottom: 20px;
+    transform: none;
+  }
+
+  .photo-lightbox-prev {
+    left: calc(50% - 54px);
+  }
+
+  .photo-lightbox-next {
+    right: calc(50% - 54px);
+  }
+}
+
+/* Training (/about-us/trainings): reuses the Exports (exports-), R&D (rd-) and ERF stat styles, plus the bits below */
+/* EWAC Institute numbers on a blue band */
+.tr-institute {
+  padding: 70px 0;
+  background: linear-gradient(180deg, #0b3aa3 0%, #07307f 55%, #041c4a 100%);
+}
+
+.tr-stats {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.tr-facilities {
+  margin-top: 0;
+}
+
+/* methodology: 4 numbered steps joined by arrows */
+.tr-method {
+  padding: 70px 0;
+  background: #fff;
+}
+
+.tr-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 36px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tr-step {
+  position: relative;
+  text-align: center;
+}
+
+/* arrow between steps: a red chevron drawn with borders (no icon font needed) */
+.tr-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 34%;
+  right: -24px;
+  width: 12px;
+  height: 12px;
+  border-top: 3px solid #c02222;
+  border-right: 3px solid #c02222;
+  transform: rotate(45deg);
+}
+
+.tr-step-img {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  line-height: 0;
+  aspect-ratio: 4 / 3;
+}
+
+.tr-step-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.tr-step:hover .tr-step-img img {
+  transform: scale(1.08);
+}
+
+.tr-step-num {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #c02222;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.tr-step h3 {
+  margin: 18px 0 0;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #434343;
+}
+
+/* savings: red band with 4 icon items */
+.tr-savings {
+  padding: 60px 0;
+  background: #c02222;
+  color: #fff;
+  text-align: center;
+}
+
+.tr-savings h2 {
+  max-width: 900px;
+  margin: 0 auto 36px;
+  font-size: clamp(24px, 2.6vw, 34px);
+  font-weight: 400;
+  line-height: 1.3;
+  color: #fff;
+}
+
+.tr-savings-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tr-savings-grid li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 18px;
+  border: 1.5px solid rgba(255, 255, 255, 0.6);
+  border-radius: 12px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.tr-savings-grid i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #fff;
+  color: #c02222;
+  font-size: 24px;
+}
+
+/* types of training: photo beside the list, then the "Click to Institute" panel */
+.tr-types {
+  padding: 80px 0;
+  background: #fff;
+}
+
+.tr-types-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 50px;
+}
+
+.tr-types-img {
+  overflow: hidden;
+  border-radius: 10px;
+  line-height: 0;
+}
+
+.tr-types-img img {
+  width: 100%;
+  height: auto;
+}
+
+.tr-types-text h2 {
+  margin: 0;
+  font-size: clamp(28px, 3.1vw, 40px);
+  font-weight: 400;
+  color: #434343;
+}
+
+.tr-types-text .tk-underline {
+  margin: 14px 0 20px;
+}
+
+.tr-types-text p,
+.tr-types-text li {
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 300;
+  color: #434343;
+}
+
+.tr-types-text p {
+  margin: 0 0 12px;
+}
+
+.tr-types-text ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style: disc;
+}
+
+.tr-types-text li + li {
+  margin-top: 8px;
+}
+
+.tr-databank {
+  margin-top: 50px;
+  border-radius: 10px;
+}
+
+/* CSR: numbered cards */
+.tr-csr {
+  margin-top: 0;
+}
+
+.tr-csr-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
+}
+
+.tr-csr-card {
+  padding: 28px 26px;
+  border-top: 3px solid #004c86;
+  border-radius: 10px;
+  background: #fff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tr-csr-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.tr-csr-num {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1;
+  color: #c02222;
+}
+
+.exports-history .tr-csr-card p {
+  max-width: none;
+  margin: 0;
+  text-align: left;
+}
+
+@media (max-width: 991px) {
+  .tr-institute,
+  .tr-method,
+  .tr-types {
+    padding: 48px 0;
+  }
+
+  .tr-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .tr-steps,
+  .tr-savings-grid,
+  .tr-csr-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tr-step::after {
+    display: none;
+  }
+
+  .tr-types-row {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .tr-databank {
+    margin-top: 30px;
+    padding: 26px 22px;
+    text-align: left;
+  }
+}
+
+@media (max-width: 575px) {
+  .tr-steps,
+  .tr-savings-grid,
+  .tr-csr-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tr-types-text h2 {
+    text-align: center;
+  }
+
+  .tr-types-text .tk-underline {
+    margin: 14px auto 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-step-img img {
+    transition: none;
+  }
+
+  .tr-step:hover .tr-step-img img {
+    transform: none;
+  }
+}

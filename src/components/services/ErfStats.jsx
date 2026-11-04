@@ -2,23 +2,24 @@
 
 import { useCountUp } from "@/components/shared/useCountUp";
 
-function Stat({ icon, target, label }) {
+function Stat({ icon, target, label, suffix = "+" }) {
   const { ref, display } = useCountUp(target);
   return (
     <div className="rw-stat erf-stat">
-      <img src={icon} alt="" />
+      {icon && <img src={icon} alt="" />}
       <strong>
-        <span ref={ref}>{display}</span>+
+        <span ref={ref}>{display}</span>
+        {suffix}
       </strong>
       <span>{label}</span>
     </div>
   );
 }
 
-/** "Expertise through experience" numbers on the ERF page; they count up when scrolled into view. */
-export default function ErfStats({ stats }) {
+/** Count-up numbers (ERF "Expertise through experience", Trainings "EWAC Institute"); they count up when scrolled into view. */
+export default function ErfStats({ stats, className = "erf-stats" }) {
   return (
-    <div className="rw-stats erf-stats">
+    <div className={`rw-stats ${className}`}>
       {stats.map((stat) => (
         <Stat key={stat.label} {...stat} />
       ))}

@@ -15,6 +15,7 @@ function CardCarouselInner(
     slideClassName = "basis-full",
     loop = false,
     align = "start",
+    startIndex = 0,
     autoplayMs,
     pauseOnHover = true,
     dots = false,
@@ -26,8 +27,8 @@ function CardCarouselInner(
   },
   ref
 ) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop, align });
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop, align, startIndex });
+  const [selectedIndex, setSelectedIndex] = useState(startIndex);
   const [scrollSnaps, setScrollSnaps] = useState([]);
   const pausedRef = useRef(false);
   const onSelectRef = useRef(onSelect);

@@ -4,7 +4,7 @@ import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import ErfTabs from "@/components/services/ErfTabs";
 import ErfStats from "@/components/services/ErfStats";
-import ErfGallery from "@/components/services/ErfGallery";
+import PhotoGallery from "@/components/shared/PhotoGallery";
 
 export const metadata = {
   title: "EWAC Reclamation Facility (ERF) | EWAC",
@@ -223,7 +223,7 @@ export default function ErfPage() {
       <section className="tk-what erf-gallery">
         <div className="container">
           <h2 className="tk-title">Gallery</h2>
-          <ErfGallery images={GALLERY} />
+          <PhotoGallery images={GALLERY} alt="Job done at the EWAC Reclamation Facility" />
         </div>
       </section>
 
