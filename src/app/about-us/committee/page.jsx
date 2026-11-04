@@ -40,6 +40,8 @@ const COMMITTEES = [
 ];
 
 
+
+
 export default function CommitteePage() {
   return (
     <>
