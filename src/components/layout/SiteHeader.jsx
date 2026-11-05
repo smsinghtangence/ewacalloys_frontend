@@ -66,7 +66,7 @@ export default function SiteHeader({
       <header className={`header${isSticky ? " is-sticky" : ""}`} ref={headerRef}>
         <div className="logo">
           <a href="/">
-            <img src="/assets/images/ewac.png" alt="EWAC" />
+            <img src={headerSettings.logo.url} alt={headerSettings.logo.alt} />
           </a>
         </div>
 
@@ -75,6 +75,8 @@ export default function SiteHeader({
           services={services}
           industries={industries}
           navItems={headerSettings.navItems}
+          showSearch={headerSettings.showSearch}
+          contact={headerSettings.contact}
           onSearch={() => setSearchOpen((open) => !open)}
         />
 
@@ -98,6 +100,7 @@ export default function SiteHeader({
         services={services}
         industries={industries}
         navItems={headerSettings.navItems}
+        contact={headerSettings.contact}
       />
     </>
   );

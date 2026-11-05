@@ -48,9 +48,20 @@ const DEFAULT_NAV_ITEMS = [
 ];
 
 const DEFAULT_HEADER_SETTINGS = {
+  logo: { url: "/assets/images/ewac.png", alt: "EWAC" },
+  showSearch: true,
+  contact: { label: "Contact", href: "/contact-us" },
   topBar: DEFAULT_TOP_BAR,
   navItems: DEFAULT_NAV_ITEMS,
 };
+
+function resolveLink(raw) {
+  return {
+    label: raw.Label || "",
+    href: raw.Href || "#",
+    newTab: Boolean(raw.OpenInNewTab),
+  };
+}
 
 // Where "Explore All" goes when Strapi leaves the link empty.
 const EXPLORE_FALLBACK = {
@@ -72,6 +83,20 @@ function resolveNavItem(raw) {
       exploreHref: raw.ExploreHref || EXPLORE_FALLBACK[raw.Source] || "#",
       source: raw.Source,
       cardVariant: raw.CardVariant || "icon",
+      // Cards picked in Strapi override Source; when empty, the cards are pulled from the Source collection.
+      cards: (raw.Cards ?? []).map((card) => ({
+        label: card.Label || "",
+        href: card.Href || "#",
+        image: card.Image?.url || "",
+      })),
+    };
+  }
+  if (raw.__component === "nav.simple-dropdown") {
+    return {
+      type: "simple-dropdown",
+      label: raw.Label || "",
+      href: raw.Href || "#",
+      links: (raw.Links ?? []).map(resolveLink).filter((link) => link.label),
     };
   }
   if (raw.__component === "nav.nav-link") {
@@ -81,6 +106,7 @@ function resolveNavItem(raw) {
       type: "link",
       label,
       href: raw.Href && raw.Href !== "#" ? raw.Href : fallbackHref,
+      newTab: Boolean(raw.OpenInNewTab),
     };
   }
   return null;
@@ -104,6 +130,15 @@ export async function getHeaderSettings() {
       : [];
 
     return {
+      logo: {
+        url: data?.Logo?.url || DEFAULT_HEADER_SETTINGS.logo.url,
+        alt: data?.LogoAlt || DEFAULT_HEADER_SETTINGS.logo.alt,
+      },
+      showSearch: data?.ShowSearch ?? DEFAULT_HEADER_SETTINGS.showSearch,
+      contact: {
+        label: data?.ContactLabel || DEFAULT_HEADER_SETTINGS.contact.label,
+        href: data?.ContactHref || DEFAULT_HEADER_SETTINGS.contact.href,
+      },
       topBar: {
         label: data?.TopBar?.Label || DEFAULT_TOP_BAR.label,
         message: data?.TopBar?.Message || DEFAULT_TOP_BAR.message,

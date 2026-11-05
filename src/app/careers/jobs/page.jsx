@@ -1,13 +1,16 @@
 import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
-import JobSearch from "@/components/careers/JobSearch";
+import CareerApplicationForm from "@/components/careers/CareerApplicationForm";
 
 export const metadata = {
-  title: "Find Jobs | Careers at EWAC",
-  description: "Search career opportunities at EWAC Alloys by keyword, job title, or location.",
+  title: "Apply | Careers at EWAC",
+  description: "Apply to EWAC Alloys as an experienced professional or for early careers.",
 };
 
-export default function CareerJobsPage() {
+// ?type=experienced or ?type=early (from the Careers page cards) opens that form's tab.
+export default async function CareerJobsPage({ searchParams }) {
+  const { type } = await searchParams;
+
   return (
     <>
       <InnerBanner
@@ -19,11 +22,21 @@ export default function CareerJobsPage() {
 
       <section className="blog-toolbar">
         <div className="container">
-          <Breadcrumb current="Find Jobs" trail={[{ label: "Careers", href: "/careers" }]} />
+          <Breadcrumb current="Apply" trail={[{ label: "Careers", href: "/careers" }]} />
         </div>
       </section>
 
-      <JobSearch />
+      <section className="career-apply-section">
+        <div className="container">
+          <div className="career-apply-heading">
+            <p className="careers-eyebrow">Take the next step</p>
+            <h1>Apply to EWAC</h1>
+            <p>Choose your career path, fill in your details and upload your resume. Fields marked * are required.</p>
+          </div>
+
+          <CareerApplicationForm initialType={type} />
+        </div>
+      </section>
     </>
   );
 }
