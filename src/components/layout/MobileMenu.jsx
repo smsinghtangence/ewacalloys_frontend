@@ -10,17 +10,18 @@ function buildMobileMenu(
   productCategories,
   services,
   industries,
-  navItems
+  navItems,
+  contact
 ) {
   // Products is the only source with a real 2nd nesting level (category ->
   // products); Services/Industries are flat, matching their catalog shape.
   const childrenBySource = {
     "product-categories": productCategories.map((category) => ({
       label: category.name,
-      href: `#${category.slug}`,
+      href: `/products/${category.slug}`,
       children: category.products.map((product) => ({
         label: product.name,
-        href: `#${product.slug}`,
+        href: `/products/${category.slug}/${product.slug}`,
       })),
     })),
     services: services.map((service) => ({ label: service.name, href: `#${service.slug}` })),
@@ -29,12 +30,27 @@ function buildMobileMenu(
 
   return [
     { label: "Home", href: "#" },
-    ...navItems.map((item) =>
-      item.type === "dropdown"
-        ? { label: item.label, children: childrenBySource[item.source] }
-        : { label: item.label, href: item.href }
-    ),
-    { label: "Contact", href: "/contact-us" },
+    ...navItems.map((item) => {
+      if (item.type === "simple-dropdown") {
+        return { label: item.label, children: item.links };
+      }
+      if (item.type === "dropdown") {
+        // Cards picked in Strapi win; a product-category card keeps its products as a sub-level when its
+        // link matches a category page.
+        const sourceChildren = childrenBySource[item.source] ?? [];
+        const children =
+          item.cards.length > 0
+            ? item.cards.map((card) => ({
+                label: card.label,
+                href: card.href,
+                children: sourceChildren.find((child) => child.href === card.href)?.children,
+              }))
+            : sourceChildren;
+        return { label: item.label, children };
+      }
+      return { label: item.label, href: item.href, newTab: item.newTab };
+    }),
+    ...(contact?.label ? [{ label: contact.label, href: contact.href }] : []),
   ];
 }
 
@@ -47,7 +63,9 @@ function MenuList({ nodes, level }) {
         if (!node.children) {
           return (
             <li key={node.label}>
-              <a href={node.href ?? "#"}>{node.label}</a>
+              <a href={node.href ?? "#"} {...(node.newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                {node.label}
+              </a>
             </li>
           );
         }
@@ -82,8 +100,9 @@ export default function MobileMenu({
   services,
   industries,
   navItems,
+  contact,
 }) {
-  const menu = buildMobileMenu(productCategories, services, industries, navItems);
+  const menu = buildMobileMenu(productCategories, services, industries, navItems, contact);
 
   return (
     <div className={`mobile-menu${open ? " active" : ""}`} id="mobileMenu">

@@ -2,7 +2,10 @@
 
 import { useState } from "react";
 
-/** R&D Centre facility tabs: red tabs like the Exports page, then a photo beside the selected facility's text. */
+/**
+ * R&D Centre facility tabs: red tabs like the Exports page, then a photo beside the selected facility's text.
+ * On phones the tabs are replaced by a dropdown (the tabs wrap into an untidy block at that width).
+ */
 export default function RdFacilities({ facilities }) {
   const [activeId, setActiveId] = useState(facilities[0].id);
   const facility = facilities.find((f) => f.id === activeId) ?? facilities[0];
@@ -10,7 +13,28 @@ export default function RdFacilities({ facilities }) {
   return (
     <section className="exports-explorer rd-facilities">
       <div className="container">
-        <ul className="exports-tabs" role="tablist">
+        <div className="rd-dropdown-wrap">
+          <label htmlFor="rd-facility-select" className="visually-hidden">
+            Choose a facility
+          </label>
+          <select
+            id="rd-facility-select"
+            className="rd-dropdown"
+            value={activeId}
+            onChange={(event) => setActiveId(event.target.value)}
+          >
+            {facilities.map((f) => (
+              <option value={f.id} key={f.id}>
+                {f.title}
+              </option>
+            ))}
+          </select>
+          <span className="rd-dropdown-arrow" aria-hidden="true">
+            <i className="fas fa-chevron-down" />
+          </span>
+        </div>
+
+        <ul className="exports-tabs rd-tabs" role="tablist">
           {facilities.map((f) => (
             <li key={f.id} role="presentation">
               <button

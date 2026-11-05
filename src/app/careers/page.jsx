@@ -8,13 +8,14 @@ import ConsultCta from "@/components/shared/ConsultCta";
 export const metadata = {
   title: "Careers | EWAC Alloys",
   description:
-    "Explore career paths at EWAC Alloys, from experienced professional roles and early careers to contract opportunities.",
+    "Explore career paths at EWAC Alloys, from experienced professional roles to early careers.",
 };
 
 const CAREER_PATHS = [
   {
     number: "01",
     title: "Experienced professionals",
+    applyAs: "experienced",
     description:
       "Bring your experience to work that supports industries, infrastructure and lasting progress.",
     image: "/assets/images/life/career-4.jpg",
@@ -23,18 +24,11 @@ const CAREER_PATHS = [
   {
     number: "02",
     title: "Early careers",
+    applyAs: "early",
     description:
       "Start your professional journey alongside teams solving real-world materials and engineering challenges.",
     image: "/assets/images/life/career-3.jpg",
     imageAlt: "EWAC colleagues reviewing technical work together",
-  },
-  {
-    number: "03",
-    title: "Contract opportunities",
-    description:
-      "Explore project-based opportunities to bring your specialist skills to EWAC and its customers.",
-    image: "/assets/images/life/career-1.jpg",
-    imageAlt: "A candidate speaking with a colleague during an interview",
   },
 ];
 
@@ -74,7 +68,7 @@ export default function CareersPage() {
                     src={path.image}
                     alt={path.imageAlt}
                     fill
-                    sizes="(max-width: 767px) 100vw, (max-width: 991px) 50vw, 33vw"
+                    sizes="(max-width: 575px) 100vw, 50vw"
                   />
                   <span className="career-card-number">{path.number}</span>
                 </div>
@@ -83,7 +77,7 @@ export default function CareersPage() {
                   <p>{path.description}</p>
                   <Link
                     className="career-card-link"
-                    href="/careers/jobs"
+                    href={`/careers/jobs?type=${path.applyAs}`}
                   >
                     Find Jobs
                     <span aria-hidden="true">↗</span>

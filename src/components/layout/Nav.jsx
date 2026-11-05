@@ -47,18 +47,45 @@ function MegaDropdown({
   );
 }
 
+// Opens external or editor-flagged links in a new tab without leaking window.opener.
+function newTabProps(newTab) {
+  return newTab ? { target: "_blank", rel: "noopener noreferrer" } : {};
+}
+
+function SimpleDropdown({ item }) {
+  return (
+    <div className="nav-item has-dropdown">
+      <a href={item.href}>
+        {item.label}{" "}
+        <span className="nav-arrow">
+          <img src="/assets/images/expand-arrow.webp" alt="" />
+        </span>
+      </a>
+      <div className="dropdown dropdown-simple">
+        {item.links.map((link) => (
+          <a href={link.href} key={link.label} {...newTabProps(link.newTab)}>
+            {link.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function Nav({
   productCategories,
   services,
   industries,
   navItems,
+  showSearch = true,
+  contact,
   onSearch,
 }) {
   const cardsBySource = {
     "product-categories": productCategories.map((category) => ({
       label: category.name,
       image: category.image.url,
-      href: `#${category.slug}`,
+      href: `/products/${category.slug}`,
     })),
     services: services.map((service) => ({
       label: service.name,
@@ -75,7 +102,9 @@ export default function Nav({
   return (
     <nav className="nav">
       {navItems.map((item) =>
-        item.type === "dropdown" ? (
+        item.type === "simple-dropdown" ? (
+          <SimpleDropdown item={item} key={item.label} />
+        ) : item.type === "dropdown" ? (
           <div className="nav-item has-dropdown" key={item.label}>
             <a href="#">
               {item.label}{" "}
@@ -83,24 +112,29 @@ export default function Nav({
                 <img src="/assets/images/expand-arrow.webp" alt="" />
               </span>
             </a>
-            <MegaDropdown copy={item} cards={cardsBySource[item.source]} />
+            {/* Cards picked in Strapi win; Source only fills in when an editor left Cards empty. */}
+            <MegaDropdown copy={item} cards={item.cards.length > 0 ? item.cards : cardsBySource[item.source] ?? []} />
           </div>
         ) : (
-          <Link href={item.href} key={item.label}>
+          <Link href={item.href} key={item.label} {...newTabProps(item.newTab)}>
             {item.label}
           </Link>
         )
       )}
 
-      <button className="search-btn" type="button" aria-label="Search" onClick={onSearch}>
-        <svg viewBox="0 0 24 24">
-          <circle cx="10" cy="10" r="6.5" stroke="#d32f2f" strokeWidth="1.8" />
-          <line x1="15" y1="15" x2="20" y2="20" stroke="#d32f2f" strokeWidth="1.8" strokeLinecap="round" />
-        </svg>
-      </button>
-      <Link href="/contact-us" className="contact-btn">
-        Contact
-      </Link>
+      {showSearch && (
+        <button className="search-btn" type="button" aria-label="Search" onClick={onSearch}>
+          <svg viewBox="0 0 24 24">
+            <circle cx="10" cy="10" r="6.5" stroke="#d32f2f" strokeWidth="1.8" />
+            <line x1="15" y1="15" x2="20" y2="20" stroke="#d32f2f" strokeWidth="1.8" strokeLinecap="round" />
+          </svg>
+        </button>
+      )}
+      {contact?.label && (
+        <Link href={contact.href} className="contact-btn">
+          {contact.label}
+        </Link>
+      )}
     </nav>
   );
 }
