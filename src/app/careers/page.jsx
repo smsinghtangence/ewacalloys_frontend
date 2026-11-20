@@ -4,12 +4,13 @@ import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Careers | EWAC Alloys",
-  description:
-    "Explore career paths at EWAC Alloys, from experienced professional roles to early careers.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/careers").
+export const generateMetadata = () => getPageMeta("/careers", {
+  title: "Careers",
+  description: "Build your career with EWAC Alloys. Apply as an experienced professional or early-career graduate.",
+});
 
 const CAREER_PATHS = [
   {
@@ -79,7 +80,7 @@ export default function CareersPage() {
                     className="career-card-link"
                     href={`/careers/jobs?type=${path.applyAs}`}
                   >
-                    Find Jobs
+                    Apply Now
                     <span aria-hidden="true">↗</span>
                   </Link>
                 </div>

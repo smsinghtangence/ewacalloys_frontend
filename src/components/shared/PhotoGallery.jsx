@@ -54,7 +54,8 @@ export default function PhotoGallery({
   );
 }
 
-function Lightbox({ images, alt, startIndex, onClose }) {
+// Full-screen photo viewer, also used by the Gallery page (LifeGallery).
+export function Lightbox({ images, alt, startIndex, onClose }) {
   const carouselRef = useRef(null);
   const closeRef = useRef(null);
   const [current, setCurrent] = useState(startIndex);

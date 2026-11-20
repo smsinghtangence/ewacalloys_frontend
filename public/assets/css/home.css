@@ -147,7 +147,7 @@
 }
 
 .about-para strong {
-    color: #1a1a1a;
+    color: inherit;
     font-weight: 300;
 }
 
@@ -239,8 +239,15 @@
 
 .products-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 40px;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 32px;
+}
+
+/* Laptop widths: 5 across gets too narrow, use 3 */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .products-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
 .product-card {
@@ -1107,11 +1114,14 @@
 }
 
 .ind-card {
+    display: block;
     position: relative;
     border-radius: 14px;
     overflow: hidden;
     aspect-ratio: 3 / 3.5;
     cursor: pointer;
+    color: inherit;
+    text-decoration: none;
 }
 
 .ind-card img {

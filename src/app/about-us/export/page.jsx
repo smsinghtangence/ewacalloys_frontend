@@ -4,12 +4,10 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import ExportsExplorer from "@/components/about/ExportsExplorer";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Exports | EWAC",
-  description:
-    "EWAC Alloys exports Eutectic welding, brazing and thermal spray products to over 25 countries across South Asia, South East Asia, East Asia, West Asia and Africa.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/about-us/export").
+export const generateMetadata = () => getPageMeta("/about-us/export");
 
 const PRODUCTS = [
   "Special Maintenance & Repair Welding Electrodes",
@@ -27,6 +25,7 @@ export default function ExportsPage() {
         src="/assets/images/exports/export-banner.webp"
         mobileSrc="/assets/images/exports/export-banner.webp"
         alt="Exports"
+        heading="Exports"
         className="blog-page-banner"
       />
 

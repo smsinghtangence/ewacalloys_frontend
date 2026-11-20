@@ -3,12 +3,14 @@ import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import PostListing from "@/components/shared/PostListing";
 import ConsultCta from "@/components/shared/ConsultCta";
-import { INSIGHTS_CASE_CARDS } from "@/components/blogs/blogData";
+import { CASE_STUDY_POST_CARDS } from "@/components/insights/dummyPosts";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Case Studies | EWAC",
-  description: "Case studies from EWAC Alloys.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/case-studies").
+export const generateMetadata = () => getPageMeta("/case-studies", {
+  title: "Case Studies",
+  description: "See how EWAC Alloys solves wear problems in cement, power, steel, sugar and refinery plants with hardfacing, thermal spray coatings and wear plates.",
+});
 
 export default function CaseStudiesPage() {
   return (
@@ -17,6 +19,7 @@ export default function CaseStudiesPage() {
         src="/assets/images/blogs/case-studies-banner.webp"
         mobileSrc="/assets/images/blogs/case-studies-banner-mobile.webp"
         alt="Case Studies"
+        heading="Case Studies"
         className="blog-page-banner"
       />
 
@@ -26,7 +29,7 @@ export default function CaseStudiesPage() {
         </div>
       </section>
 
-      <PostListing cards={INSIGHTS_CASE_CARDS} activeTab="case-studies" />
+      <PostListing cards={CASE_STUDY_POST_CARDS} activeTab="case-studies" />
 
       <ConsultCta welderDecoration />
     </>

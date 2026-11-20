@@ -3,11 +3,13 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import PostListing from "@/components/shared/PostListing";
 import ConsultCta from "@/components/shared/ConsultCta";
 import { fetchStrapi } from "@/lib/catalog";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Blogs | EWAC",
-  description: "Technical articles and insights from EWAC Alloys.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/blogs").
+export const generateMetadata = () => getPageMeta("/blogs", {
+  title: "Blogs",
+  description: "Read EWAC Alloys blogs on welding electrodes, thermal spray powders, HVOF coatings, wear plates and maintenance welding.",
+});
 
 export const revalidate = 60;
 
@@ -32,6 +34,7 @@ export default async function BlogsPage() {
         src="/assets/images/blogs/blogs-banner.webp"
         mobileSrc="/assets/images/blogs/blogs-banner-mobile.webp"
         alt="Blogs"
+        heading="Blogs"
         className="blog-page-banner"
       />
 

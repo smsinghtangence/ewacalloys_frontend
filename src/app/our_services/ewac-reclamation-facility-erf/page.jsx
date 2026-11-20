@@ -5,12 +5,13 @@ import ConsultCta from "@/components/shared/ConsultCta";
 import ErfTabs from "@/components/services/ErfTabs";
 import ErfStats from "@/components/services/ErfStats";
 import PhotoGallery from "@/components/shared/PhotoGallery";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "EWAC Reclamation Facility (ERF) | EWAC",
-  description:
-    "EWAC Reclamation Facility (ERF) specializes in critical turnkey reclamation jobs involving weld surfacing, machining, pre & post weld heat treatment with the latest technologies and up-to-date surfacing materials.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/our_services/ewac-reclamation-facility-erf").
+export const generateMetadata = () => getPageMeta("/our_services/ewac-reclamation-facility-erf", {
+  title: "EWAC Reclamation Facility (ERF)",
+  description: "EWAC Reclamation Facility (ERF) handles critical turnkey reclamation jobs: weld surfacing, machining and pre and post weld heat treatment of worn industrial components.",
+});
 
 const IMG = "/assets/images/erf";
 

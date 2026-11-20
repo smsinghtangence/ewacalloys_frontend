@@ -17,9 +17,12 @@ function MegaDropdown({
           <span className="mega-eyebrow">{copy.eyebrow}</span>
           <h3>{copy.title}</h3>
           <p>{copy.description}</p>
-          <a href={copy.exploreHref} className="mega-explore-btn">
-            {copy.exploreLabel} <i className="fa fa-arrow-right" />
-          </a>
+          {/* Hidden when there is no label or no real link (see exploreHref in lib/headerSettings.js) */}
+          {copy.exploreLabel && copy.exploreHref && (
+            <a href={copy.exploreHref} className="mega-explore-btn">
+              {copy.exploreLabel} <i className="fa fa-arrow-right" />
+            </a>
+          )}
         </div>
         <div className={`mega-cards-grid ${gridModifier}`}>
           {copy.cardVariant === "image"
@@ -90,12 +93,12 @@ export default function Nav({
     services: services.map((service) => ({
       label: service.name,
       image: service.image.url,
-      href: `#${service.slug}`,
+      href: service.href,
     })),
     industries: industries.map((industry) => ({
       label: industry.name,
       image: industry.image.url,
-      href: `/our_industries/${industry.slug}`,
+      href: industry.href,
     })),
   };
 

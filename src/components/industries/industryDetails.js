@@ -426,7 +426,7 @@ export const INDUSTRY_DETAILS = [
   },
   {
     "slug": "oil-gas-refineries",
-    "name": "Refineries",
+    "name": "Oil & Gas Refineries",
     "description": [
       "Petroleum products make lives more accessible in various ways and provide continuous economic growth and prosperity to a nation. Fuel for transportation, power generation, chemical feedstocks and numerous products are derived from petroleum.",
       "Refining is a series of processes that break crude petroleum oil into various petroleum products.",

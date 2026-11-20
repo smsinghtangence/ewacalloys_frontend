@@ -28,10 +28,29 @@ const SEEDS = [
   { name: "EWAC Gougetro", description: GOUGE, type: "Thermal spraying", process: "Thermal Spray", brand: "Eutectic", category: "maintenance-and-repair", bestSeller: true },
 ];
 
+// Real products listed first. Their pages have their own layout (see CUSTOM_PRODUCT_PAGES in careKit.js).
+const FEATURED = [
+  {
+    id: "ewac-care-kit",
+    slug: "ewac-care-kit",
+    name: "EWAC Care Kit",
+    description: "Maintenance-in-a-Box: six types of M&R electrodes, cold repair compounds and PPE accessories in one reusable kit.",
+    type: "Maintenance Kit",
+    process: "Manual Metal Arc",
+    brand: "EWAC",
+    category: "maintenance-and-repair",
+    image: "/assets/images/products-page/care-kit/care-kit-flatlay.webp",
+  },
+];
+
 // Placeholder catalogue that mirrors the design until product records exist in Strapi.
-export const PRODUCTS = SEEDS.map((seed, index) => ({
-  ...seed,
-  id: index + 1,
-  slug: `${seed.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${index + 1}`,
-  image: IMAGES[Math.floor(index / 4) % IMAGES.length],
-}));
+// (Numbered slugs stay the same as before: the featured products above are not counted.)
+export const PRODUCTS = [
+  ...FEATURED,
+  ...SEEDS.map((seed, index) => ({
+    ...seed,
+    id: index + 1,
+    slug: `${seed.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}-${index + 1}`,
+    image: IMAGES[Math.floor(index / 4) % IMAGES.length],
+  })),
+];

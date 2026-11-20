@@ -3,9 +3,10 @@
 import { useCallback, useRef, useState } from "react";
 import CardCarousel, { } from "@/components/shared/CardCarousel";
 
+// WebP copies of the original JPGs (same images, ~8× smaller). width/height reserve the space so the page does not jump.
 const SLIDES = [
-  { desktop: "/assets/images/Sugar-Plant.jpg", mobile: "/assets/images/sugar-plant-mobile.jpg" },
-  { desktop: "/assets/images/steel-industry.jpg", mobile: "/assets/images/steel-industry-mobile.jpg" },
+  { desktop: "/assets/images/Sugar-Plant.webp", mobile: "/assets/images/sugar-plant-mobile.webp" },
+  { desktop: "/assets/images/steel-industry.webp", mobile: "/assets/images/steel-industry-mobile.webp" },
 ];
 
 const arrowClass =
@@ -20,6 +21,7 @@ export default function HomeBanner() {
 
   return (
     <section className="home-banner">
+      <h1 className="sr-only">EWAC Alloys Limited – Welding, Wear and Maintenance Solutions</h1>
       <div className="banner-slider relative">
         <CardCarousel
           ref={carouselRef}
@@ -27,13 +29,25 @@ export default function HomeBanner() {
           loop
           autoplayMs={2600}
           dots
+          dotClassName="h-2 w-2 rounded-full bg-[#9ca3af] transition-all"
           slideClassName="basis-full"
           keyExtractor={(slide) => slide.desktop}
           onSelect={handleSelect}
-          renderItem={(slide) => (
+          renderItem={(slide, index) => (
             <div className="slick-slideshow__slide">
-              <img className="banner-desktop" src={slide.desktop} alt="" />
-              <img className="banner-mob" src={slide.mobile} alt="" />
+              {/* <picture> downloads only the image for the current screen size (mobile below 576px).
+                  The first slide is the main (LCP) image, so it loads first; the others can wait. */}
+              <picture>
+                <source media="(max-width: 575.98px)" srcSet={slide.mobile} width={360} height={430} />
+                <img
+                  src={slide.desktop}
+                  alt=""
+                  width={2298}
+                  height={636}
+                  style={{ height: "auto" }}
+                  {...(index === 0 ? { fetchPriority: "high" } : { loading: "lazy" })}
+                />
+              </picture>
             </div>
           )}
         />

@@ -1,18 +1,15 @@
 
 import Link from "next/link";
+import { getPageMeta } from "@/lib/seo";
 import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import ConsultCta from "@/components/shared/ConsultCta";
 
-export async function generateMetadata() {
-  const terms = null; // static page: no CMS fetch
-  return {
-    title: terms?.seoTitle ?? "Terms & Conditions | EWAC",
-    description:
-      terms?.seoDescription ??
-      "The terms and conditions for using the EWAC Alloys website and its product information.",
-  };
-}
+// Title, description and robots come from Strapi → Page SEO (path "/terms-conditions").
+export const generateMetadata = () => getPageMeta("/terms-conditions", {
+  title: "Terms & Conditions",
+  description: "Terms and conditions for using the EWAC Alloys Limited website.",
+});
 
 const LAST_UPDATED = "23 October 2026";
 

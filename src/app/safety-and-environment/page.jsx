@@ -4,12 +4,13 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import SafetyContentsNav, { } from "@/components/about/SafetyContentsNav";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Safety and Environment | EWAC",
-  description:
-    "EWAC Alloys' commitment to safety and the environment, its EHS policy statement, quality policy and ISO certification.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/safety-and-environment").
+export const generateMetadata = () => getPageMeta("/safety-and-environment", {
+  title: "Safety and Environment",
+  description: "How EWAC Alloys protects its people and the environment: safety practices, environmental management and sustainability commitments.",
+});
 
 const SECTIONS = [
   { id: "commitment-to-safety", label: "Our Commitment to Safety" },

@@ -60,7 +60,7 @@ export default function SiteHeader({
   return (
     <>
       <div ref={topBarRef}>
-        <TopBar {...headerSettings.topBar} />
+        {headerSettings.topBar && <TopBar {...headerSettings.topBar} />}
       </div>
 
       <header className={`header${isSticky ? " is-sticky" : ""}`} ref={headerRef}>

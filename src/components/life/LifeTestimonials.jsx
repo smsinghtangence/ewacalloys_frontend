@@ -66,6 +66,7 @@ export default function LifeTestimonials() {
   return (
     <section
       className="life-testimonials"
+      id="testimonials"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}

@@ -1,32 +1,26 @@
-import { fetchStrapi, resolveImage } from "@/lib/catalog";
-import { BLOG_CARDS, NEWS_CARDS, CASE_STUDY_CARDS } from "@/components/home/uniSliderData";
+import { fetchStrapi } from "@/lib/catalog";
+import { NEWS_POST_CARDS, CASE_STUDY_POST_CARDS } from "@/components/insights/dummyPosts";
 
-// Cards come from Strapi; when it returns nothing (or isn't reachable) the built-in cards are used.
-function toCards(entries, fallback) {
-  if (!entries.length) return fallback;
-  return entries.map((entry) => ({
-    image: resolveImage(entry.Image, entry.Name).url,
-    title: entry.Name,
+// Homepage Blogs slider: the 9 newest published blogs (same as the Insights page); each card uses the
+// first photo in the article and links to its detail page.
+export async function getBlogPostCards() {
+  const blogs = await fetchStrapi("/api/blogs?filters[slug][$notNull]=true&sort=publishedAt:desc&pagination[pageSize]=9");
+  return blogs.map((blog) => ({
+    image:
+      blog.Content?.match(/<img[^>]+src="(?:https?:\/\/[^/"]+)?(\/uploads\/[^"]+)"/i)?.[1] ??
+      "/assets/images/blogs/blogs-banner.webp",
+    title: blog.Heading,
+    href: `/blogs/${blog.slug}`,
   }));
 }
 
-export async function getBlogPostCards() {
-  const data = (await fetchStrapi(
-    "/api/blog-posts?populate=Image&sort=order"
-  ));
-  return toCards(data, BLOG_CARDS);
-}
-
+// News and Case Studies use the dummy posts for now (src/components/insights/dummyPosts.js), the same ones the
+// /news and /case-studies pages list, so every card opens its detail page. Switch these to Strapi once the
+// News Article / Case Study collections have real content and detail pages read from Strapi.
 export async function getNewsArticleCards() {
-  const data = (await fetchStrapi(
-    "/api/news-articles?populate=Image&sort=order"
-  ));
-  return toCards(data, NEWS_CARDS);
+  return NEWS_POST_CARDS;
 }
 
 export async function getCaseStudyCards() {
-  const data = (await fetchStrapi(
-    "/api/case-studies?populate=Image&sort=order"
-  ));
-  return toCards(data, CASE_STUDY_CARDS);
+  return CASE_STUDY_POST_CARDS;
 }

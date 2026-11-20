@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
+import { normalizeContact, validateContact } from "@/lib/contactValidation";
 
-
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
+// Receives the Contact Us form, validates it again (the browser checks can be bypassed) and saves it in
+// Strapi as a contact-submission. Strapi validates once more, including that the dropdown answers are
+// options from the Contact Page, and emails the admin after saving.
 export async function POST(request) {
   let body;
   try {
@@ -18,22 +18,13 @@ export async function POST(request) {
     return NextResponse.json({ ok: true });
   }
 
-  const name = body.name?.trim();
-  const email = body.email?.trim();
-  const message = body.message?.trim();
-  const phone = body.phone?.trim();
-  const country = body.country?.trim();
-  const interestedIn = body.interestedIn?.trim();
-
-  if (!name || !email || !phone || !country || !interestedIn || !message) {
+  const values = normalizeContact(body);
+  const fieldErrors = validateContact(values);
+  if (Object.keys(fieldErrors).length > 0) {
     return NextResponse.json(
-      { ok: false, error: "Name, phone, email, country, interested-in, and message are required." },
+      { ok: false, error: "Please correct the highlighted fields.", fieldErrors },
       { status: 400 }
     );
-  }
-
-  if (!EMAIL_PATTERN.test(email)) {
-    return NextResponse.json({ ok: false, error: "Please enter a valid email address." }, { status: 400 });
   }
 
   const backendUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
@@ -42,8 +33,21 @@ export async function POST(request) {
     const response = await fetch(`${backendUrl}/api/contact-submissions`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ data: { name, email, phone, country, interestedIn, message } }),
+      body: JSON.stringify({ data: values }),
     });
+
+    if (response.status === 400) {
+      // Strapi rejected a field (e.g. a dropdown value that is no longer an option) — show it on that field.
+      const payload = await response.json().catch(() => null);
+      return NextResponse.json(
+        {
+          ok: false,
+          error: payload?.error?.message || "Please correct the highlighted fields.",
+          fieldErrors: payload?.error?.details?.errors ?? {},
+        },
+        { status: 400 }
+      );
+    }
 
     if (!response.ok) {
       return NextResponse.json(

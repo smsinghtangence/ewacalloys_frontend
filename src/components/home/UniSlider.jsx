@@ -37,13 +37,15 @@ export default function UniSlider({
             keyExtractor={(card, index) => `${card.title}-${index}`}
             slideClassName="basis-full sm:basis-1/2 lg:basis-1/3"
             className="services-slider"
+            dots
+            dotClassName="h-2 w-2 rounded-full bg-[#c4c4c4] transition-all"
             renderItem={(card) => (
               <div className="svc-card">
                 <div className="svc-img-wrap">
-                  <img src={card.image} alt={card.title} />
+                  <img src={card.image} alt={card.title} loading="lazy" />
                 </div>
                 <h3 className="svc-name">{card.title}</h3>
-                <a href="#" className="svc-link">
+                <a href={card.href ?? "#"} className="svc-link">
                   Read More
                 </a>
               </div>

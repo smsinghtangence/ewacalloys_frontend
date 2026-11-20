@@ -1,6 +1,6 @@
 import Link from "next/link";
 import GearBackdrop from "@/components/shared/GearBackdrop";
-import BlogListCard, { } from "@/components/shared/BlogListCard";
+import PostGrid from "@/components/shared/PostGrid";
 
 const TABS = [
   { id: "blogs", label: "Blogs", href: "/blogs" },
@@ -35,13 +35,7 @@ export default function PostListing({
           ))}
         </ul>
 
-        <div className="row gy-5 gx-4">
-          {cards.map((card) => (
-            <div className="col-lg-4 col-md-6" key={card.title}>
-              <BlogListCard {...card} />
-            </div>
-          ))}
-        </div>
+        <PostGrid cards={cards} />
       </div>
     </section>
   );

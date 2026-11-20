@@ -4,53 +4,26 @@ import { useState } from "react";
 
 
 
-// West/South addresses are placeholders in the design itself (contact.php),
-// explicitly marked "to be updated with real details" — carried over as-is.
-const OFFICES = [
-  {
-    value: "head",
-    label: "Head Office",
-    name: "EWAC Alloys Limited,",
-    address:
-      "6th floor, AWFIS, Vaman Techno Center, Makwana Road, Marol, Andheri East, Mumbai – 400059. Maharashtra, India.",
-    phones: ["+91 89255 22309", "+91 8433603454"],
-    email: "enquiry@ewacalloys.com",
-  },
-  {
-    value: "west",
-    label: "Western Region Office",
-    name: "EWAC Alloys Limited,",
-    address: "Placeholder address — Western Region Office, to be updated with real details.",
-    phones: ["+91 00000 00000"],
-    email: "enquiry@ewacalloys.com",
-  },
-  {
-    value: "south",
-    label: "Southern Region Office",
-    name: "EWAC Alloys Limited,",
-    address: "Placeholder address — Southern Region Office, to be updated with real details.",
-    phones: ["+91 00000 00000"],
-    email: "enquiry@ewacalloys.com",
-  },
-];
-
-export default function OfficeInfoCard() {
-  const [officeValue, setOfficeValue] = useState(OFFICES[0].value);
-  const office = OFFICES.find((item) => item.value === officeValue) ?? OFFICES[0];
+// Offices come from the Contact Page in Strapi (see lib/contactPage.js); the dropdown switches between them.
+export default function OfficeInfoCard({ title = "Our Offices", offices }) {
+  const [officeIndex, setOfficeIndex] = useState(0);
+  const office = offices[officeIndex] ?? offices[0];
+  if (!office) return null;
 
   return (
     <div className="contact-office-card">
       <div className="contact-office-header">
-        <h3 className="contact-office-title">Our Offices</h3>
+        <h3 className="contact-office-title">{title}</h3>
         <div className="contact-office-select-wrap">
           <select
             className="contact-office-select"
             id="officeSelect"
-            value={officeValue}
-            onChange={(event) => setOfficeValue(event.target.value)}
+            aria-label="Choose an office"
+            value={officeIndex}
+            onChange={(event) => setOfficeIndex(Number(event.target.value))}
           >
-            {OFFICES.map((item) => (
-              <option value={item.value} key={item.value}>
+            {offices.map((item, index) => (
+              <option value={index} key={item.label}>
                 {item.label}
               </option>
             ))}
@@ -72,25 +45,29 @@ export default function OfficeInfoCard() {
 
       <hr className="contact-office-divider" />
 
-      <div className="contact-office-row">
-        <i className="fas fa-phone" />
-        <p className="contact-office-text mb-0 contact-phone">
-          {office.phones.map((phone, index) => (
-            <span key={phone}>
-              {index > 0 && " / "}
-              <a href={`tel:${phone.replace(/\s+/g, "")}`}>{phone}</a>
-            </span>
-          ))}
-        </p>
-      </div>
-      <div className="contact-office-row">
-        <i className="fas fa-envelope" />
-        <p className="contact-office-text mb-0">
-          <a href={`mailto:${office.email}`} target="_blank" rel="noreferrer">
-            {office.email}
-          </a>
-        </p>
-      </div>
+      {office.phones.length > 0 && (
+        <div className="contact-office-row">
+          <i className="fas fa-phone" />
+          <p className="contact-office-text mb-0 contact-phone">
+            {office.phones.map((phone, index) => (
+              <span key={phone}>
+                {index > 0 && " / "}
+                <a href={`tel:${phone.replace(/\s+/g, "")}`}>{phone}</a>
+              </span>
+            ))}
+          </p>
+        </div>
+      )}
+      {office.email && (
+        <div className="contact-office-row">
+          <i className="fas fa-envelope" />
+          <p className="contact-office-text mb-0">
+            <a href={`mailto:${office.email}`} target="_blank" rel="noreferrer">
+              {office.email}
+            </a>
+          </p>
+        </div>
+      )}
     </div>
   );
 }

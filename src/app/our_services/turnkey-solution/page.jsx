@@ -5,12 +5,13 @@ import ConsultCta from "@/components/shared/ConsultCta";
 import TurnkeyIndustries from "@/components/services/TurnkeyIndustries";
 import TurnkeyServices from "@/components/services/TurnkeyServices";
 import WorkshopLocations from "@/components/services/WorkshopLocations";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Turnkey Solution | EWAC",
-  description:
-    "EWAC Alloys turnkey maintenance and repair solutions: on-site and workshop services across all process industries, backed by a nationwide service network.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/our_services/turnkey-solution").
+export const generateMetadata = () => getPageMeta("/our_services/turnkey-solution", {
+  title: "Turnkey Solutions",
+  description: "EWAC Alloys turnkey maintenance and repair solutions: on-site reclamation, hardfacing and wear protection services through our workshops across India.",
+});
 
 const IMG = "/assets/images/turnkey";
 

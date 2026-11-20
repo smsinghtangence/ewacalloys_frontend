@@ -1,10 +1,12 @@
 import Link from "next/link";
 import GearBackdrop from "@/components/shared/GearBackdrop";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Thank You | EWAC",
-  description: "Thank you for contacting EWAC. Our team will get back to you shortly.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/thank-you").
+export const generateMetadata = () => getPageMeta("/thank-you", {
+  title: "Thank You",
+  description: "Thank you for contacting EWAC Alloys. Our team will get back to you soon.",
+});
 
 // Sparks burst from behind the check badge (same keyframes as the 404 page).
 const SPARKS = [

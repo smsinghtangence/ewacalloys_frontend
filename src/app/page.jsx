@@ -11,6 +11,12 @@ import FaqSection from "@/components/home/FaqSection";
 import CtaBanner from "@/components/home/CtaBanner";
 import { getProductCategories, getServices, getIndustries } from "@/lib/catalog";
 import { getBlogPostCards, getNewsArticleCards, getCaseStudyCards } from "@/lib/insights";
+import { getPageMeta } from "@/lib/seo";
+
+// No fallback title/description: the site defaults in layout.jsx are the home page's meta,
+// unless Strapi → Page SEO has an entry for "/".
+// Title, description and robots come from Strapi → Page SEO (path "/").
+export const generateMetadata = () => getPageMeta("/");
 
 export default async function Home() {
   const [productCategories, services, industries, blogCards, newsCards, caseStudyCards] =

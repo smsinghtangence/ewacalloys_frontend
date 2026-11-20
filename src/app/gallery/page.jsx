@@ -2,11 +2,13 @@ import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import ConsultCta from "@/components/shared/ConsultCta";
 import LifeGallery from "@/components/life/LifeGallery";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Gallery | EWAC",
-  description: "Photos from EWAC workshops, training sessions, conferences and exhibitions.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/gallery").
+export const generateMetadata = () => getPageMeta("/gallery", {
+  title: "Gallery",
+  description: "Photos from EWAC Alloys: our plants, R&D centre, events, trainings and life at EWAC.",
+});
 
 export default function GalleryPage() {
   return (
@@ -15,6 +17,7 @@ export default function GalleryPage() {
         src="/assets/images/gallery/gallery-banner.webp"
         mobileSrc="/assets/images/gallery/gallery-banner-mobile.webp"
         alt="Gallery"
+        heading="Gallery"
         className="blog-page-banner"
       />
 

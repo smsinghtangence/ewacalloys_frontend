@@ -131,11 +131,7 @@ export default function FaqSection() {
           ))}
         </div>
 
-        <div className="faq-footer">
-          <a href="#" className="faq-btn">
-            Read All FAQs
-          </a>
-        </div>
+        {/* "Read All FAQs" is hidden until a separate FAQ page exists. */}
       </div>
     </section>
   );

@@ -41,7 +41,7 @@ function MarqueeRow({
 
 export default function ClientsLogos() {
   return (
-    <section className="clients-section">
+    <section className="clients-section" id="clients">
       <div className="container">
         <h2 className="clients-title">Our Clients</h2>
       </div>

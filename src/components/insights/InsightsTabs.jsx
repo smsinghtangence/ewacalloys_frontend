@@ -4,15 +4,16 @@ import { useEffect } from "react";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import BlogListCard from "@/components/shared/BlogListCard";
 import { useTabs } from "@/components/shared/useTabs";
-import { INSIGHTS_NEWS_CARDS, INSIGHTS_CASE_CARDS } from "@/components/blogs/blogData";
+import { NEWS_POST_CARDS, CASE_STUDY_POST_CARDS } from "@/components/insights/dummyPosts";
 
-// The Blogs tab's cards come from the page (Strapi); News and Case Studies are still built in.
+// The Blogs tab's cards come from the page (Strapi); News and Case Studies use the dummy posts
+// (src/components/insights/dummyPosts.js), each linking to its detail page.
 const OTHER_TABS = [
-  { id: "news-pane", label: "News", cards: INSIGHTS_NEWS_CARDS, viewAllLabel: "View all News", viewAllHref: "/news" },
+  { id: "news-pane", label: "News", cards: NEWS_POST_CARDS, viewAllLabel: "View all News", viewAllHref: "/news" },
   {
     id: "case-pane",
     label: "Case Studies",
-    cards: INSIGHTS_CASE_CARDS,
+    cards: CASE_STUDY_POST_CARDS,
     viewAllLabel: "View all Case Studies",
     viewAllHref: "/case-studies",
   },

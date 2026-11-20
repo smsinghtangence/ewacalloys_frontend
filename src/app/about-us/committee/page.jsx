@@ -3,11 +3,10 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import BoardCommittees from "@/components/about/BoardCommittees";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Committee | EWAC",
-  description: "Meet the members of EWAC Alloys Limited's Audit, Nomination and Remuneration, and Corporate Social Responsibility Committees.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/about-us/committee").
+export const generateMetadata = () => getPageMeta("/about-us/committee");
 
 const COMMITTEES = [
   {

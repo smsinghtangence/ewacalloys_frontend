@@ -3,11 +3,13 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import PolicySlider from "@/components/policies/PolicySlider";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Policies and Certifications | EWAC",
-  description: "EWAC Alloys policies, code of conduct and certifications.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/policies").
+export const generateMetadata = () => getPageMeta("/policies", {
+  title: "Policies and Certifications",
+  description: "Corporate policies of EWAC Alloys Limited, including Whistle Blower, Anti-Bribery and Anti-Corruption, Prevention of Sexual Harassment, Remuneration and CSR policies.",
+});
 
 export default function PoliciesPage() {
   return (
