@@ -3,11 +3,10 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import BoardDirectors from "@/components/about/BoardDirectors";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Board of Directors | EWAC",
-  description: "Meet the Board of Directors of EWAC Alloys Limited.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/about-us/company-info").
+export const generateMetadata = () => getPageMeta("/about-us/company-info");
 
 // Photos are in /public/assets/images/company-info/.
 const DIRECTORS = [

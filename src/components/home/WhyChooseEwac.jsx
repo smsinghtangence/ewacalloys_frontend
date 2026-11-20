@@ -120,7 +120,7 @@ export default function WhyChooseEwac() {
 
         <div className="why-tabs-wrap">
           <div className="why-dropdown-wrap">
-            <select className="why-dropdown" id="whyDropdown" value={activeTab} onChange={onDropdownChange}>
+            <select className="why-dropdown" id="whyDropdown" aria-label="Why choose EWAC – topic" value={activeTab} onChange={onDropdownChange}>
               {TABS.map((tab) => (
                 <option value={tab.id} key={tab.id}>
                   {tab.dropdownLabel}

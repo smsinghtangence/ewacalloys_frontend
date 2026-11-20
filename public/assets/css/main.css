@@ -2023,6 +2023,26 @@ color: #555;
   padding-bottom: 20px;
 }
 
+/* "Load More" under the Blogs / News / Case Studies grid (same pill as the homepage "View all") */
+.post-load-more {
+  display: block;
+  width: fit-content;
+  margin: 45px auto 20px;
+  padding: 10px 30px;
+  border: 1px solid #004c86;
+  border-radius: 117px;
+  background: #004c86;
+  color: #fff;
+  font-size: 16px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.post-load-more:hover,
+.post-load-more:focus-visible {
+  background: #fff;
+  color: #004c86;
+}
+
 /* Blogs / News / Case Studies tabs are links: match the Insights tab buttons */
 .insights-tabs a.nav-link {
   display: block;
@@ -3017,15 +3037,16 @@ color: #555;
 
 .product-tile-body h3 {
     margin: 0 0 6px;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 600 !important;
+    line-height: 1.3;
     color: #111;
 }
 
 .product-tile-body p {
     flex: 1;
     margin: 0 0 12px;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 1.5;
     color: #666;
 }
@@ -3194,7 +3215,6 @@ color: #555;
     background: #fff;
 }
 
-.ind-acc-section-head,
 .ind-acc-head {
     display: flex;
     align-items: center;
@@ -3207,11 +3227,6 @@ color: #555;
     font-size: 16px;
     font-weight: 700;
     text-align: left;
-}
-
-.ind-acc-section-head {
-    margin-bottom: 26px;
-    background: #7f7f7f;
 }
 
 .ind-acc-head {
@@ -4142,8 +4157,9 @@ margin: 0 0 24px;
     transition: transform 0.5s ease, width 0.5s ease, height 0.5s ease, opacity 0.4s ease;
 }
 
+/* The centre photo opens full screen (Lightbox). */
 .life-gallery-slide.is-active {
-    cursor: default;
+    cursor: zoom-in;
 }
 
 .life-gallery-slide img {
@@ -4928,7 +4944,6 @@ margin: 0 0 24px;
     display: none;
   }
 
-  .ind-acc-section-head,
   .ind-acc-head {
     padding: 14px 18px;
   }
@@ -8538,4 +8553,624 @@ border: 0;
   position: absolute;
   transform: translateX(-50%);
   top: 20px;}
+}
+
+/* ===== Industries list page (/our_industries) ===== */
+.ind-list-section {
+  position: relative;
+  padding: 10px 0 70px;
+  background: #fff;
+  overflow: clip;
+}
+
+.ind-list-section .ind-gear {
+  left: auto;
+  right: -60px;
+  top: 10px;
+  bottom: auto;
+  margin: 0;
+  transform: scale(0.85);
+  transform-origin: top right;
+}
+
+.ind-list-section .container {
+  position: relative;
+}
+
+.ind-list-intro {
+  max-width: 900px;
+  margin-bottom: 44px;
+}
+
+.ind-list-intro h1 {
+  margin: 0 0 10px;
+  font-size: clamp(30px, 3.4vw, 44px);
+  font-weight: 400;
+  color: #434343;
+}
+
+.ind-list-intro .ind-intro-underline {
+  margin-bottom: 22px;
+}
+
+.ind-list-intro p {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.75;
+  color: #555;
+}
+
+.ind-list-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 30px;
+}
+
+.ind-list-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e3e8ee;
+  border-radius: 10px;
+  background: #fff;
+  color: inherit;
+  text-decoration: none !important;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.ind-list-card:hover,
+.ind-list-card:focus-visible {
+  box-shadow: 0 12px 30px rgba(0, 76, 134, 0.14);
+  transform: translateY(-4px);
+}
+
+.ind-list-img {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #e9eef4;
+}
+
+.ind-list-img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.ind-list-card:hover .ind-list-img img {
+  transform: scale(1.06);
+}
+
+.ind-list-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 22px 24px 24px;
+  border-top: 3px solid #004c86;
+  text-align: left;
+}
+
+.ind-list-name {
+  margin: 0 0 10px;
+  text-align: left;
+  font-size: 22px;
+  font-weight: 700;
+  color: #004c86;
+}
+
+.ind-list-text {
+  display: -webkit-box;
+  margin: 0 0 18px;
+  overflow: hidden;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #555;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.ind-list-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  font-size: 15px;
+  font-weight: 700;
+  color: #c02222;
+}
+
+.ind-list-more i {
+  transition: transform 0.3s ease;
+}
+
+.ind-list-card:hover .ind-list-more i {
+  transform: translateX(4px);
+}
+
+@media (max-width: 991.98px) {
+  .ind-list-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+  }
+
+  .ind-list-section .ind-gear {
+    display: none;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .ind-list-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ind-list-intro {
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .ind-list-intro .ind-intro-underline {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ind-list-body {
+    padding: 18px 20px 20px;
+  }
+}
+
+/* About Us banner: on small screens the button sat on top of "SINCE 1962" (part of the image) — move it to the right. */
+@media (max-width: 767.98px) {
+  .about-banner-cta {
+    left: auto;
+    right: 12px;
+    bottom: 12px;
+    font-size: 13px;
+    padding: 6px 16px;
+    line-height: 1.4;
+  }
+}
+
+/* ───────────── EWAC Care Kit product page (/products/maintenance-and-repair/ewac-care-kit) ───────────── */
+.ck-banner {
+  position: relative;
+  height: clamp(200px, 27vw, 400px);
+  overflow: hidden;
+  background: #0b3a63;
+}
+
+.ck-banner img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+/* Blue wash so the label reads on any photo. */
+.ck-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(0, 46, 96, 0.92) 0%, rgba(0, 76, 134, 0.6) 45%, rgba(0, 76, 134, 0.2) 100%);
+}
+
+.ck-banner-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.ck-banner-label {
+  position: relative;
+  margin: 0;
+  padding: 6px 40px 6px 0;
+  font-size: clamp(16px, 1.8vw, 26px);
+  font-style: italic;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+/* Red-to-blue stripe under the label, running in from the left edge of the screen. */
+.ck-banner-label::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(192, 34, 34, 0.9) 0%, rgba(192, 34, 34, 0.9) 55%, rgba(0, 120, 200, 0.55) 100%);
+  clip-path: polygon(0 62%, 100% 62%, calc(100% - 14px) 100%, 0 100%);
+}
+
+.ck-intro {
+  padding: 30px 0 70px;
+  background: #fff;
+}
+
+.ck-intro-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+
+.ck-intro-text {
+  padding-left: 22px;
+  border-left: 2px solid #c02222;
+}
+
+.ck-intro-text h1 {
+  margin: 0 0 22px;
+  font-size: clamp(28px, 3vw, 44px);
+  font-weight: 400;
+  color: #434343;
+}
+
+.ck-intro-text p {
+  max-width: 420px;
+  margin: 0 0 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #434343;
+}
+
+.ck-intro-media {
+  position: relative;
+  padding: 0 0 50px;
+}
+
+/* Grey block behind the photo card, offset to the right and down. */
+.ck-intro-media::before {
+  content: "";
+  position: absolute;
+  top: 50px;
+  right: -60px;
+  bottom: 0;
+  left: 120px;
+  background: #f2f2f2;
+}
+
+.ck-intro-card {
+  position: relative;
+  padding: 20px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.ck-intro-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.ck-contains {
+  padding: 10px 0 70px;
+  background: #fff;
+}
+
+.ck-heading {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin: 0 0 36px;
+  font-size: clamp(26px, 2.6vw, 40px);
+  font-weight: 400;
+  color: #434343;
+}
+
+.ck-heading::before {
+  content: "";
+  flex: 0 0 34px;
+  height: 2px;
+  background: #c02222;
+}
+
+.ck-contains-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.ck-video {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: 10px;
+  aspect-ratio: 16 / 9;
+  background: #111;
+}
+
+.ck-video img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.ck-video:hover img {
+  transform: scale(1.04);
+}
+
+.ck-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #c02222;
+  color: #fff;
+  font-size: 20px;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 0 10px rgba(192, 34, 34, 0.25);
+}
+
+.ck-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ck-list li {
+  position: relative;
+  padding: 18px 20px 18px 50px;
+  font-size: 15px;
+  line-height: 1.45;
+  color: #434343;
+  background: #f2f2f2;
+  border-left: 4px solid transparent;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.ck-list li::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 24px;
+  width: 7px;
+  height: 7px;
+  background: #c02222;
+  transform: translateY(-50%);
+}
+
+.ck-list li.is-active,
+.ck-list li:hover {
+  color: #fff;
+  background: #004c86;
+  border-left-color: #c02222;
+}
+
+.ck-showcase {
+  position: relative;
+  padding: 70px 0;
+  overflow: hidden;
+  background: #004c86;
+}
+
+/* Faint ring in the top-left corner, as in the design. */
+.ck-showcase::before {
+  content: "";
+  position: absolute;
+  top: -260px;
+  left: -200px;
+  width: 520px;
+  height: 520px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}
+
+.ck-showcase .container {
+  position: relative;
+}
+
+.ck-tagline {
+  max-width: 820px;
+  margin: 0 auto 40px;
+  font-size: clamp(16px, 1.4vw, 20px);
+  line-height: 1.6;
+  text-align: center;
+  color: #fff;
+}
+
+.ck-tagline--dark {
+  color: #434343;
+}
+
+.ck-featured {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto 10px;
+  padding: 10px 40px;
+  background: #fff;
+}
+
+/* Red corner triangle, bottom right. */
+.ck-featured::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-style: solid;
+  border-width: 0 0 22px 22px;
+  border-color: transparent transparent #c02222 transparent;
+}
+
+.ck-featured img,
+.ck-grid-item img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The pack photo has wide white margins: show a short strip around the pack, as in the design. */
+.ck-featured img {
+  aspect-ratio: 3 / 1;
+  object-fit: cover;
+}
+
+.ck-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.ck-grid-item {
+  padding: 8px;
+  background: #fff;
+}
+
+.ck-more {
+  padding: 70px 0 80px;
+  background: #f6f6f6;
+}
+
+.ck-slider {
+  position: relative;
+}
+
+.ck-slide {
+  padding: 0 10px;
+}
+
+.ck-slide-card {
+  position: relative;
+  padding: 26px 20px 20px;
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 4px;
+}
+
+/* Short red line along the top edge of each card. */
+.ck-slide-card::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 45%;
+  height: 3px;
+  background: #c02222;
+}
+
+.ck-slide-card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: contain;
+}
+
+.ck-dots {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  min-height: 40px;
+  align-items: center;
+  margin-top: 26px;
+  padding: 0 10px;
+}
+
+.ck-dot {
+  width: 6px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: #c4c4c4;
+  transition: width 0.25s ease;
+}
+
+.ck-dot.is-active {
+  width: 22px;
+  border-radius: 3px;
+  background: #c02222;
+}
+
+/* Arrows sit on the same row as the dots, on the left. */
+.ck-arrows {
+  position: absolute;
+  left: 10px;
+  bottom: 0;
+  display: flex;
+  gap: 10px;
+}
+
+.ck-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid #bdbdbd;
+  border-radius: 50%;
+  background: #fff;
+  color: #434343;
+  font-size: 13px;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.ck-arrow:hover {
+  background: #c02222;
+  border-color: #c02222;
+  color: #fff;
+}
+
+@media (max-width: 991.98px) {
+  .ck-intro-grid,
+  .ck-contains-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ck-intro-media::before {
+    right: -16px;
+    left: 60px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .ck-intro {
+    padding-bottom: 50px;
+  }
+
+  .ck-showcase,
+  .ck-more {
+    padding: 50px 0;
+  }
+
+  /* Keep the 3 × 3 grid of 9 photos on phones (2 columns would leave the last one alone). */
+  .ck-grid {
+    gap: 6px;
+  }
+
+  .ck-grid-item {
+    padding: 4px;
+  }
+
+  .ck-featured {
+    padding: 8px 16px;
+  }
+
+  .ck-list li {
+    padding: 14px 16px 14px 42px;
+  }
+
+  .ck-list li::before {
+    left: 20px;
+  }
 }

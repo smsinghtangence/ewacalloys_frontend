@@ -4,11 +4,14 @@ import ConsultCta from "@/components/shared/ConsultCta";
 import { fetchStrapi } from "@/lib/catalog";
 import { INDUSTRY_DETAILS } from "@/components/industries/industryDetails";
 import { PRODUCTS } from "@/components/products/productsData";
+import { CUSTOM_PRODUCT_PAGES } from "@/components/products/careKit";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Search | EWAC",
-  robots: { index: false },
-};
+// Title, description and robots come from Strapi → Page SEO (path "/search").
+export const generateMetadata = () => getPageMeta("/search", {
+  title: "Search",
+  description: "Search EWAC Alloys products, industries and blogs.",
+});
 
 const PAGES = [
   { title: "About Us", href: "/about-us", keywords: "company history mission vision strengths ewac" },
@@ -29,10 +32,11 @@ const PAGES = [
   { title: "Terms & Conditions", href: "/terms-conditions", keywords: "legal terms use" },
 ];
 
-// One entry per product name (the catalogue repeats names across brands), linking to its category.
+// One entry per product name (the catalogue repeats names across brands), linking to its category
+// (or to its own page for products that have one, e.g. the EWAC Care Kit).
 const PRODUCT_ENTRIES = [...new Map(PRODUCTS.map((p) => [p.name, p])).values()].map((p) => ({
   title: p.name,
-  href: `/products/${p.category}`,
+  href: CUSTOM_PRODUCT_PAGES[p.slug] ? `/products/${p.category}/${p.slug}` : `/products/${p.category}`,
   keywords: `${p.description} ${p.type} ${p.process}`,
 }));
 

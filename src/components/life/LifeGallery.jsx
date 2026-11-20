@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Lightbox } from "@/components/shared/PhotoGallery";
 
 
 
@@ -48,6 +49,8 @@ export default function LifeGallery({ showHeading = true }) {
   const [index, setIndex] = useState(0);
   const [scale, setScale] = useState(1);
   const [paused, setPaused] = useState(false);
+  // Index (in `images`) of the photo open full screen, or null.
+  const [openIndex, setOpenIndex] = useState(null);
   const frameRef = useRef(null);
 
   const images = tab === "all" ? IMAGES : IMAGES.filter((image) => image.category === tab);
@@ -66,11 +69,11 @@ export default function LifeGallery({ showHeading = true }) {
   // Autoplay: advance every few seconds. The timer restarts after any manual change (it depends on
   // `index`), and stops while the pointer or keyboard focus is on the slider or the user prefers reduced motion.
   useEffect(() => {
-    if (paused || total < 2) return;
+    if (paused || openIndex !== null || total < 2) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = window.setTimeout(() => setIndex((current) => (current + 1) % total), AUTOPLAY_MS);
     return () => window.clearTimeout(id);
-  }, [index, paused, total]);
+  }, [index, paused, openIndex, total]);
 
   const go = (step) => setIndex((current) => (current + step + total) % total);
 
@@ -142,9 +145,9 @@ export default function LifeGallery({ showHeading = true }) {
                   className={`life-gallery-slide${offset === 0 ? " is-active" : ""}`}
                   style={style}
                   tabIndex={offset === 0 ? 0 : -1}
-                  aria-label={image.alt}
+                  aria-label={offset === 0 ? `Open ${image.alt} full screen` : image.alt}
                   aria-hidden={!slot}
-                  onClick={() => offset !== 0 && go(offset)}
+                  onClick={() => (offset === 0 ? setOpenIndex(i) : go(offset))}
                 >
                   <img src={image.src} alt={image.alt} loading={Math.abs(offset) <= 2 ? "eager" : "lazy"} />
                 </button>
@@ -160,6 +163,15 @@ export default function LifeGallery({ showHeading = true }) {
           </button>
         </div>
       </div>
+
+      {openIndex !== null && (
+        <Lightbox
+          images={images.map((image) => image.src)}
+          alt="EWAC gallery photo"
+          startIndex={openIndex}
+          onClose={() => setOpenIndex(null)}
+        />
+      )}
     </section>
   );
 }

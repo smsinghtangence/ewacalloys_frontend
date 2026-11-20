@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useCountUp } from "@/components/shared/useCountUp";
 
 const ABOUT_TEXT =
@@ -33,45 +35,46 @@ function StatItem({ icon, target, format, label }) {
 
 function AboutParagraph() {
   const paraRef = useRef(null);
-  const words = ABOUT_TEXT.split(" ");
-  const strongWordCount = STRONG_PREFIX.split(" ").length;
+  const characters = Array.from(ABOUT_TEXT);
+  const strongCharacterCount = Array.from(STRONG_PREFIX).length;
 
   useEffect(() => {
     const el = paraRef.current;
     if (!el) return;
 
-    const wordSpans = Array.from(el.querySelectorAll(".about-word"));
+    gsap.registerPlugin(ScrollTrigger);
+    const context = gsap.context(() => {
+      const chars = el.querySelectorAll(".about-char");
+      gsap.fromTo(
+        chars,
+        { color: "#b4b4b4" },
+        {
+          color: "#1a1a1a",
+          duration: 0.01,
+          ease: "none",
+          stagger: { each: 0.025 },
+          scrollTrigger: {
+            trigger: el,
+            start: "top 78%",
+            end: "bottom 22%",
+            scrub: true,
+          },
+        }
+      );
+    }, el);
 
-    const onScroll = () => {
-      const rect = el.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      // progress 0 -> 1 as the paragraph travels from "just entering" to "just leaving" the viewport
-      const total = rect.height + viewportHeight;
-      const traveled = viewportHeight - rect.top;
-      const progress = Math.min(Math.max(traveled / total, 0), 1);
-
-      const revealCount = Math.floor(progress * wordSpans.length);
-      wordSpans.forEach((span, index) => {
-        span.style.color = index < revealCount ? "#1a1a1a" : "#B4B4B4";
-      });
-    };
-
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    return () => context.revert();
   }, []);
 
   return (
     <p className="about-para" ref={paraRef}>
-      {words.map((word, index) => (
-        <span className="about-word" key={index} style={{ color: "#B4B4B4" }}>
-          {index < strongWordCount ? <strong>{word}</strong> : word}
-          {index < words.length - 1 ? " " : ""}
-        </span>
+      <strong>
+        {characters.slice(0, strongCharacterCount).map((character, index) => (
+          <span className="about-char" key={index}>{character}</span>
+        ))}
+      </strong>
+      {characters.slice(strongCharacterCount).map((character, index) => (
+        <span className="about-char" key={strongCharacterCount + index}>{character}</span>
       ))}
     </p>
   );

@@ -3,11 +3,11 @@
 import { useScrollReveal } from "@/components/shared/useScrollReveal";
 
 
-function ProductCard({ image, name, index }) {
+function ProductCard({ image, name, href, index }) {
   const { ref, visible } = useScrollReveal();
   return (
     <a
-      href="#"
+      href={href}
       className="product-links"
       ref={ref}
       style={{ transitionDelay: `${index * 0.12}s` }}
@@ -38,7 +38,7 @@ export default function ProductsByCategory({
         </p>
         <div className="products-grid">
           {productCategories.map((category, index) => (
-            <ProductCard key={category.id} index={index} image={category.image.url} name={category.name} />
+            <ProductCard key={category.id} index={index} image={category.image.url} name={category.name} href={`/products/${category.slug}`} />
           ))}
         </div>
       </div>

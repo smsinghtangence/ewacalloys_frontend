@@ -24,12 +24,12 @@ function buildMobileMenu(
         href: `/products/${category.slug}/${product.slug}`,
       })),
     })),
-    services: services.map((service) => ({ label: service.name, href: `#${service.slug}` })),
-    industries: industries.map((industry) => ({ label: industry.name, href: `/our_industries/${industry.slug}` })),
+    services: services.map((service) => ({ label: service.name, href: service.href })),
+    industries: industries.map((industry) => ({ label: industry.name, href: industry.href })),
   };
 
   return [
-    { label: "Home", href: "#" },
+    { label: "Home", href: "/" },
     ...navItems.map((item) => {
       if (item.type === "simple-dropdown") {
         return { label: item.label, children: item.links };

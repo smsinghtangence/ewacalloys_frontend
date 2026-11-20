@@ -4,11 +4,13 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import ConsultCta from "@/components/shared/ConsultCta";
 import InsightsTabs from "@/components/insights/InsightsTabs";
 import { fetchStrapi } from "@/lib/catalog";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Insights | EWAC",
-  description: "Blogs, news, and case studies from EWAC Alloys.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/insights").
+export const generateMetadata = () => getPageMeta("/insights", {
+  title: "Insights",
+  description: "Blogs, news and case studies from EWAC Alloys on welding, hardfacing, thermal spraying and wear protection for industry.",
+});
 
 export const revalidate = 60;
 
@@ -29,6 +31,7 @@ export default async function InsightsPage() {
         src="/assets/images/blogs/insights-banner.webp"
         mobileSrc="/assets/images/blogs/insights-banner-mobile.webp"
         alt="Insights"
+        heading="Insights"
         className="blog-page-banner"
       />
 

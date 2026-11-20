@@ -1,57 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+// What the visitor sees on /careers/jobs: the two tabs, the inputs and the error messages.
+// The field list and the code that sends the application live in src/app/careers/jobs/page.jsx.
+
+import { useActionState, useState, startTransition } from "react";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MAX_RESUME_MB = 5;
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-// Fields shared by both forms come first; `required` fields are marked with *.
-const COMMON_FIELDS = [
-  { name: "fullName", label: "Full Name", required: true },
-  { name: "email", label: "Personal Email ID", type: "email", required: true },
-  { name: "dateOfBirth", label: "Date of Birth", type: "dob", required: true },
-  { name: "mobile", label: "Mobile Number", type: "tel", required: true },
-];
-
-const FORMS = {
-  experienced: {
-    tab: "Experienced Professionals",
-    fields: [
-      ...COMMON_FIELDS,
-      { name: "currentCompany", label: "Current Company", required: true },
-      { name: "currentDesignation", label: "Current Designation", required: true },
-      { name: "totalExperience", label: "Total Experience (Years)", type: "number", required: true },
-      { name: "currentLocation", label: "Current Location", required: true },
-      { name: "preferredLocation", label: "Preferred Location", required: true },
-      { name: "resume", label: "Resume Upload", type: "file", required: true },
-      { name: "noticePeriod", label: "Notice Period" },
-      { name: "expectedCtc", label: "Expected CTC" },
-    ],
-  },
-  early: {
-    tab: "Early Careers",
-    fields: [
-      ...COMMON_FIELDS,
-      { name: "highestQualification", label: "Highest Qualification", required: true },
-      { name: "specialization", label: "Specialization / Branch", required: true },
-      { name: "currentLocation", label: "Current Location", required: true },
-      { name: "preferredLocation", label: "Preferred Location", required: true },
-      { name: "resume", label: "Resume Upload", type: "file", required: true },
-      { name: "graduationYear", label: "Year of Graduation", type: "number" },
-      { name: "address", label: "Address for Communication", type: "textarea" },
-    ],
-  },
-};
-
-export default function CareerApplicationForm({ initialType = "experienced" }) {
-  const [type, setType] = useState(FORMS[initialType] ? initialType : "experienced");
+export default function CareerApplicationForm({ forms, initialType, maxResumeMb, action }) {
+  const [type, setType] = useState(forms[initialType] ? initialType : "experienced");
 
   return (
     <div className="career-apply-card">
       <div className="career-apply-tabs" role="tablist">
-        {Object.entries(FORMS).map(([key, form]) => (
+        {Object.entries(forms).map(([key, form]) => (
           <button
             key={key}
             type="button"
@@ -66,55 +29,37 @@ export default function CareerApplicationForm({ initialType = "experienced" }) {
       </div>
 
       {/* `key` gives each tab its own blank form */}
-      <ApplicationForm key={type} type={type} fields={FORMS[type].fields} />
+      <ApplicationForm key={type} type={type} fields={forms[type].fields} maxResumeMb={maxResumeMb} action={action} />
     </div>
   );
 }
 
-function ApplicationForm({ type, fields }) {
-  const router = useRouter();
-  const [error, setError] = useState(null);
-  const [submitting, setSubmitting] = useState(false);
+function ApplicationForm({ type, fields, maxResumeMb, action }) {
+  // `state` is what submitApplication (page.jsx) returned: { error, fieldErrors }.
+  const [state, submit, pending] = useActionState(action, {});
+  const [clientError, setClientError] = useState(null);
+  const error = clientError ?? state.error;
+  const fieldErrors = clientError ? {} : (state.fieldErrors ?? {});
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    setError(null);
-
     const formData = new FormData(event.currentTarget);
+
+    // Quick checks in the browser, so obvious mistakes don't need a trip to the server.
     const missing = fields.find((field) => {
       const value = formData.get(field.name);
       return field.required && (field.type === "file" ? !value?.size : !String(value ?? "").trim());
     });
-    if (missing) {
-      setError(`Please fill in ${missing.label}.`);
-      return;
-    }
-    if (!EMAIL_PATTERN.test(String(formData.get("email")).trim())) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-    if (formData.get("resume").size > MAX_RESUME_MB * 1024 * 1024) {
-      setError(`Resume must be smaller than ${MAX_RESUME_MB} MB.`);
-      return;
+    if (missing) return setClientError(`Please fill in ${missing.label}.`);
+    if (!EMAIL_PATTERN.test(String(formData.get("email")).trim())) return setClientError("Please enter a valid email address.");
+    if (formData.get("resume")?.size > maxResumeMb * 1024 * 1024) {
+      return setClientError(`Resume must be smaller than ${maxResumeMb} MB.`);
     }
 
+    setClientError(null);
     formData.append("applicationType", type);
-    setSubmitting(true);
-    try {
-      const response = await fetch("/api/careers", { method: "POST", body: formData });
-      const payload = await response.json();
-
-      if (!response.ok || !payload.ok) {
-        setError(payload.error || "Something went wrong. Please try again.");
-        setSubmitting(false);
-        return;
-      }
-
-      router.push("/thank-you");
-    } catch {
-      setError("Could not reach the server. Please try again later.");
-      setSubmitting(false);
-    }
+    // Calling the action here (not via <form action>) keeps the typed values if the server returns errors.
+    startTransition(() => submit(formData));
   };
 
   return (
@@ -126,7 +71,12 @@ function ApplicationForm({ type, fields }) {
               {field.label}
               {field.required && <span className="contact-required">*</span>}
             </label>
-            <FieldInput field={field} />
+            <FieldInput field={field} maxResumeMb={maxResumeMb} />
+            {fieldErrors[field.name] && (
+              <p className="mt-1 text-left text-sm text-[#c0392b]" role="alert">
+                {fieldErrors[field.name]}
+              </p>
+            )}
           </div>
         ))}
       </div>
@@ -143,15 +93,15 @@ function ApplicationForm({ type, fields }) {
 
       {error && <p className="text-left text-base font-medium text-[#c0392b]">{error}</p>}
 
-      <button type="submit" className="contact-submit-btn" disabled={submitting}>
-        {submitting ? "Sending..." : "Submit Application"}
+      <button type="submit" className="contact-submit-btn" disabled={pending}>
+        {pending ? "Sending..." : "Submit Application"}
       </button>
     </form>
   );
 }
 
-function FieldInput({ field }) {
-  const props = { id: `apply-${field.name}`, name: field.name, required: field.required };
+function FieldInput({ field, maxResumeMb }) {
+  const props = { id: `apply-${field.name}`, name: field.name, required: field.required, maxLength: field.max };
 
   if (field.type === "dob") return <DobInput field={field} />;
 
@@ -161,7 +111,7 @@ function FieldInput({ field }) {
     return (
       <>
         <input type="file" className="contact-input career-apply-file" accept=".pdf,.doc,.docx" {...props} />
-        <small className="career-apply-hint">PDF, DOC or DOCX, up to {MAX_RESUME_MB} MB</small>
+        <small className="career-apply-hint">PDF, DOC or DOCX, up to {maxResumeMb} MB</small>
       </>
     );
   }

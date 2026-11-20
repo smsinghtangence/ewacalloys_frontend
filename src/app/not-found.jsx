@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Page Not Found | EWAC",
+  title: "Page Not Found", // " | EWAC" is added by the template in layout.jsx
   description: "The page you are looking for does not exist.",
 };
 
@@ -22,7 +22,7 @@ const SPARKS = [
 const QUICK_LINKS = [
   { href: "/about-us", label: "About Us" },
   { href: "/products", label: "Products" },
-  { href: "/our_industries/steel", label: "Industries" },
+  { href: "/our_industries", label: "Industries" },
   { href: "/insights", label: "Insights" },
   { href: "/safety-and-environment", label: "Safety & Environment" },
 ];

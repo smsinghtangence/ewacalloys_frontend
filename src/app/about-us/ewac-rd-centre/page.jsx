@@ -4,12 +4,10 @@ import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import RdFacilities from "@/components/about/RdFacilities";
 import PhotoGallery from "@/components/shared/PhotoGallery";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "EWAC R&D Centre | EWAC",
-  description:
-    "EWAC R&D Centre, inaugurated in 1980 and recognised by DSIR, Govt. of India since 1982, develops welding, coating, brazing and polymer products and solutions for maintenance and repair.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/about-us/ewac-rd-centre").
+export const generateMetadata = () => getPageMeta("/about-us/ewac-rd-centre");
 
 const IMG = "/assets/images/rd-centre";
 

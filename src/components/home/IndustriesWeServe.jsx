@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Link from "next/link";
 import CardCarousel, { } from "@/components/shared/CardCarousel";
 
 
@@ -23,6 +24,7 @@ export default function IndustriesWeServe({ industries }) {
         <div className="container">
           <button
             className="ind-arrow ind-prev"
+            aria-label="Previous industries"
             type="button"
             onClick={() => carouselRef.current?.scrollPrev()}
           >
@@ -30,6 +32,7 @@ export default function IndustriesWeServe({ industries }) {
           </button>
           <button
             className="ind-arrow ind-next"
+            aria-label="Next industries"
             type="button"
             onClick={() => carouselRef.current?.scrollNext()}
           >
@@ -45,10 +48,10 @@ export default function IndustriesWeServe({ industries }) {
             className="industries-slider"
             renderItem={(industry) => (
               <div className="ind-slide">
-                <div className="ind-card">
+                <Link className="ind-card" href={industry.href} aria-label={`Explore ${industry.name}`}>
                   <img src={industry.image.url} alt={industry.name} />
                   <div className="ind-label">{industry.name}</div>
-                </div>
+                </Link>
               </div>
             )}
           />

@@ -4,12 +4,10 @@ import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import PhotoGallery from "@/components/shared/PhotoGallery";
 import ErfStats from "@/components/services/ErfStats";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Training | EWAC",
-  description:
-    "EWAC Training Institute at Ankleshwar has conducted Maintenance Welding Training Programmes for employees, customers and the global sales team for over 45 years.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/about-us/trainings").
+export const generateMetadata = () => getPageMeta("/about-us/trainings");
 
 const IMG = "/assets/images/trainings";
 

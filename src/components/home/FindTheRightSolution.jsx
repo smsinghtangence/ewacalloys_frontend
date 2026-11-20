@@ -1,32 +1,22 @@
 "use client";
 
 import { useRef } from "react";
-import CardCarousel, { } from "@/components/shared/CardCarousel";
+import Link from "next/link";
+import CardCarousel from "@/components/shared/CardCarousel";
 import { useTabs } from "@/components/shared/useTabs";
 
-
-// Design (index.php) shows a 5th "Equipment" tab here that isn't backed by any
-// product-category in the CMS yet — kept as a static, product-less tab until
-// real Equipment products are added in Strapi.
-const EQUIPMENT_TAB = {
-  id: -1,
-  name: "Equipment",
-  slug: "equipment",
-  image: { url: "/assets/images/products2.webp", alt: "Equipment" },
-  products: [],
-};
-
+// Tabs and products come from Strapi → Product Category (and its products), in Strapi order.
+// A product card opens its product page (/products/<category>/<product>); "View All" opens the category page.
 export default function FindTheRightSolution({
   productCategories,
 }) {
-  const tabs = productCategories.some((category) => category.slug === EQUIPMENT_TAB.slug)
-    ? productCategories
-    : [...productCategories, EQUIPMENT_TAB];
+  const tabs = productCategories;
   const { activeTab, setActiveTab, onDropdownChange } = useTabs(tabs.map((category) => category.slug));
   const carouselRef = useRef(null);
   const activePane = tabs.find((category) => category.slug === activeTab) ?? tabs[0];
 
   if (!activePane) return null;
+  const categoryHref = `/products/${activePane.slug}`;
 
   return (
     <section className="solution-section">
@@ -57,6 +47,7 @@ export default function FindTheRightSolution({
           <div className="solution-nav-arrows">
             <button
               className="sol-arr sol-arr-prev"
+              aria-label="Previous products"
               type="button"
               onClick={() => carouselRef.current?.scrollPrev()}
             >
@@ -64,6 +55,7 @@ export default function FindTheRightSolution({
             </button>
             <button
               className="sol-arr sol-arr-next"
+              aria-label="Next products"
               type="button"
               onClick={() => carouselRef.current?.scrollNext()}
             >
@@ -88,7 +80,7 @@ export default function FindTheRightSolution({
               </ul>
 
               <div className="sol-dropdown-wrap">
-                <select className="sol-dropdown" id="solDropdown" value={activeTab} onChange={onDropdownChange}>
+                <select className="sol-dropdown" id="solDropdown" aria-label="Product category" value={activeTab} onChange={onDropdownChange}>
                   {tabs.map((category) => (
                     <option value={category.slug} key={category.slug}>
                       {category.name}
@@ -111,20 +103,20 @@ export default function FindTheRightSolution({
                   slideClassName="basis-full sm:basis-1/2 lg:basis-1/3"
                   className="sol-products-slider"
                   renderItem={(product) => (
-                    <a href="#" className="sol-prod-card-link">
+                    <Link href={`${categoryHref}/${product.slug}`} className="sol-prod-card-link">
                       <div className="sol-prod-item">
                         <div className="sol-prod-img">
-                          <img src={product.image.url} alt={product.name} />
+                          {product.image.url && <img src={product.image.url} alt={product.name} />}
                         </div>
                         <h4 className="sol-prod-name">{product.name}</h4>
                       </div>
-                    </a>
+                    </Link>
                   )}
                 />
                 <div className="sol-pane-footer">
-                  <a href="#" className="sol-view-all">
+                  <Link href={categoryHref} className="sol-view-all">
                     View All
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

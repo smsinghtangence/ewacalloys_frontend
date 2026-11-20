@@ -41,6 +41,12 @@ export async function getProductCategories() {
   }));
 }
 
+// Strapi slugs whose page lives at a different URL. Any other slug uses /our_services/<slug>.
+const SERVICE_PAGES = {
+  "turnkey-solutions": "/our_services/turnkey-solution",
+  "erf-services": "/our_services/ewac-reclamation-facility-erf",
+};
+
 export async function getServices() {
   const data = (await fetchStrapi(
     "/api/services?populate=Image&sort=order"
@@ -50,10 +56,16 @@ export async function getServices() {
     id: service.id,
     name: service.Name,
     slug: service.slug,
+    href: SERVICE_PAGES[service.slug] ?? `/our_services/${service.slug}`,
     image: resolveImage(service.Image, service.Name),
     description: service.Description || "",
   }));
 }
+
+// Strapi industries without their own /our_industries page. Any other slug uses /our_industries/<slug>.
+const INDUSTRY_PAGES = {
+  railways: "/our_services/railways",
+};
 
 export async function getIndustries() {
   const data = (await fetchStrapi(
@@ -64,15 +76,35 @@ export async function getIndustries() {
     id: industry.id,
     name: industry.Name,
     slug: industry.slug,
+    href: INDUSTRY_PAGES[industry.slug] ?? `/our_industries/${industry.slug}`,
     image: resolveImage(industry.Image, industry.Name),
   }));
 }
 
 // Footer links that are still "#" in Strapi but already have a page on this site.
+// A real Href set in Strapi always wins. Keys are the link label in lower case.
 const FOOTER_HREF_FALLBACKS = {
-  "terms & conditions": "/terms-conditions",
-  "privacy policy": "/privacy-policy",
+  // Products (no separate Process/Technology/Metal/Brand pages yet, so all go to the product listing)
+  "by category": "/products",
+  "by process": "/products",
+  "by technology": "/products",
+  "by metal type": "/products",
+  "by brand": "/products",
+  // Services
+  "turnkey solutions": "/our_services/turnkey-solution",
+  railways: "/our_services/railways",
+  erf: "/our_services/ewac-reclamation-facility-erf",
+  // Company
   "about us": "/about-us",
+  "r&d centre": "/about-us/ewac-rd-centre",
+  "ewac institute": "/about-us/trainings",
+  careers: "/careers",
+  "our clients": "/#clients",
+  // Legal
+  "contact us": "/contact-us",
+  "privacy policy": "/privacy-policy",
+  "terms & conditions": "/terms-conditions",
+  testimonials: "/life-at-ewac#testimonials",
 };
 
 export async function getFooterColumns() {

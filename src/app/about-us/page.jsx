@@ -4,11 +4,10 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import AboutHistorySlider from "@/components/about/AboutHistorySlider";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "About Us | EWAC",
-  description: "About EWAC Alloys — leader in maintenance and repair welding since 1962.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/about-us").
+export const generateMetadata = () => getPageMeta("/about-us");
 
 const PRODUCT_PILLS = [
   { icon: "/assets/images/about-icon1.svg", label: "Specialized Welding Alloys" },
@@ -29,6 +28,7 @@ export default function AboutPage() {
         src="/assets/images/about/about-banner.webp"
         mobileSrc="/assets/images/about/about-banner-mobile.webp"
         alt="About Us — Leader in Maintenance Repair Welding since 1962"
+        heading="About EWAC Alloys"
         className="about-page-banner"
       >
         <a href="/contact-us" className="about-banner-cta">

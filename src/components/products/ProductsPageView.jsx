@@ -11,6 +11,7 @@ export default function ProductsPageView({ category }) {
         src="/assets/images/products-page/products-banner.webp"
         mobileSrc="/assets/images/products-page/products-banner-mobile.webp"
         alt={category?.name ?? "Products"}
+        heading={category?.name ?? "Products"}
         className="blog-page-banner"
       />
 

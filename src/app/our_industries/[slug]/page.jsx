@@ -7,6 +7,7 @@ import ConsultCta from "@/components/shared/ConsultCta";
 import IndustryApplications from "@/components/industries/IndustryApplications";
 import { INDUSTRY_DETAILS } from "@/components/industries/industryDetails";
 import { getIndustries } from "@/lib/catalog";
+import { getPageMeta } from "@/lib/seo";
 
 // The header menu (Strapi) uses "oil-and-gas-refineries"; the live site URL is "oil-gas-refineries". Serve both.
 const SLUG_ALIASES = { "oil-and-gas-refineries": "oil-gas-refineries" };
@@ -23,9 +24,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const { slug } = await params;
   const industry = findIndustry(slug);
-  return industry
-    ? { title: `${industry.name} | Industries | EWAC`, description: industry.description[0]?.slice(0, 160) }
-    : {};
+  if (!industry) return {};
+  // Old URLs (SLUG_ALIASES) point their canonical link at the current URL.
+  return getPageMeta(`/our_industries/${industry.slug}`, {
+    title: `${industry.name} | Industries`,
+    description: industry.description[0]?.slice(0, 160),
+  });
 }
 
 export default async function IndustryPage({ params }) {
@@ -49,7 +53,7 @@ export default async function IndustryPage({ params }) {
 
       <section className="blog-toolbar">
         <div className="container">
-          <Breadcrumb current={industry.name} trail={[{ label: "Industries", href: "/our_industries/steel" }]} />
+          <Breadcrumb current={industry.name} trail={[{ label: "Industries", href: "/our_industries" }]} />
         </div>
       </section>
 

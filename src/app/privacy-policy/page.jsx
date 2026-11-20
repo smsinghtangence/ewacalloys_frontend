@@ -1,4 +1,5 @@
 import { marked } from "marked";
+import { toMetadata } from "@/lib/seo";
 import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import ConsultCta from "@/components/shared/ConsultCta";
@@ -67,13 +68,12 @@ async function getPrivacyPolicy() {
 
 export async function generateMetadata() {
   const policy = await getPrivacyPolicy();
-  const meta = policy?.meta;
-  return {
-    title: meta?.MetaTitle || "Privacy Policy | EWAC",
-    description: meta?.MetaDescription,
-    keywords: meta?.MetaKeyword,
-    robots: meta?.MetaRobots,
-  };
+  // Meta comes from the Privacy Policy's MetaSection in Strapi (src/lib/seo.js).
+  return toMetadata({
+    meta: policy?.meta,
+    fallback: { title: "Privacy Policy", description: "How EWAC Alloys collects, uses and protects your personal data." },
+    path: "/privacy-policy",
+  });
 }
 
 export default async function PrivacyPolicyPage() {

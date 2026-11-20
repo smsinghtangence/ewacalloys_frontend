@@ -3,12 +3,13 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import RailwayGallery from "@/components/services/RailwayGallery";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Railways | EWAC",
-  description:
-    "EWAC Offers Techno-Economical Turnkey Solution to enhance Track Life & Smooth Running of Train: reconditioning of Points & Crossings, Wheel Burns & Scabs and Tie Tamping Tools.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/our_services/railways").
+export const generateMetadata = () => getPageMeta("/our_services/railways", {
+  title: "Railways",
+  description: "EWAC Alloys reconditions railway track components on site, with RDSO-approved welder training and teams working at nearly 50 locations.",
+});
 
 const IMG = "/assets/images/railways";
 

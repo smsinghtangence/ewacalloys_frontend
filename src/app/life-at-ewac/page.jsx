@@ -6,12 +6,13 @@ import ConsultCta from "@/components/shared/ConsultCta";
 import LifeRewardsSlider from "@/components/life/LifeRewardsSlider";
 import LifeGallery from "@/components/life/LifeGallery";
 import LifeTestimonials from "@/components/life/LifeTestimonials";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Life at EWAC | EWAC",
-  description:
-    "Benefits, rewards and recognition, learning and development, and life as an associate at EWAC Alloys.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/life-at-ewac").
+export const generateMetadata = () => getPageMeta("/life-at-ewac", {
+  title: "Life at EWAC",
+  description: "Discover life at EWAC Alloys: our people, culture, rewards and recognition, and what our employees say about working with us.",
+});
 
 const BENEFITS = [
   {

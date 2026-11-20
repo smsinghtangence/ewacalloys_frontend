@@ -3,11 +3,13 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import SafetyContentsNav from "@/components/about/SafetyContentsNav";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Investor Relations | EWAC",
-  description: "EWAC Alloys Limited annual returns and CSR annual action plans.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/investor-relations").
+export const generateMetadata = () => getPageMeta("/investor-relations", {
+  title: "Investor Relations",
+  description: "Annual returns, reports and shareholder information for EWAC Alloys Limited.",
+});
 
 const DOCS = "/assets/docs/investor-relations";
 
@@ -121,7 +123,13 @@ export default function InvestorRelationsPage() {
           </h1>
 
           <div className="safety-layout">
-            <SafetyContentsNav sections={SECTIONS} />
+            <SafetyContentsNav
+              sections={SECTIONS}
+              help={{
+                title: "Investor queries?",
+                text: "Contact our team for any questions about annual returns, reports or shareholder matters.",
+              }}
+            />
 
             <div className="safety-main">
               <section id={SECTIONS[0].id} className="safety-block" data-aos="fade-up">

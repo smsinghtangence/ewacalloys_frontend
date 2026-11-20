@@ -47,7 +47,6 @@ function ApplicationBody({ app }) {
 }
 
 export default function IndustryApplications({ applications }) {
-  const [sectionOpen, setSectionOpen] = useState(true);
   const [openItems, setOpenItems] = useState(applications.length > 0 ? [0] : []);
 
   const toggleItem = (index) =>
@@ -58,29 +57,20 @@ export default function IndustryApplications({ applications }) {
   return (
     <section className="ind-applications">
       <div className="container">
-        <button
-          type="button"
-          className="ind-acc-section-head"
-          aria-expanded={sectionOpen}
-          onClick={() => setSectionOpen((open) => !open)}
-        >
-          <span>Applications</span>
-          <Chevron open={sectionOpen} />
-        </button>
+        <h2 className="tk-title">Applications</h2>
 
-        {sectionOpen &&
-          applications.map((app, index) => {
-            const open = openItems.includes(index);
-            return (
-              <div className="ind-acc-item" key={`${app.title}-${index}`}>
-                <button type="button" className="ind-acc-head" aria-expanded={open} onClick={() => toggleItem(index)}>
-                  <span>{app.title}</span>
-                  <Chevron open={open} />
-                </button>
-                {open && <ApplicationBody app={app} />}
-              </div>
-            );
-          })}
+        {applications.map((app, index) => {
+          const open = openItems.includes(index);
+          return (
+            <div className="ind-acc-item" key={`${app.title}-${index}`}>
+              <button type="button" className="ind-acc-head" aria-expanded={open} onClick={() => toggleItem(index)}>
+                <span>{app.title}</span>
+                <Chevron open={open} />
+              </button>
+              {open && <ApplicationBody app={app} />}
+            </div>
+          );
+        })}
       </div>
     </section>
   );

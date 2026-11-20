@@ -8,12 +8,22 @@ import "./globals.css";
 import SiteHeader from "@/components/layout/SiteHeader";
 import Footer from "@/components/layout/Footer";
 import AosInit from "@/components/layout/AosInit";
+import PreloadFonts from "@/components/layout/PreloadFonts";
 import { getProductCategories, getServices, getIndustries, getFooterColumns } from "@/lib/catalog";
 import { getHeaderSettings } from "@/lib/headerSettings";
+import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
 
+// Site-wide SEO defaults. Each page sets its own title/description (see src/lib/seo.js and docs/SEO.md);
+// a page title "Railways" becomes "Railways | EWAC" through the template.
 export const metadata = {
-  title: "EWAC",
-  description: "EWAC",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "EWAC Alloys Limited | Welding, Wear & Maintenance Solutions",
+    template: "%s | EWAC",
+  },
+  description:
+    "EWAC Alloys Limited makes welding electrodes, wear plates, thermal spray powders and repair solutions that extend the life of industrial equipment.",
+  openGraph: { type: "website", siteName: SITE_NAME, images: [DEFAULT_OG_IMAGE] },
 };
 
 export default async function RootLayout({
@@ -44,6 +54,7 @@ export default async function RootLayout({
         <link rel="stylesheet" href="/assets/css/main.css" />
       </head>
       <body>
+        <PreloadFonts />
         <SiteHeader
           productCategories={productCategories}
           services={services}

@@ -4,12 +4,10 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import FacilityPlantSlider from "@/components/about/FacilityPlantSlider";
 import ConsultCta from "@/components/shared/ConsultCta";
+import { getPageMeta } from "@/lib/seo";
 
-export const metadata = {
-  title: "Facilities | EWAC",
-  description:
-    "EWAC Alloys facilities — the Dr. Rene Wasserman Centre manufacturing plant in Ankleshwar and the EWAC Reclamation Facility in Pune.",
-};
+// Title, description and robots come from Strapi → Page SEO (path "/about-us/facilities").
+export const generateMetadata = () => getPageMeta("/about-us/facilities");
 
 const ISO_CERTS = [
   { image: "/assets/images/facilities/certificate1.png", label: "ISO 9001:2015", system: "Quality Management System" },
@@ -33,6 +31,7 @@ export default function FacilitiesPage() {
         src="/assets/images/facilities/facilities-banner.webp"
         mobileSrc="/assets/images/facilities/facilities-banner-mobile.webp"
         alt="Facilities"
+        heading="Facilities"
         className="blog-page-banner"
       />
 
