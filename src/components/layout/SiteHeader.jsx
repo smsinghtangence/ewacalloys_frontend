@@ -102,6 +102,8 @@ export default function SiteHeader({
         industries={industries}
         navItems={headerSettings.navItems}
         contact={headerSettings.contact}
+
+        
       />
     </>
   );

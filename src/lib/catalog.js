@@ -104,7 +104,18 @@ export async function getProductCategories() {
   });
 }
 
+// Unreachable Strapi (e.g. during a Vercel build without NEXT_PUBLIC_STRAPI_URL) must not fail the build:
+// the page is built with only the custom cards and refills from Strapi on the next revalidation (60 s).
 export async function getProducts() {
+  try {
+    return await loadProducts();
+  } catch (error) {
+    console.error(`getProducts: ${error.message}`);
+    return [...CUSTOM_PRODUCT_CARDS];
+  }
+}
+
+async function loadProducts() {
   const data = [];
   const pageSize = 100;
   let page = 1;
