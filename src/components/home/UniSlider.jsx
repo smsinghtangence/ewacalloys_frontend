@@ -36,6 +36,8 @@ export default function UniSlider({
             items={cards}
             keyExtractor={(card, index) => `${card.title}-${index}`}
             slideClassName="basis-full sm:basis-1/2 lg:basis-1/3"
+            loop
+            autoplayMs={3000}
             className="services-slider"
             dots
             dotClassName="h-2 w-2 rounded-full bg-[#c4c4c4] transition-all"

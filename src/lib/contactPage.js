@@ -1,4 +1,13 @@
+import { getProductCategories } from "@/lib/catalog";
+
 const backendUrl = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
+const LEGACY_PRODUCT_INTERESTS = new Set([
+  "maintenance & repair products",
+  "fabrication products",
+  "wear liners & components",
+  "ceramic liners & components",
+  "equipment",
+]);
 
 // What the page showed before it moved to Strapi; used when Strapi is down or a field is left empty.
 const DEFAULT_CONTACT_PAGE = {
@@ -21,11 +30,11 @@ const DEFAULT_CONTACT_PAGE = {
     "Bangladesh",
   ],
   interests: [
-    "Maintenance & Repair Products",
-    "Fabrication Products",
+    "Maintenance & Repair products",
+    "Fabrication",
     "Wear Liners & Components",
     "Ceramic Liners & Components",
-    "Equipment",
+    "Welding Equipment",
     "Turnkey Solutions",
     "Railways",
     "EWAC Reclamation Facility (ERF)",
@@ -70,7 +79,14 @@ export async function getContactPage() {
     if (!data) return DEFAULT_CONTACT_PAGE;
 
     const countries = labels(data.CountryOptions);
-    const interests = labels(data.InterestedInOptions);
+    const categoryList = await getProductCategories();
+    const productInterests = categoryList.length > 0
+      ? categoryList.map((category) => category.name)
+      : DEFAULT_CONTACT_PAGE.interests.slice(0, 5);
+    const otherInterests = labels(data.InterestedInOptions).filter(
+      (label) => !LEGACY_PRODUCT_INTERESTS.has(label.trim().toLowerCase())
+    );
+    const interests = [...productInterests, ...otherInterests];
     const offices = (data.Offices ?? []).map(resolveOffice).filter((office) => office.label);
 
     return {
@@ -80,7 +96,7 @@ export async function getContactPage() {
       formTitle: data.FormTitle || DEFAULT_CONTACT_PAGE.formTitle,
       formSubtitle: data.FormSubtitle || DEFAULT_CONTACT_PAGE.formSubtitle,
       countries: countries.length > 0 ? countries : DEFAULT_CONTACT_PAGE.countries,
-      interests: interests.length > 0 ? interests : DEFAULT_CONTACT_PAGE.interests,
+      interests,
       map: data.MapImage?.url || DEFAULT_CONTACT_PAGE.map,
       mapAlt: data.MapAlt || DEFAULT_CONTACT_PAGE.mapAlt,
       officesTitle: data.OfficesTitle || DEFAULT_CONTACT_PAGE.officesTitle,

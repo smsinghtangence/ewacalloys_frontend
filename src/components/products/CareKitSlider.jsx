@@ -13,6 +13,8 @@ export default function CareKitSlider({ items }) {
         ref={carouselRef}
         items={items}
         keyExtractor={(item) => item.src}
+        loop
+        autoplayMs={3500}
         slideClassName="basis-full sm:basis-1/2 lg:basis-1/3"
         dots
         dotsClassName="ck-dots"
@@ -22,6 +24,7 @@ export default function CareKitSlider({ items }) {
           <div className="ck-slide">
             <div className="ck-slide-card">
               <img src={item.src} alt={item.alt} loading="lazy" />
+              <p className="ck-slide-name">{item.name}</p>
             </div>
           </div>
         )}

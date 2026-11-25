@@ -1,14 +1,12 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getPageMeta, toMetadata } from "@/lib/seo";
-import { fetchStrapi } from "@/lib/catalog";
+import { fetchStrapiRequired, PRODUCT_PLACEHOLDER } from "@/lib/catalog";
 import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import { ProductGallery, ProductTabs } from "@/components/products/ProductDetailView";
-import { PRODUCT_DETAILS } from "@/components/products/productDetails";
-import { PRODUCTS } from "@/components/products/productsData";
 import CareKitDetail from "@/components/products/CareKitDetail";
 import { CUSTOM_PRODUCT_PAGES } from "@/components/products/careKit";
 
@@ -18,66 +16,82 @@ export const revalidate = 60;
 // the /uploads rewrite in next.config.mjs.
 const mediaUrl = (media) => (media?.url ? media.url.replace(/^https?:\/\/[^/]+(?=\/uploads\/)/, "") : null);
 const texts = (items) => (items ?? []).map((item) => item.Text).filter(Boolean);
+const cells = (line) => line.split("|").map((cell) => cell.trim());
 
-// The product as entered in Strapi → Product. The custom product controller populates every field this page
-// needs; populate=* covers a server still running the default controller (images and components).
-async function getStrapiProduct(slug) {
-  const [product] = await fetchStrapi(`/api/products?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`);
+// Amperage is stored as text: one row per line, cells separated by "|", first line is the header.
+function parseTable(text) {
+  const [head, ...rows] = (text || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  return head ? { head: cells(head), rows: rows.map(cells) } : null;
+}
+
+async function getProduct(slug) {
+  const { data } = await fetchStrapiRequired(
+    `/api/products?filters[slug][$eq]=${encodeURIComponent(slug)}&populate=*`
+  );
+  const [product] = data;
   if (!product) return null;
 
-  const images = [...(product.Gallery ?? []).map(mediaUrl), mediaUrl(product.Image)].filter(Boolean);
+  const photos = [...(product.Gallery ?? []).map(mediaUrl), mediaUrl(product.Image)].filter(Boolean);
+  const applicationImage = mediaUrl(product.ApplicationImage);
+  // Without a product photo, the application photo becomes the main picture (and is not repeated below).
+  const images = photos.length ? photos : [applicationImage].filter(Boolean);
   return {
-    // false while the product has no detail content (Features) in Strapi yet
-    hasDetails: Boolean(product.Features?.length),
     slug: product.slug,
-    category: product.category?.slug,
+    category: product.mainCategory?.slug || "",
+    categoryName: product.mainCategory?.Name || "",
+    subCategory: product.subCategory?.Name || "",
+    productCategory: product.category?.Name || "",
+    type: product.ProductType || "",
+    process: product.Process || "",
+    brand: product.Brand || "",
     name: product.Name,
     subtitle: product.Subtitle || "",
     bestSeller: Boolean(product.BestSeller),
     images: [...new Set(images)],
-    applicationImage: mediaUrl(product.ApplicationImage),
+    applicationImage,
     wheel: mediaUrl(product.WheelImage),
     application: product.Application || "",
     features: texts(product.Features),
     recommendations: texts(product.Recommendations),
     hardness: texts(product.Hardness),
-    amperage: (product.Amperage ?? []).map((row) => ({ size: row.Size, amps: row.Amperage })),
-    brochure: mediaUrl(product.Brochure),
+    amperage: parseTable(product.Amperage),
     meta: product.MetaSection?.[0] ?? null,
   };
 }
 
-// 1. Strapi product with details  2. placeholder data below  3. Strapi product with just its name/image
-// (so every product listed in Strapi has a page instead of a 404).
-async function getProduct(slug) {
-  const strapiProduct = await getStrapiProduct(slug);
-  if (strapiProduct?.hasDetails) return strapiProduct;
-  return findProduct(slug) ?? strapiProduct;
-}
+// DUMMY CONTENT — lorem ipsum shown in place of missing product content so the layout can be reviewed.
+// Applied only when rendering the page (never in metadata). Set to false before launch.
+const SHOW_DUMMY_CONTENT = true;
+const LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+const DUMMY = {
+  subtitle: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+  wheel: "/assets/images/product-detail/te-101-wheel.webp", // the design's sample wear-rating wheel
+  application: `${LOREM} Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.`,
+  features: [
+    "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "Sed do eiusmod tempor incididunt ut labore et dolore.",
+    "Ut enim ad minim veniam, quis nostrud exercitation.",
+    "Duis aute irure dolor in reprehenderit in voluptate.",
+  ],
+  recommendations: [LOREM, "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."],
+  hardness: ["Lorem ipsum 20 - 24 HRC", "Dolor sit 35 - 48 HRC"],
+  amperage: { head: ["Size (mm)", "Range"], rows: [["3.15", "100 - 120"], ["4.00", "130 - 160"], ["5.00", "150 - 180"]] },
+};
 
-// Products with their own entry in productDetails.js use it; any other catalogue product reuses the first
-// entry as a template until its real details are added.
-function findProduct(slug) {
-  const detail = PRODUCT_DETAILS.find((product) => product.slug === slug);
-  if (detail) return detail;
-  const listed = PRODUCTS.find((product) => product.slug === slug);
-  if (!listed) return null;
+function withDummyContent(product) {
+  if (!SHOW_DUMMY_CONTENT) return product;
   return {
-    ...PRODUCT_DETAILS[0],
-    slug: listed.slug,
-    category: listed.category,
-    name: listed.name,
-    subtitle: listed.type,
-    bestSeller: Boolean(listed.bestSeller),
-    images: [listed.image, ...PRODUCT_DETAILS[0].images],
+    ...product,
+    subtitle: product.subtitle || DUMMY.subtitle,
+    applicationImage: product.applicationImage || PRODUCT_PLACEHOLDER,
+    wheel: product.wheel || DUMMY.wheel,
+    wheelIsDemo: !product.wheel,
+    application: product.application || DUMMY.application,
+    features: product.features.length ? product.features : DUMMY.features,
+    recommendations: product.recommendations.length ? product.recommendations : DUMMY.recommendations,
+    hardness: product.hardness.length ? product.hardness : DUMMY.hardness,
+    amperage: product.amperage || DUMMY.amperage,
   };
-}
-
-export function generateStaticParams() {
-  return [
-    ...PRODUCT_DETAILS.map(({ category, slug }) => ({ category, slug })),
-    ...Object.values(CUSTOM_PRODUCT_PAGES).map(({ category, slug }) => ({ category, slug })),
-  ];
 }
 
 // Meta description: the product's application text, or a sentence built from its name, type and category.
@@ -101,7 +115,7 @@ export async function generateMetadata({ params }) {
     });
   }
   const product = await getProduct(slug);
-  if (!product) return {};
+  if (!product || product.category !== category) return {};
   const description = describeProduct(product, category);
   const fallback = { title: `${product.name} | Products`, description };
   // The product's own MetaSection in Strapi wins; otherwise Page SEO / the fallback.
@@ -114,15 +128,20 @@ export async function generateMetadata({ params }) {
 export default async function ProductDetailPage({ params }) {
   const { category, slug } = await params;
   // A few products (e.g. the EWAC Care Kit) have a page with their own layout; every other product uses the one below.
+  // A product opened under another category (e.g. /products/view/<slug> from the Strapi "Open" button)
+  // is sent to its real URL.
   const custom = CUSTOM_PRODUCT_PAGES[slug];
   if (custom) {
-    if (custom.category !== category) notFound();
+    if (custom.category !== category) redirect(`/products/${custom.category}/${slug}`);
     return <CareKitDetail kit={custom} />;
   }
-  const product = await getProduct(slug);
-  if (!product) notFound();
+  const found = await getProduct(slug);
+  if (!found || !found.category) notFound();
+  if (found.category !== category) redirect(`/products/${found.category}/${slug}`);
+  const product = withDummyContent(found);
   const hasNoDetails =
-    !product.application && !product.features.length && !product.recommendations.length && !product.hardness.length;
+    !product.application && !product.features.length && !product.recommendations.length &&
+    !product.hardness.length && !product.amperage;
 
   return (
     <>
@@ -135,7 +154,13 @@ export default async function ProductDetailPage({ params }) {
 
       <section className="blog-toolbar">
         <div className="container">
-          <Breadcrumb current={product.name} trail={[{ label: "Products", href: "/products" }]} />
+          <Breadcrumb
+            current={product.name}
+            trail={[
+              { label: "Products", href: "/products" },
+              ...(product.categoryName ? [{ label: product.categoryName, href: `/products/${product.category}` }] : []),
+            ]}
+          />
         </div>
       </section>
 
@@ -144,11 +169,16 @@ export default async function ProductDetailPage({ params }) {
         <div className="container">
           <div className="pd-grid">
             <div className="pd-left">
-              {product.images.length > 0 && <ProductGallery images={product.images} name={product.name} />}
+              {/* No photos yet: a greyed demo slider with three placeholder slides keeps the layout. */}
+              <ProductGallery
+                images={product.images.length > 0 ? product.images : Array(3).fill(PRODUCT_PLACEHOLDER)}
+                name={product.name}
+                demo={product.images.length === 0}
+              />
 
               {product.wheel && (
-                <div className="pd-wheel">
-                  <img src={product.wheel} alt="Wear resistance ratings" />
+                <div className={`pd-wheel${product.wheelIsDemo ? " pd-wheel--demo" : ""}`}>
+                  <img src={product.wheel} alt={product.wheelIsDemo ? "Sample wear resistance ratings" : "Wear resistance ratings"} />
                 </div>
               )}
             </div>
@@ -190,7 +220,7 @@ export default async function ProductDetailPage({ params }) {
                 <ProductTabs features={product.features} recommendations={product.recommendations} />
               )}
 
-              {(product.hardness.length > 0 || product.amperage.length > 0) && (
+              {(product.hardness.length > 0 || product.amperage) && (
               <div className="pd-tables">
                 {product.hardness.length > 0 && (
                 <table className="pd-table pd-hardness">
@@ -200,8 +230,8 @@ export default async function ProductDetailPage({ params }) {
                     </tr>
                   </thead>
                   <tbody>
-                    {product.hardness.map((row) => (
-                      <tr key={row}>
+                    {product.hardness.map((row, index) => (
+                      <tr key={`${row}-${index}`}>
                         <td>{row}</td>
                       </tr>
                     ))}
@@ -209,24 +239,26 @@ export default async function ProductDetailPage({ params }) {
                 </table>
                 )}
 
-                {product.amperage.length > 0 && (
+                {product.amperage && (
                 <table className="pd-table pd-amperage">
                   <thead>
                     <tr>
-                      <th colSpan={2} className="pd-amperage-head">
+                      <th colSpan={product.amperage.head.length} className="pd-amperage-head">
                         Recommended Amperage
                       </th>
                     </tr>
                     <tr className="pd-amperage-cols">
-                      <th>Size (mm)</th>
-                      <th>Amperage</th>
+                      {product.amperage.head.map((cell, index) => (
+                        <th key={`${cell}-${index}`}>{cell}</th>
+                      ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {product.amperage.map((row) => (
-                      <tr key={row.size}>
-                        <td>{row.size}</td>
-                        <td>{row.amps}</td>
+                    {product.amperage.rows.map((row, index) => (
+                      <tr key={`${row[0]}-${index}`}>
+                        {row.map((cell, cellIndex) => (
+                          <td key={cellIndex}>{cell}</td>
+                        ))}
                       </tr>
                     ))}
                   </tbody>
@@ -235,11 +267,6 @@ export default async function ProductDetailPage({ params }) {
               </div>
               )}
 
-              {product.brochure && product.brochure !== "#" && (
-                <a href={product.brochure} className="pd-btn" target="_blank" rel="noopener noreferrer" download>
-                  Download Brochure
-                </a>
-              )}
             </div>
           </div>
         </div>

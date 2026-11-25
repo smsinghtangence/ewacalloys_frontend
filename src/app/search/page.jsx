@@ -1,10 +1,8 @@
 import Link from "next/link";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import ConsultCta from "@/components/shared/ConsultCta";
-import { fetchStrapi } from "@/lib/catalog";
+import { fetchStrapi, getProducts } from "@/lib/catalog";
 import { INDUSTRY_DETAILS } from "@/components/industries/industryDetails";
-import { PRODUCTS } from "@/components/products/productsData";
-import { CUSTOM_PRODUCT_PAGES } from "@/components/products/careKit";
 import { getPageMeta } from "@/lib/seo";
 
 // Title, description and robots come from Strapi → Page SEO (path "/search").
@@ -32,17 +30,8 @@ const PAGES = [
   { title: "Terms & Conditions", href: "/terms-conditions", keywords: "legal terms use" },
 ];
 
-// One entry per product name (the catalogue repeats names across brands), linking to its category
-// (or to its own page for products that have one, e.g. the EWAC Care Kit).
-const PRODUCT_ENTRIES = [...new Map(PRODUCTS.map((p) => [p.name, p])).values()].map((p) => ({
-  title: p.name,
-  href: CUSTOM_PRODUCT_PAGES[p.slug] ? `/products/${p.category}/${p.slug}` : `/products/${p.category}`,
-  keywords: `${p.description} ${p.type} ${p.process}`,
-}));
-
 const STATIC_INDEX = [
   ...PAGES.map((item) => ({ ...item, type: "Page" })),
-  ...PRODUCT_ENTRIES.map((item) => ({ ...item, type: "Product" })),
   ...INDUSTRY_DETAILS.map((item) => ({
     title: `${item.name} Industry`,
     href: `/our_industries/${item.slug}`,
@@ -69,10 +58,16 @@ function search(index, query) {
 export default async function SearchPage({ searchParams }) {
   const { q } = await searchParams;
   const query = (Array.isArray(q) ? q[0] : q)?.trim() ?? "";
-  // Blogs come from Strapi, so they are added to the index on each request.
+  const products = await getProducts();
   const blogs = await fetchStrapi("/api/blogs?fields[0]=Heading&fields[1]=slug&filters[slug][$notNull]=true&pagination[pageSize]=100");
   const index = [
     ...STATIC_INDEX,
+    ...products.map((product) => ({
+      title: product.name,
+      href: `/products/${product.category}/${product.slug}`,
+      keywords: `${product.description} ${product.productCategory} ${product.type} ${product.process} ${product.brand} ${product.categoryName} ${product.subCategory}`,
+      type: "Product",
+    })),
     ...blogs.map((blog) => ({ title: blog.Heading, href: `/blogs/${blog.slug}`, keywords: "", type: "Blog" })),
   ];
   const results = search(index, query);

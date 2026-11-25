@@ -4,7 +4,7 @@ const IMG = "/assets/images/product-detail";
 export const PRODUCT_DETAILS = [
   {
     slug: "ewac-te-101-ac-dc",
-    category: "maintenance-and-repair",
+    category: "maintenance-and-repair-products",
     name: "EWAC TE 101 ac/dc+",
     subtitle: "Tubular Electrode with High Temperature Properties",
     bestSeller: true,

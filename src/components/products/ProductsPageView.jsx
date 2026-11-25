@@ -4,7 +4,7 @@ import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import ProductListing from "@/components/products/ProductListing";
 
-export default function ProductsPageView({ category }) {
+export default function ProductsPageView({ category, products }) {
   return (
     <>
       <InnerBanner
@@ -26,7 +26,7 @@ export default function ProductsPageView({ category }) {
 
       <div className="products-wrap">
         <GearBackdrop className="products-gear" />
-        <ProductListing category={category?.slug} />
+        <ProductListing category={category?.slug} products={products} />
       </div>
 
       <ConsultCta welderDecoration />

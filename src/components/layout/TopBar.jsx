@@ -1,3 +1,5 @@
+import SmartLink from "@/components/shared/SmartLink";
+
 export default function TopBar({
   label,
   message,
@@ -9,8 +11,8 @@ export default function TopBar({
       <div className="container">
         <div className="top-header">
           <span>{label}</span>
-          <p>{message}</p>
-          <a href={ctaHref}>{ctaLabel}</a>
+          <p data-message={message}>{message}</p>
+          <SmartLink href={ctaHref}>{ctaLabel}</SmartLink>
         </div>
       </div>
     </div>

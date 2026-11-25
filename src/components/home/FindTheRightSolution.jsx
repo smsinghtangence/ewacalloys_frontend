@@ -101,6 +101,8 @@ export default function FindTheRightSolution({
                   items={activePane.products}
                   keyExtractor={(product) => product.id}
                   slideClassName="basis-full sm:basis-1/2 lg:basis-1/3"
+                  loop
+                  autoplayMs={3000}
                   className="sol-products-slider"
                   renderItem={(product) => (
                     <Link href={`${categoryHref}/${product.slug}`} className="sol-prod-card-link">

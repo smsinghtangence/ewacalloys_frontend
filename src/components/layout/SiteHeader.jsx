@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import TopBar from "./TopBar";
 import Nav from "./Nav";
 import MobileMenu from "./MobileMenu";
@@ -65,9 +66,9 @@ export default function SiteHeader({
 
       <header className={`header${isSticky ? " is-sticky" : ""}`} ref={headerRef}>
         <div className="logo">
-          <a href="/">
+          <Link href="/">
             <img src={headerSettings.logo.url} alt={headerSettings.logo.alt} />
-          </a>
+          </Link>
         </div>
 
         <Nav

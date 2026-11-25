@@ -1,48 +1,163 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
-import { PRODUCTS } from "@/components/products/productsData";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 function countBy(products, pick) {
   const counts = new Map();
-  products.forEach((p) => counts.set(pick(p), (counts.get(pick(p)) ?? 0) + 1));
+  products.forEach((p) => {
+    const value = pick(p);
+    if (value) counts.set(value, (counts.get(value) ?? 0) + 1);
+  });
   return counts;
 }
 
-/** Filterable product grid. `category` (a Strapi product-category slug) limits the catalogue when given. */
-export default function ProductListing({ category }) {
-  const base = useMemo(() => (category ? PRODUCTS.filter((p) => p.category === category) : PRODUCTS), [category]);
+// DUMMY CONTENT — shown on cards whose product has no description yet, so every card looks complete.
+const DUMMY_DESCRIPTION = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.";
+
+/** One labelled filter dropdown; `options` are [value, label] pairs, "" = All. */
+function FilterSelect({ id, label, value, onChange, options }) {
+  return (
+    <div className="products-filter-field">
+      <label className="products-filter-label" htmlFor={id}>
+        {label}
+      </label>
+      <select id={id} value={value} onChange={(event) => onChange(event.target.value)}>
+        <option value="">All</option>
+        {options.map(([optionValue, optionLabel]) => (
+          <option key={optionValue} value={optionValue}>
+            {optionLabel}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+// Footer "Products → By …" links open /products?by=<key>; the page then shows that dimension as chips.
+const BROWSE_LABELS = {
+  category: "Category",
+  process: "Process",
+  technology: "Technology",
+  metal: "Metal Type",
+  brand: "Brand",
+};
+// Product categories that name a base metal (used for "By Metal Type").
+const METALS = ["Steel", "Stainless Steel", "Cast Iron", "Copper", "Aluminium", "Special Alloys"];
+
+/** Reads ?by= from the URL. Kept in its own Suspense boundary so the product grid still renders on the server. */
+function BrowseParam({ onChange }) {
+  const by = useSearchParams().get("by") ?? "";
+  useEffect(() => onChange(BROWSE_LABELS[by] ? by : ""), [by, onChange]);
+  return null;
+}
+
+const unique = (products, pick) => [...new Set(products.map(pick).filter(Boolean))];
+
+/**
+ * Filterable product grid. `category` (a main product-category slug) limits the catalogue when given.
+ * Filters follow the product hierarchy sheet: Main category > Sub-category > Product Category narrow the
+ * hierarchy, then Product Type / Process / Brand list only the values found in that part of it.
+ */
+export default function ProductListing({ category, products }) {
+  const base = useMemo(() => {
+    const catalogue = products ?? [];
+    return category ? catalogue.filter((product) => product.category === category) : catalogue;
+  }, [category, products]);
 
   const [query, setQuery] = useState("");
-  const [types, setTypes] = useState([]);
+  const [mainCategory, setMainCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [productCategory, setProductCategory] = useState("");
+  const [type, setType] = useState("");
   const [process, setProcess] = useState("");
   const [brand, setBrand] = useState("");
   const [sort, setSort] = useState("relevance");
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [browseBy, setBrowseBy] = useState("");
 
-  const typeCounts = useMemo(() => countBy(base, (p) => p.type), [base]);
-  const processes = useMemo(() => [...new Set(base.map((p) => p.process))], [base]);
-  const brands = useMemo(() => [...new Set(base.map((p) => p.brand))], [base]);
+  const mainCategories = useMemo(() => {
+    const options = new Map();
+    base.forEach((product) => options.set(product.category, product.categoryName || product.category));
+    return [...options.entries()];
+  }, [base]);
+  const inMain = useMemo(
+    () => base.filter((p) => !mainCategory || p.category === mainCategory),
+    [base, mainCategory]
+  );
+  const subCategories = useMemo(() => unique(inMain, (p) => p.subCategory), [inMain]);
+  const inSub = useMemo(
+    () => inMain.filter((p) => !subCategory || p.subCategory === subCategory),
+    [inMain, subCategory]
+  );
+  const productCategories = useMemo(() => unique(inSub, (p) => p.productCategory), [inSub]);
+  const inHierarchy = useMemo(
+    () => inSub.filter((p) => !productCategory || p.productCategory === productCategory),
+    [inSub, productCategory]
+  );
+  const typeCounts = useMemo(() => countBy(inHierarchy, (p) => p.type), [inHierarchy]);
+  const processes = useMemo(() => unique(inHierarchy, (p) => p.process), [inHierarchy]);
+  const brands = useMemo(() => unique(inHierarchy, (p) => p.brand), [inHierarchy]);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const filtered = base.filter(
+    const filtered = inHierarchy.filter(
       (p) =>
-        (types.length === 0 || types.includes(p.type)) &&
+        (!type || p.type === type) &&
         (!process || p.process === process) &&
         (!brand || p.brand === brand) &&
-        (!q || `${p.name} ${p.description} ${p.type} ${p.process} ${p.brand}`.toLowerCase().includes(q))
+        (!q || `${p.name} ${p.description} ${p.type} ${p.process} ${p.brand} ${p.productCategory} ${p.subCategory} ${p.categoryName}`.toLowerCase().includes(q))
     );
     if (sort === "name-asc") return [...filtered].sort((a, b) => a.name.localeCompare(b.name));
     if (sort === "name-desc") return [...filtered].sort((a, b) => b.name.localeCompare(a.name));
     return filtered;
-  }, [base, query, types, process, brand, sort]);
+  }, [inHierarchy, query, type, process, brand, sort]);
 
-  const toggleType = (type) =>
-    setTypes((current) => (current.includes(type) ? current.filter((t) => t !== type) : [...current, type]));
+  // Changing a hierarchy level clears the filters below it, so none is left on a value that no longer exists.
+  const resetBelowHierarchy = () => {
+    setType("");
+    setProcess("");
+    setBrand("");
+  };
+
+  const activeFilters = [mainCategory, subCategory, productCategory, type, process, brand].filter(Boolean).length;
+  const clearFilters = () => {
+    setMainCategory("");
+    setSubCategory("");
+    setProductCategory("");
+    resetBelowHierarchy();
+  };
+
+  // Chips for the "Browse by" bar: [value, label, count] over the whole catalogue of this page.
+  const browseOptions = useMemo(() => {
+    const counted = (pick) => [...countBy(base, pick).entries()].map(([value, count]) => [value, value, count]);
+    if (browseBy === "category") {
+      const counts = countBy(base, (p) => p.category);
+      return mainCategories.map(([slug, name]) => [slug, name, counts.get(slug) ?? 0]);
+    }
+    if (browseBy === "process") return counted((p) => p.process);
+    if (browseBy === "technology") return counted((p) => p.type);
+    if (browseBy === "brand") return counted((p) => p.brand).sort((a, b) => a[1].localeCompare(b[1]));
+    if (browseBy === "metal") return counted((p) => p.productCategory).filter(([value]) => METALS.includes(value));
+    return [];
+  }, [browseBy, base, mainCategories]);
+  const browseValue = { category: mainCategory, process, technology: type, metal: productCategory, brand }[browseBy] ?? "";
+  // A chip replaces every other filter, so the list shows exactly that group.
+  const pickBrowse = (value) => {
+    clearFilters();
+    if (browseBy === "category") setMainCategory(value);
+    if (browseBy === "process") setProcess(value);
+    if (browseBy === "technology") setType(value);
+    if (browseBy === "metal") setProductCategory(value);
+    if (browseBy === "brand") setBrand(value);
+  };
 
   return (
     <section className="products-page">
+      <Suspense fallback={null}>
+        <BrowseParam onChange={setBrowseBy} />
+      </Suspense>
       <div className="container">
         <div className="products-search">
           <input
@@ -55,59 +170,106 @@ export default function ProductListing({ category }) {
           <i className="fas fa-search" aria-hidden="true" />
         </div>
 
+        {browseOptions.length > 0 && !(browseBy === "category" && category) && (
+          <div className="products-browse" role="group" aria-label={`Browse by ${BROWSE_LABELS[browseBy]}`}>
+            <span className="products-browse-label">Browse by {BROWSE_LABELS[browseBy]}</span>
+            <div className="products-browse-chips">
+              <button type="button" className={`products-browse-chip${browseValue ? "" : " is-active"}`} onClick={() => pickBrowse("")}>
+                All <small>{base.length}</small>
+              </button>
+              {browseOptions.map(([value, label, count]) => (
+                <button
+                  type="button"
+                  key={value}
+                  className={`products-browse-chip${browseValue === value ? " is-active" : ""}`}
+                  aria-pressed={browseValue === value}
+                  onClick={() => pickBrowse(value)}
+                >
+                  {label} <small>{count}</small>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="products-layout">
-          <aside className="products-filters">
+          <aside className={`products-filters${filtersOpen ? " is-open" : ""}`}>
+            {/* On mobile the heading is a toggle; the filters stay collapsed until it is tapped. */}
             <h2>
-              <i className="fas fa-filter" aria-hidden="true" /> Filters
+              <button
+                type="button"
+                className="products-filters-toggle"
+                aria-expanded={filtersOpen}
+                aria-controls="productFilters"
+                onClick={() => setFiltersOpen((open) => !open)}
+              >
+                <i className="fas fa-filter" aria-hidden="true" /> Filters
+                {activeFilters > 0 && <span className="products-filters-count">{activeFilters}</span>}
+                <i className="fas fa-chevron-down products-filters-chevron" aria-hidden="true" />
+              </button>
+              {activeFilters > 0 && (
+                <button type="button" className="products-filters-clear" onClick={clearFilters}>
+                  Clear all
+                </button>
+              )}
             </h2>
 
-            <label className="products-filter-label" htmlFor="filterType">
-              Product type
-            </label>
-            <select
-              id="filterType"
-              value={types.length === 1 ? types[0] : ""}
-              onChange={(event) => setTypes(event.target.value ? [event.target.value] : [])}
-            >
-              <option value="">All</option>
-              {[...typeCounts.keys()].map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+            <div className="products-filters-body" id="productFilters">
+              {!category && (
+                <FilterSelect
+                  id="filterMainCategory"
+                  label="Main category"
+                  value={mainCategory}
+                  onChange={(value) => {
+                    setMainCategory(value);
+                    setSubCategory("");
+                    setProductCategory("");
+                    resetBelowHierarchy();
+                  }}
+                  options={mainCategories.map(([slug, name]) => [slug, name])}
+                />
+              )}
 
-            <ul className="products-type-list">
-              {[...typeCounts.entries()].map(([type, count]) => (
-                <li key={type}>
-                  <label>
-                    <input type="checkbox" checked={types.includes(type)} onChange={() => toggleType(type)} />
-                    <span>{type}</span>
-                    <small>{count}</small>
-                  </label>
-                </li>
-              ))}
-            </ul>
+              {subCategories.length > 0 && (
+                <FilterSelect
+                  id="filterSubCategory"
+                  label="Sub-category"
+                  value={subCategory}
+                  onChange={(value) => {
+                    setSubCategory(value);
+                    setProductCategory("");
+                    resetBelowHierarchy();
+                  }}
+                  options={subCategories.map((name) => [name, name])}
+                />
+              )}
 
-            <label className="products-filter-label" htmlFor="filterProcess">
-              Process
-            </label>
-            <select id="filterProcess" value={process} onChange={(event) => setProcess(event.target.value)}>
-              <option value="">All</option>
-              {processes.map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </select>
+              <FilterSelect
+                id="filterProductCategory"
+                label="Product category"
+                value={productCategory}
+                onChange={(value) => {
+                  setProductCategory(value);
+                  resetBelowHierarchy();
+                }}
+                options={productCategories.map((name) => [name, name])}
+              />
+              <FilterSelect
+                id="filterType"
+                label="Product type"
+                value={type}
+                onChange={setType}
+                options={[...typeCounts.entries()].map(([item, count]) => [item, `${item} (${count})`])}
+              />
+              <FilterSelect id="filterProcess" label="Process" value={process} onChange={setProcess}
+                options={processes.map((item) => [item, item])} />
+              <FilterSelect id="filterBrand" label="Brand" value={brand} onChange={setBrand}
+                options={brands.map((item) => [item, item])} />
 
-            <label className="products-filter-label" htmlFor="filterBrand">
-              Brand
-            </label>
-            <select id="filterBrand" value={brand} onChange={(event) => setBrand(event.target.value)}>
-              <option value="">All</option>
-              {brands.map((item) => (
-                <option key={item}>{item}</option>
-              ))}
-            </select>
+              <button type="button" className="products-filters-done" onClick={() => setFiltersOpen(false)}>
+                Show {results.length} products
+              </button>
+            </div>
           </aside>
 
           <div className="products-results">
@@ -132,16 +294,17 @@ export default function ProductListing({ category }) {
                 {results.map((product) => (
                   <article className="product-tile" key={product.id}>
                     <div className="product-tile-img">
-                      <img src={product.image} alt={product.name} />
+                      {product.image && <img src={product.image} alt={product.name} />}
                       {product.bestSeller && <span className="product-tile-badge">Best Seller</span>}
                     </div>
                     <div className="product-tile-body">
                       <div className="product-tile-tags">
-                        <span>{product.process}</span>
-                        <span>{product.type}</span>
+                        {[product.process, product.type, product.brand, product.productCategory].filter(Boolean).map((tag, index) => (
+                          <span key={`${tag}-${index}`}>{tag}</span>
+                        ))}
                       </div>
                       <h3>{product.name}</h3>
-                      <p>{product.description}</p>
+                      <p>{product.description || DUMMY_DESCRIPTION}</p>
                       <Link
                         href={`/products/${product.category}/${product.slug}`}
                         className={`product-tile-btn${product.bestSeller ? " is-red" : ""}`}

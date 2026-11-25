@@ -1,4 +1,23 @@
+"use client";
+
 import Link from "next/link";
+import SmartLink from "@/components/shared/SmartLink";
+
+import { useState } from "react";
+
+// Dropdowns open on CSS hover. Links navigate without a page reload, so after a click the menu is closed
+// (class "is-closed") until the pointer leaves it; otherwise it would stay open over the new page.
+// Kept in React state: a class set on the element directly would be wiped by the re-render after navigation.
+function useCloseAfterClick() {
+  const [closed, setClosed] = useState(null);
+  return (label) => ({
+    className: `nav-item has-dropdown${closed === label ? " is-closed" : ""}`,
+    onClick: (event) => {
+      if (event.target.closest(".dropdown a")) setClosed(label);
+    },
+    onMouseLeave: () => setClosed((current) => (current === label ? null : current)),
+  });
+}
 
 
 
@@ -19,30 +38,30 @@ function MegaDropdown({
           <p>{copy.description}</p>
           {/* Hidden when there is no label or no real link (see exploreHref in lib/headerSettings.js) */}
           {copy.exploreLabel && copy.exploreHref && (
-            <a href={copy.exploreHref} className="mega-explore-btn">
+            <SmartLink href={copy.exploreHref} className="mega-explore-btn">
               {copy.exploreLabel} <i className="fa fa-arrow-right" />
-            </a>
+            </SmartLink>
           )}
         </div>
         <div className={`mega-cards-grid ${gridModifier}`}>
           {copy.cardVariant === "image"
             ? cards.map((card) => (
-                <a href={card.href} key={card.label}>
+                <SmartLink href={card.href} key={card.label}>
                   <div className="menu-img-wrap">
-                    <img src={card.image} alt={card.label} />
+                    {card.image && <img src={card.image} alt={card.label} />}
                   </div>
                   <div className="menu">
                     <p className="menu-title">{card.label}</p>
                   </div>
-                </a>
+                </SmartLink>
               ))
             : cards.map((card) => (
-                <a href={card.href} className="mic" key={card.label}>
+                <SmartLink href={card.href} className="mic" key={card.label}>
                   <div className="mic-icon-industry">
                     <img src={card.image} alt="" />
                   </div>
                   <span className="mic-title">{card.label}</span>
-                </a>
+                </SmartLink>
               ))}
         </div>
       </div>
@@ -55,9 +74,9 @@ function newTabProps(newTab) {
   return newTab ? { target: "_blank", rel: "noopener noreferrer" } : {};
 }
 
-function SimpleDropdown({ item }) {
+function SimpleDropdown({ item, itemProps }) {
   return (
-    <div className="nav-item has-dropdown">
+    <div {...itemProps}>
       <a href={item.href}>
         {item.label}{" "}
         <span className="nav-arrow">
@@ -66,9 +85,9 @@ function SimpleDropdown({ item }) {
       </a>
       <div className="dropdown dropdown-simple">
         {item.links.map((link) => (
-          <a href={link.href} key={link.label} {...newTabProps(link.newTab)}>
+          <SmartLink href={link.href} key={link.label} newTab={link.newTab}>
             {link.label}
-          </a>
+          </SmartLink>
         ))}
       </div>
     </div>
@@ -84,6 +103,7 @@ export default function Nav({
   contact,
   onSearch,
 }) {
+  const dropdownProps = useCloseAfterClick();
   const cardsBySource = {
     "product-categories": productCategories.map((category) => ({
       label: category.name,
@@ -101,22 +121,26 @@ export default function Nav({
       href: industry.href,
     })),
   };
+  const cardsForItem = (item) => {
+    if (item.source === "product-categories") return cardsBySource[item.source];
+    return item.cards.length > 0 ? item.cards : cardsBySource[item.source] ?? [];
+  };
 
   return (
     <nav className="nav">
       {navItems.map((item) =>
         item.type === "simple-dropdown" ? (
-          <SimpleDropdown item={item} key={item.label} />
+          <SimpleDropdown item={item} key={item.label} itemProps={dropdownProps(item.label)} />
         ) : item.type === "dropdown" ? (
-          <div className="nav-item has-dropdown" key={item.label}>
+          <div key={item.label} {...dropdownProps(item.label)}>
             <a href="#">
               {item.label}{" "}
               <span className="nav-arrow">
                 <img src="/assets/images/expand-arrow.webp" alt="" />
               </span>
             </a>
-            {/* Cards picked in Strapi win; Source only fills in when an editor left Cards empty. */}
-            <MegaDropdown copy={item} cards={item.cards.length > 0 ? item.cards : cardsBySource[item.source] ?? []} />
+            {/* Product categories always come from the Excel-synced catalog. */}
+            <MegaDropdown copy={item} cards={cardsForItem(item)} />
           </div>
         ) : (
           <Link href={item.href} key={item.label} {...newTabProps(item.newTab)}>

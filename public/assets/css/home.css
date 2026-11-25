@@ -116,7 +116,7 @@
 .about-men-bg {
     position: absolute;
     left: 0;
-    bottom: -14%;
+    bottom: -110px;
     pointer-events: none;
     z-index: 0;
     line-height: 0;
@@ -213,12 +213,11 @@
 }
 
 .solution-section .about-men-bg {
-    bottom: -13%;
     width: 14%;
 }
 
 .products-section {
-    padding: 70px 0 80px;
+    padding: 70px 0 70px;
     background: #f7f7f7;
 }
 
@@ -332,7 +331,7 @@
 
 .solution-section {
     position: relative;
-    padding: 80px 0 90px;
+    padding: 70px 0 70px;
     background: #fff;
     overflow: hidden;
 }
@@ -340,11 +339,13 @@
 .solution-gears {
     position: absolute;
     right: 0px;
-    top: 50px;
+    top: 40px;
     bottom: auto;
     margin: auto;
     width: 270px;
     height: 290px;
+    transform: scale(0.6);
+    transform-origin: top right;
     pointer-events: none;
     z-index: 0;
     line-height: 0;
@@ -627,7 +628,7 @@
 
 .faq-section {
     position: relative;
-    padding: 80px 0 90px;
+    padding: 70px 0 90px;
     background: #fff;
     overflow: hidden;
 }
@@ -645,7 +646,7 @@
     position: absolute;
     right: 0;
     bottom: -20%;
-    width: 20%;
+    width: 15%;
     transform: translateZ(180px) scaleX(-1);
 }
 
@@ -805,16 +806,17 @@
 
 .why-section {
     position: relative;
-    padding: 80px 0 50px;
+    padding: 70px 0 70px;
     background: #fff;
     overflow: hidden;
 }
 
 .why-gears {
     position: absolute;
-    left: -30px;
+    left: 20px;
     top: 50%;
-    transform: translateY(-50%);
+    transform: translateY(-50%) scale(0.7);
+    transform-origin: left center;
     pointer-events: none;
     z-index: 0;
     width: 270px;
@@ -830,10 +832,10 @@
 }
 
 .why-gears .gear2 {
-    width: 61px;
+width: 88px;
     position: relative;
     left: -22px;
-    top: 88px;
+    top: 56px;  
 }
 
 .why-gears .gear3 {
@@ -1044,7 +1046,7 @@
 
 .industries-section {
     position: relative;
-    padding: 70px 0 80px;
+    padding: 70px 0 70px;
     background: url("../images/serve-bg.jpg");
     background-size: cover;
     background-position: center;
@@ -1166,7 +1168,7 @@
 
 .services-section {
     background: #0b3d6e;
-    padding: 70px 0 80px;
+    padding: 70px 0 70px;
     overflow: hidden;
 }
 
@@ -1334,8 +1336,8 @@
 
 .uni-slider-section {
     position: relative;
-    padding: 48px 0;
-    margin: 70px 0;
+    padding: 70px 0;
+
 }
 
 .services-slider {
@@ -1369,12 +1371,12 @@
 }
 
 .red-color .uni-men-bg {
-    position: absolute;
+       position: absolute;
     right: 13%;
-    top: -21%;
+    top: -13%;
     width: 200px;
     height: 200px;
-    transform: scale(0.8);
+    transform: scale(0.6);
 }
 
 .heading-back-wrap {
@@ -1402,21 +1404,22 @@
     margin-top: 0;
     background-color: #fff;
     padding: 0;
-    margin-left: -0.5px;
+    margin-left: 0px;
 }
 
 .uni-slider-wrap {
     background-color: #fff;
     border-radius: 24px 0 0 24px;
     border: 1px solid #D9D9D9;
+    border-right: 0px solid #D9D9D9;
     padding: 30px 0;
     position: relative;
-    border-right: 0;
+    z-index: 2;
     padding-bottom: 0;
 }
 
 .uni-slider-wrap:before {
-    content: '';
+       content: '';
     background: #fff;
     width: 200%;
     height: 70%;
@@ -1427,13 +1430,14 @@
 }
 
 .uni-slider-wrap:after {
-    content: '';
-    background: #D9D9D9;
+       content: '';
+    background: transparent;
     width: 200%;
     height: 1px;
     position: absolute;
     left: 10%;
     bottom: -1px;
+     border-top: 1px solid #D9D9D9;
 }
 
 .blogs-view-all {
@@ -1579,7 +1583,7 @@
     position: absolute;
     right: 6%;
     top: -128px;
-    width: 17%;
+    width: 15%;
     transform: translateZ(180px) scaleX(-1);
 }
 
@@ -1693,9 +1697,6 @@
           transform: translateZ(180px) scaleX(-1);
       }
 
-  .about-men-bg {
-          bottom: -21%;
-      }
 }
 
 /* xxl (1400px - 1599px) */
@@ -1705,24 +1706,19 @@
       }
 
   .case-study .uni-men-bg {
-          right: 15%;
-          top: -17%;
-          width: 14%;
+               right: 15%;
+        top: -7%;
+        width: 12%;
       }
 
   .blog .uni-men-bg {
-          right: 16%;
-          top: -19%;
-          width: 16%;
+              right: 16%;
+        top: -6%;
+        width: 12%;
       }
 
   .solution-section .about-men-bg {
-          bottom: -16%;
           width: 14%;
-      }
-
-  .about-men-bg {
-          bottom: -20%;
       }
 }
 
@@ -1742,11 +1738,11 @@
       }
 
   .blog .uni-men-bg {
-          top: -12%;
+          top: -7%;
       }
 
   .case-study .uni-men-bg {
-          top: -104px;
+          top: -7%;
       }
 
   .faq-men {
@@ -1762,8 +1758,9 @@
       }
 
   .solution-gears {
-          transform: scale(0.8);
-          top: -4%;
+          transform: scale(0.6);
+          transform-origin: top right;
+          top: 40px;
       }
 
   .faq-gears-left {
@@ -1888,7 +1885,6 @@
       }
 
   .solution-section .about-men-bg {
-          bottom: -8%;
           width: 16%;
       }
 
@@ -1961,7 +1957,6 @@
   #about-stats .about-men-bg {
           position: absolute;
           left: 0;
-          bottom: -13%;
           pointer-events: none;
           z-index: 0;
           line-height: 0;
@@ -2039,7 +2034,7 @@
       }
 
   .faq-question {
-          font-size: 14px;
+          font-size: 18px;
           padding: 16px;
       }
 
@@ -2079,7 +2074,7 @@
   .why-pane-overlay {
           width: 100%;
           padding: 20px 18px;
-          background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+         
       }
 
   .why-pane-overlay p {
@@ -2331,6 +2326,7 @@
 
   .uni-slider-wrap {
           border-radius: 24px;
+          border-right: 1px solid #ddd;
       }
 
   .uni-slider-wrap {
@@ -2369,4 +2365,109 @@
   .industries-slider-wrap {
           padding: 0 20px;
       }
+      .products-sub{font-size: 16px; line-height: 1.6}
 }
+
+/* Center the four About stats in equal cells on phones and tablets. */
+@media (max-width: 991.98px) {
+  #about-stats .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 20px 0;
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 16px 0 0;
+    text-align: center;
+  }
+
+  #about-stats .stat-item {
+    box-sizing: border-box;
+    display: flex;
+    width: auto;
+    min-width: 0;
+    min-height: 160px;
+    flex: initial;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 8px;
+    text-align: center;
+  }
+
+  #about-stats .stat-item:nth-child(odd)::before { display: none; }
+  #about-stats .stat-item:nth-child(even)::before {
+    display: block;
+    left: 0;
+    top: 12%;
+    height: 76%;
+  }
+
+  #about-stats .stat-item img {
+    display: block;
+    height: 36px;
+    width: auto;
+    margin: 0 auto 8px;
+    object-fit: contain;
+  }
+
+  #about-stats .stat-number {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    margin: 0 0 8px;
+    font-size: clamp(36px, 9vw, 36px);
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  #about-stats .stat-item .count { left: 0; }
+  #about-stats .stat-label { font-size: 13px; letter-spacing: 1px; }
+  .product-name{text-align: center;}
+  .sol-pane-title{text-align: center;}
+  .sol-prod-name{text-align: center;}
+}
+
+@media (max-width: 767.98px) {
+  #about-stats .stats-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  #about-stats .about-men-bg,
+  .solution-section .about-men-bg {
+    width: calc(50vw - 270px);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+  #about-stats .about-men-bg,
+  .solution-section .about-men-bg {
+    width: calc(50vw - 360px);
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  #about-stats .about-men-bg,
+  .solution-section .about-men-bg {
+    width: calc(50vw - 480px);
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  #about-stats .about-men-bg,
+  .solution-section .about-men-bg {
+    width: calc(56vw - 570px);
+    bottom: -78px
+  }
+}
+
+@media (min-width: 1400px) {
+  #about-stats .about-men-bg,
+  .solution-section .about-men-bg {
+    width: calc(56vw - 660px);
+  }
+}
+

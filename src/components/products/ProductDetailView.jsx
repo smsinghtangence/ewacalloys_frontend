@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 /** Product photo slider: arrows, swipe, autoplay and clickable thumbnails. */
-export function ProductGallery({ images, name }) {
+export function ProductGallery({ images, name, demo = false }) {
   const [active, setActive] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchX = useRef(null);
@@ -20,7 +20,7 @@ export function ProductGallery({ images, name }) {
   }, [active, paused, total]);
 
   return (
-    <div className="pd-gallery">
+    <div className={`pd-gallery${demo ? " pd-gallery--demo" : ""}`}>
       <div
         className="pd-main-img"
         onMouseEnter={() => setPaused(true)}
@@ -34,8 +34,8 @@ export function ProductGallery({ images, name }) {
         }}
       >
         <div className="pd-track" style={{ transform: `translateX(-${active * 100}%)` }}>
-          {images.map((src) => (
-            <img key={src} src={src} alt={name} />
+          {images.map((src, index) => (
+            <img key={`${src}-${index}`} src={src} alt={name} />
           ))}
         </div>
       </div>
@@ -45,7 +45,7 @@ export function ProductGallery({ images, name }) {
           {images.map((src, index) => (
             <button
               type="button"
-              key={src}
+              key={`${src}-${index}`}
               className={`pd-thumb${index === active ? " is-active" : ""}`}
               aria-label={`Show photo ${index + 1}`}
               onClick={() => setActive(index)}
@@ -88,8 +88,8 @@ export function ProductTabs({ features, recommendations }) {
       </div>
       <div className="pd-list">
         <ul>
-          {list.map((item) => (
-            <li key={item}>{item}</li>
+          {list.map((item, index) => (
+            <li key={`${item}-${index}`}>{item}</li>
           ))}
         </ul>
       </div>

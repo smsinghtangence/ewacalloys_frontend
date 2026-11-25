@@ -1,10 +1,10 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import InnerBanner from "@/components/shared/InnerBanner";
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import GearBackdrop from "@/components/shared/GearBackdrop";
 import ConsultCta from "@/components/shared/ConsultCta";
 import IndustryApplications from "@/components/industries/IndustryApplications";
+import IndustryTabs from "@/components/industries/IndustryTabs";
 import { INDUSTRY_DETAILS } from "@/components/industries/industryDetails";
 import { getIndustries } from "@/lib/catalog";
 import { getPageMeta } from "@/lib/seo";
@@ -59,19 +59,10 @@ export default async function IndustryPage({ params }) {
 
       <section className="ind-tabs-section">
         <div className="container">
-          <nav className="ind-tabs" aria-label="Industries">
-            <span className="ind-tabs-label">Industries</span>
-            {INDUSTRY_DETAILS.map((item) => (
-              <Link
-                key={item.slug}
-                href={`/our_industries/${item.slug}`}
-                className={item.slug === industry.slug ? "active" : ""}
-                aria-current={item.slug === industry.slug ? "page" : undefined}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
+          <IndustryTabs
+            industries={INDUSTRY_DETAILS.map(({ slug, name }) => ({ slug, name }))}
+            activeSlug={industry.slug}
+          />
         </div>
       </section>
 

@@ -65,7 +65,7 @@ export default function RailwaysPage() {
       <section className="tk-intro">
         <GearBackdrop className="tk-gear" />
         <div className="container">
-          <div className="tk-intro-stage">
+          <div className="tk-intro-stage rw-intro-stage">
             <div className="tk-intro-img" data-aos="fade-right">
               <img src={`${IMG}/intro.png`} alt="Welder reconditioning a rail track on site" />
             </div>
@@ -111,7 +111,10 @@ export default function RailwaysPage() {
       {APPLICATIONS.map((app, i) => {
         const reverse = i % 2 === 1;
         return (
-          <section className={`rw-app${reverse ? " rw-app--reverse" : ""}`} key={app.title}>
+          <section
+            className={`rw-app${reverse ? " rw-app--reverse" : ""}${i === APPLICATIONS.length - 1 ? " rw-app--last" : ""}`}
+            key={app.title}
+          >
             <div className="container">
               <div className="rw-app-stage">
                 <div className="rw-app-text" data-aos={reverse ? "fade-left" : "fade-right"}>

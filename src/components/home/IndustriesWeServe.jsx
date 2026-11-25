@@ -44,6 +44,7 @@ export default function IndustriesWeServe({ industries }) {
             items={industries}
             keyExtractor={(item) => item.id}
             slideClassName="basis-1/2 sm:basis-1/3 lg:basis-1/4"
+            loop
             autoplayMs={3000}
             className="industries-slider"
             renderItem={(industry) => (
