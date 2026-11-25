@@ -5,7 +5,7 @@ import Breadcrumb from "@/components/shared/Breadcrumb";
 import ConsultCta from "@/components/shared/ConsultCta";
 import SafetyContentsNav from "@/components/about/SafetyContentsNav";
 
-const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL;
+const STRAPI_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://127.0.0.1:1337";
 
 function addPolicySectionAnchors(html) {
   const sections = [];
