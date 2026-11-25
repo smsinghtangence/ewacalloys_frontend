@@ -4,10 +4,11 @@ import { useState } from "react";
 
 
 
-// Offices come from the Contact Page in Strapi (see lib/contactPage.js); the dropdown switches between them.
-export default function OfficeInfoCard({ title = "Our Offices", offices }) {
+// Office entries are managed in Strapi → Contact Page → Offices.
+export default function OfficeInfoCard({ title = "Our Offices", offices = [] }) {
   const [officeIndex, setOfficeIndex] = useState(0);
   const office = offices[officeIndex] ?? offices[0];
+  if (!office) return null;
   if (!office) return null;
 
   return (
@@ -45,7 +46,7 @@ export default function OfficeInfoCard({ title = "Our Offices", offices }) {
 
       <hr className="contact-office-divider" />
 
-      {office.phones.length > 0 && (
+      {(office.phones ?? []).length > 0 && (
         <div className="contact-office-row">
           <i className="fas fa-phone" />
           <p className="contact-office-text mb-0 contact-phone">

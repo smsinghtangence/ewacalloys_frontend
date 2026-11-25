@@ -26,6 +26,8 @@ const EXPLORE_ALL_PAGES = {
   "product-categories": "/products",
   industries: "/our_industries",
 };
+// Sources without a list page: "Explore All" is hidden even if Strapi has an ExploreHref (it would point at one item).
+const NO_LIST_PAGE = new Set(["services"]);
 
 function resolveLink(raw) {
   return { label: raw.Label || "", href: linkOrHash(raw.Href), newTab: Boolean(raw.OpenInNewTab) };
@@ -101,16 +103,18 @@ function resolveNavItem(raw) {
       description: raw.Description || "",
       exploreLabel: raw.ExploreLabel || "",
       // Empty when there is nowhere to go; the Explore button is then hidden.
-      exploreHref: realHref(raw.ExploreHref) || EXPLORE_ALL_PAGES[raw.Source] || "",
+      exploreHref: NO_LIST_PAGE.has(raw.Source) ? "" : realHref(raw.ExploreHref) || EXPLORE_ALL_PAGES[raw.Source] || "",
       // Which Strapi collection fills the cards: product-categories, services or industries.
       source: raw.Source,
       cardVariant: raw.CardVariant || "icon",
-      // Cards picked in Strapi override Source; when empty, the cards come from the Source collection.
-      cards: (raw.Cards ?? []).map((card) => ({
-        label: card.Label || "",
-        href: linkOrHash(card.Href),
-        image: card.Image?.url || "",
-      })),
+      // Product cards always use the Excel-synced catalog, not old editor-entered categories.
+      cards: raw.Source === "product-categories"
+        ? []
+        : (raw.Cards ?? []).map((card) => ({
+            label: card.Label || "",
+            href: linkOrHash(card.Href),
+            image: card.Image?.url || "",
+          })),
     };
   }
   if (type === "simple-dropdown" || type === "dropdown") {

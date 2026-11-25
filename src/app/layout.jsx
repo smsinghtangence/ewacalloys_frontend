@@ -9,6 +9,8 @@ import SiteHeader from "@/components/layout/SiteHeader";
 import Footer from "@/components/layout/Footer";
 import AosInit from "@/components/layout/AosInit";
 import PreloadFonts from "@/components/layout/PreloadFonts";
+import SiteLoader from "@/components/layout/SiteLoader";
+import BodyPageClass from "@/components/layout/BodyPageClass";
 import { getProductCategories, getServices, getIndustries, getFooterColumns } from "@/lib/catalog";
 import { getHeaderSettings } from "@/lib/headerSettings";
 import { DEFAULT_OG_IMAGE, SITE_NAME, SITE_URL } from "@/lib/seo";
@@ -54,6 +56,8 @@ export default async function RootLayout({
         <link rel="stylesheet" href="/assets/css/main.css" />
       </head>
       <body>
+        <BodyPageClass />
+        <SiteLoader />
         <PreloadFonts />
         <SiteHeader
           productCategories={productCategories}

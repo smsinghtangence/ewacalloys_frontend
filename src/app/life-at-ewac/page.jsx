@@ -103,8 +103,11 @@ export default function LifeAtEwacPage() {
                 <article className="life-benefit-card" tabIndex={0}>
                   <div className="life-benefit-media">
                     <img src={benefit.image} alt="" />
-                    <h3>{benefit.title}</h3>
-                    <p>{benefit.text}</p>
+                    {/* Title and text share one bottom-anchored box, so the title always sits above the text. */}
+                    <div className="life-benefit-body">
+                      <h3>{benefit.title}</h3>
+                      <p>{benefit.text}</p>
+                    </div>
                   </div>
                 </article>
               </div>

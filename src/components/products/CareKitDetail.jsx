@@ -1,6 +1,7 @@
 import Breadcrumb from "@/components/shared/Breadcrumb";
 import ConsultCta from "@/components/shared/ConsultCta";
 import CareKitSlider from "@/components/products/CareKitSlider";
+import CareKitVideoLightbox from "@/components/products/CareKitVideoLightbox";
 
 /** Detail page with its own layout for the EWAC Care Kit (content in careKit.js). */
 export default function CareKitDetail({ kit }) {
@@ -46,21 +47,10 @@ export default function CareKitDetail({ kit }) {
         <div className="container">
           <h2 className="ck-heading">The Care Kit contains :</h2>
           <div className="ck-contains-grid">
-            <a
-              className="ck-video"
-              href={kit.video.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Watch the EWAC Care Kit video on YouTube (opens in a new tab)"
-            >
-              <img src={kit.video.thumbnail} alt="" loading="lazy" />
-              <span className="ck-play" aria-hidden="true">
-                <i className="fas fa-play" />
-              </span>
-            </a>
+            <CareKitVideoLightbox video={kit.video} />
             <ul className="ck-list">
               {kit.contents.map((item, index) => (
-                <li key={item} className={index === 0 ? "is-active" : undefined}>
+                <li key={item} >
                   {item}
                 </li>
               ))}
@@ -76,11 +66,13 @@ export default function CareKitDetail({ kit }) {
           <p className="ck-tagline">{kit.tagline}</p>
           <div className="ck-featured">
             <img src={kit.featured.src} alt={kit.featured.alt} loading="lazy" />
+            <p className="ck-item-name">{kit.featured.name}</p>
           </div>
           <div className="ck-grid">
             {kit.items.map((item) => (
               <div className="ck-grid-item" key={item.src}>
                 <img src={item.src} alt={item.alt} loading="lazy" />
+                <p className="ck-item-name">{item.name}</p>
               </div>
             ))}
           </div>

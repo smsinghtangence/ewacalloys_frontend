@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import ProductsPageView from "@/components/products/ProductsPageView";
-import { getProductCategories } from "@/lib/catalog";
+import { getProductCategories, getProducts } from "@/lib/catalog";
 import { getPageMeta } from "@/lib/seo";
 
 async function findCategory(slug) {
@@ -22,5 +22,6 @@ export default async function ProductCategoryPage({ params }) {
   const { category } = await params;
   const found = await findCategory(category);
   if (!found) notFound();
-  return <ProductsPageView category={{ slug: found.slug, name: found.name }} />;
+  const products = await getProducts();
+  return <ProductsPageView category={{ slug: found.slug, name: found.name }} products={products} />;
 }

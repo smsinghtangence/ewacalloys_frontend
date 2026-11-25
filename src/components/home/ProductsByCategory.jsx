@@ -14,7 +14,7 @@ function ProductCard({ image, name, href, index }) {
     >
       <div className={`product-card${visible ? " card-visible" : ""}`}>
         <div className="product-img-wrap">
-          <img src={image} alt={name} />
+          {image && <img src={image} alt={name} />}
         </div>
         <h3 className="product-name">{name}</h3>
       </div>
